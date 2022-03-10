@@ -6,9 +6,10 @@
  * @flow strict-local
  */
 import SignInScreen from './src/screens/SignInScreen';
+import SignUpScreen from './src/screens/SignUpScreen';
 import React from 'react';
+import Navigation from './src/navigation';
 import {
-  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -16,12 +17,14 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 const App = () => {
   return (
-    <SafeAreaView style={styles.root}>
-      <SignInScreen />
-    </SafeAreaView>
+    <>
+      <Navigation />
+    </>
   );
 };
 

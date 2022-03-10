@@ -1,21 +1,11 @@
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  useWindowDimensions,
-} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
+import React from 'react';
+import auth from '@react-native-firebase/auth';
+// import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import CustomInput from '../../components/CustomInput';
-import CustomButton from '../../components/CustomButton';
-import auth from '@react-native-firebase/auth';
-// import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
-
 import {
   LoginButton,
   AccessToken,
@@ -23,16 +13,10 @@ import {
   GraphRequest,
   GraphRequestManager,
 } from 'react-native-fbsdk';
-const SignInScreen = () => {
-  const {height} = useWindowDimensions();
 
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+import CustomButton from '../CustomButton';
 
-  useEffect(() => {
-    GoogleSignin.configure();
-  }, []);
-
+const SocialSignInButtons = () => {
   const fbLogin = resCallback => {
     LoginManager.logOut();
     return LoginManager.logInWithPermissions(['public_profile']).then(
@@ -136,32 +120,30 @@ const SignInScreen = () => {
     }
   };
 
-  const onSignInPressed = () => {
-    console.warn('onSignInPressed', email, password);
+  const onSignInFacebookPressed = () => {
+    console.warn('onSignInFacebookPressed');
+  };
+  const onSignInGooglePressed = () => {
+    console.warn('onSignInGooglePressed');
   };
   return (
-    <View style={styles.root}>
-      <Image
-        style={[styles.logo, {height: height * 0.4}]}
-        source={{
-          uri: 'https://intphcm.com/data/upload/logo-the-thao-dep.jpg',
-        }}
-      />
-      <CustomInput placeholder="Email" value={email} setValue={setEmail} />
-      <CustomInput
-        placeholder="Password"
-        value={password}
-        setValue={setPassword}
-        secureTextEntry={true}
-      />
-
-      <CustomButton text="Đăng Nhập" onPress={onSignInPressed} />
+    <>
       <CustomButton
-        text="Quên mật khẩu"
-        onPress={onSignInPressed}
-        type="tertiary"
+        text="Đăng nhập với tài khoản google"
+        onPress={googleLogin}
+        ftColor="#E7EAF4"
+        bgColor="#DD4D44"
       />
-      <TouchableOpacity onPress={googleLogin}>
+      <CustomButton
+        text="Đăng nhập với tài khoản facebook"
+        onPress={onSignInFacebookPressed}
+        ftColor="#4765A9"
+        bgColor="#E7EAF4"
+      />
+      <TouchableOpacity onPress={googleLogOut}>
+        <Text>googleLogOut</Text>
+      </TouchableOpacity>
+      {/* <TouchableOpacity onPress={googleLogin}>
         <Text>gg login</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={googleLogOut}>
@@ -186,21 +168,9 @@ const SignInScreen = () => {
           }
         }}
         onLogoutFinished={() => console.log('logout.')}
-      />
-    </View>
+      /> */}
+    </>
   );
 };
 
-export default SignInScreen;
-const styles = StyleSheet.create({
-  root: {
-    alignItems: 'center',
-    padding: 20,
-  },
-  logo: {
-    width: '90%',
-    maxWidth: 300,
-    maxHeight: 200,
-    resizeMode: 'contain',
-  },
-});
+export default SocialSignInButtons;
