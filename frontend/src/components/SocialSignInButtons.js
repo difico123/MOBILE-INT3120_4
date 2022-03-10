@@ -14,7 +14,7 @@ import {
   GraphRequestManager,
 } from 'react-native-fbsdk';
 
-import CustomButton from '../CustomButton';
+import CustomButton from './CustomButton';
 
 const SocialSignInButtons = () => {
   const fbLogin = resCallback => {
