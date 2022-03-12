@@ -8,21 +8,11 @@ import {
   ScrollView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
+
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 
-import {
-  LoginButton,
-  AccessToken,
-  LoginManager,
-  GraphRequest,
-  GraphRequestManager,
-} from 'react-native-fbsdk';
 const SignUpScreen = () => {
   const {height} = useWindowDimensions();
   const navigation = useNavigation();
@@ -31,10 +21,6 @@ const SignUpScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordRepeat, setPasswordRepeat] = useState('');
-
-  useEffect(() => {
-    GoogleSignin.configure();
-  }, []);
 
   const onSignUnPressed = () => {
     console.warn('onSignUnPressed', email, password);
