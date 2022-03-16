@@ -6,6 +6,7 @@ import { store } from "./redux/store";
 import { useSelector, useDispatch } from "react-redux";
 import AuthStack from "./navigations/AuthStack";
 import AppStack from "./navigations/AppStack";
+import Tabs from "./navigations/Tabs";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -18,7 +19,7 @@ export default function App() {
     return (
         <Provider store={store}>
             <NavigationContainer>
-                <SafeAreaProvider>{!authLogin ? <AuthStack /> : <AppStack />}</SafeAreaProvider>
+                <SafeAreaProvider>{!authLogin ? <AuthStack /> : <Tabs />}</SafeAreaProvider>
             </NavigationContainer>
         </Provider>
     );
