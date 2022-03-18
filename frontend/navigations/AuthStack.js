@@ -1,12 +1,11 @@
-import { SafeAreaView, View, Text } from "react-native";
-import React from "react";
-
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-import Signin from "../screens/Signin";
-import Signup from "../screens/Signup";
+import { SafeAreaView, View, Text } from 'react-native';
+import React, { useEffect } from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Signin from '../screens/Signin';
+import Signup from '../screens/Signup';
 
 const Stack = createNativeStackNavigator();
+
 const Navigation = () => {
     return (
         <Stack.Navigator>

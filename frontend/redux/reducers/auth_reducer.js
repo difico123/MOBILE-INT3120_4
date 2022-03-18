@@ -1,9 +1,10 @@
-import { FACEBOOK_LOGIN_SUCCESS, FACEBOOK_LOGIN_FAIL, GET_USER_INFO } from "../actions/type";
+import { FACEBOOK_LOGIN_SUCCESS, FACEBOOK_LOGIN_FAIL, GET_USER_INFO, LOGIN, LOGOUT } from '../actions/type';
 const initialState = {
     user: {
-        name: "",
+        name: '',
     },
-    token: "",
+    token: '',
+    isLogin: false,
 };
 
 export default function (state = initialState, payload) {
@@ -14,6 +15,10 @@ export default function (state = initialState, payload) {
             return { token: null };
         case GET_USER_INFO:
             return { ...state, user: payload.user };
+        case LOGIN:
+            return { ...state, isLogin: true };
+        case LOGOUT:
+            return { ...state, isLogin: false };
         default:
             return state;
     }
