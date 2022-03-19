@@ -1,12 +1,10 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import EventList from '../screens/EventList';
-import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
-import Home from '../screens/Home';
-import Me from '../screens/Me';
-import React, { useEffect } from 'react';
-
-import EventListLike from '../screens/EventListLike';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import EventList from "../screens/EventList";
+import { SafeAreaView, View, Text, StyleSheet } from "react-native";
+import Home from "../screens/Home";
+import Me from "../screens/MeTab/Me";
+import EventListLike from "../screens/EventListLike";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
@@ -58,7 +56,7 @@ const Tabs = () => {
                 }}
             />
             <Tab.Screen
-                name="Me"
+                name="Cá nhân"
                 component={Me}
                 options={{
                     tabBarLabel: 'Me',
