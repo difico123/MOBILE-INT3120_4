@@ -1,9 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { FACEBOOK_LOGIN_SUCCESS, FACEBOOK_LOGIN_FAIL, GET_USER_INFO, LOGIN, LOGOUT } from "./type.js";
+import { LOGIN_SUCCESS, LOGOUT, GET_USER_INFO } from "./type.js";
 import * as Facebook from "expo-facebook";
 import AuthService from "../../service/AuthService";
 
-import axios from "axios";
 const doFacebookLogin = async (dispatch) => {
     try {
         await Facebook.initializeAsync({
@@ -13,61 +12,53 @@ const doFacebookLogin = async (dispatch) => {
             permissions: ["public_profile"],
         });
         if (type === "success") {
-            // Get the user's name using Facebook's Graph API
-            // const response = await fetch(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,picture.height(500)`);
-            // let user = await response.json();
-            // axios.get(`https://my-json-server.typicode.com/Code-Pop/Touring-Vue-Router/events`).then((user) => {
-            //     console.log("userrrrrrrrrrrrrr", user);
-            //     dispatch({ type: GET_USER_INFO, user: user.data });
-            //     console.log("ok");
-            // });
-            // AuthService.getFbUser(token).then((user) => {
-            //     dispatch({ type: GET_USER_INFO, user: user.data });
-            // });
+            await AsyncStorage.setItem("fbLogin", token);
+            dispatch({ type: LOGIN_SUCCESS, token: token });
+            AuthService.getFbUser(token).then((res) => {
+                const user = {
+                    id: res.data.id,
+                    name: res.data.name,
+                    imageUrl: res.data.picture.data.url,
+                };
+                dispatch({ type: GET_USER_INFO, user: user });
+            });
         } else {
             // type === 'cancel'
-            dispatch({ type: FACEBOOK_LOGIN_FAIL, token: null });
-            return 0;
+            dispatch({ type: LOGOUT, token: null });
+            await AsyncStorage.setItem("fbLogin", null);
         }
-
-        await AsyncStorage.setItem("fbLogin", token);
-        dispatch({ type: FACEBOOK_LOGIN_SUCCESS, token: token });
     } catch ({ message }) {
         alert(`Facebook Login Error: ${message}`);
     }
 };
 
-export const getFBLoginUser = (token) => async (dispatch) => {
-    // const response = await fetch(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,picture.height(500)`);
-    // let user = await response.json();
-    // dispatch({ type: GET_USER_INFO, user: user });
+export const getLoginUser = (user) => async (dispatch) => {
     try {
         dispatch({ type: GET_USER_INFO, user: user });
     } catch (err) {
         console.log(err);
     }
 };
-export const updateEmail = (email) => async (dispatch) => {
-    try {
-        // dispatch({ type: UPDATE_EMAIL, email: email });
-        // console.log("update email");
-
-        await new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve();
-            }, 1000);
-        });
-
-        dispatch({ type: UPDATE_EMAIL, email: email });
-        // console.log(email);
-    } catch (err) {}
-};
 
 export const facebookLogin = () => async (dispatch) => {
     try {
         let token = await AsyncStorage.getItem("fbLogin");
         if (token) {
-            dispatch({ type: FACEBOOK_LOGIN_SUCCESS, token: token });
+            await AuthService.getFbUser(token)
+                .then((res) => {
+                    const data = { ...res.data };
+                    const user = {
+                        id: data.id,
+                        name: data.name,
+                        imageUrl: data.picture.data.url,
+                    };
+                    dispatch({ type: GET_USER_INFO, user });
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+
+            dispatch({ type: LOGIN_SUCCESS, token: token });
         } else {
             await doFacebookLogin(dispatch);
         }
@@ -76,9 +67,9 @@ export const facebookLogin = () => async (dispatch) => {
     }
 };
 
-export const setLogin = () => async (dispatch) => {
+export const setLogin = (token) => async (dispatch) => {
     try {
-        dispatch({ type: LOGIN });
+        dispatch({ type: LOGIN_SUCCESS, token: token });
     } catch (err) {
         console.warn(err);
     }
