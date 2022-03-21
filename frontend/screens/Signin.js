@@ -47,21 +47,6 @@ const Signin = () => {
         navigation.navigate("Signup");
     };
     return (
-        // <View>
-        //     <Text>{auth.email}</Text>
-        //     <TextInput style={{ height: 50, width: "100%", borderWidth: 2, padding: 10 }} value={email} onChangeText={setEmail} />
-
-        //     <CustomInput value={email} setValue={setEmail} />
-        //     <Text>{auth.email}</Text>
-        //     {/* <TouchableOpacity
-        //         onPress={() => {
-        //             dispatch(facebookLogin());
-        //         }}
-        //     >
-        //         <Text>dang nhap</Text>
-        //     </TouchableOpacity> */}
-        // </View>
-
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.root}>
                 <Image

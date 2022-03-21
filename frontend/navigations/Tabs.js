@@ -15,7 +15,7 @@ const Tabs = () => {
             <View style={{ marginTop: 20, marginBottom: 20 }}>
                 <HeaderLogo />
             </View>
-            <Tab.Navigator screenOptions={{ tabBarStyle: { display: "flex", position: "absolute", bottom: 15, left: 20, right: 20, elevation: 1, backgroundColor: "#FFFFFF", zIndex: 10, borderRadius: 10, height: 70, paddingBottom: 10, paddingTop: 5, gap: 0 } }} initialRouteName="Home">
+            <Tab.Navigator screenOptions={{ tabBarStyle: { display: "flex", position: "absolute", bottom: 10, left: 10, right: 10, elevation: 1, backgroundColor: "#FFFFFF", zIndex: 10, borderRadius: 10, height: 70, paddingBottom: 10, paddingTop: 5, gap: 0 } }} initialRouteName="Home">
                 <Tab.Screen
                     name="Home"
                     component={Home}

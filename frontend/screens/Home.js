@@ -8,6 +8,7 @@ import HeaderLogo from "../components/HeaderLogo";
 import EventItemIncomming from "../components/EventItemIncomming";
 import EventItemHot from "../components/EventItemHot";
 import CommonStyle from "../components/common/CommonStyle";
+import { useNavigation } from "@react-navigation/native";
 
 const Home = ({ navigation }) => {
     const [isToggleNav, setToggleNav] = useState(false);
@@ -15,6 +16,7 @@ const Home = ({ navigation }) => {
 
     const auth = useSelector((state) => state.authReducers.auth);
     const dispatch = useDispatch();
+    const nav = useNavigation();
 
     useEffect(() => {
         if (isToggleNav) {
@@ -25,7 +27,7 @@ const Home = ({ navigation }) => {
         } else {
             navigation.setOptions({
                 tabBarLabel: "Home",
-                tabBarStyle: { display: "flex", position: "absolute", bottom: 15, left: 20, right: 20, elevation: 1, backgroundColor: "#FFFFFF", borderRadius: 10, height: 70, paddingBottom: 10, paddingTop: 5, gap: 0 },
+                tabBarStyle: { display: "flex", position: "absolute", bottom: 10, left: 10, right: 10, elevation: 1, backgroundColor: "#FFFFFF", borderRadius: 10, height: 70, paddingBottom: 10, paddingTop: 5, gap: 0 },
             });
         }
     }, [isToggleNav]);
@@ -74,18 +76,23 @@ const Home = ({ navigation }) => {
         },
     ];
 
+    const showEventList = () => {
+        nav.navigate("EventList");
+    };
+    const EventHotList = data.map((item, index) => <EventItemHot item={item} key={index} />);
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <SearchBar placeholder="Tìm kiếm" setToggleNav={setToggleNav} setValue={setSearchEvent} value={searchEvent} />
             </View>
-            <View style={styles.scroll}>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.eventContainer}>
                     <View style={[CommonStyle.spaceBetween]}>
                         <TouchableOpacity>
                             <Text style={styles.title}>Sự kiện sắp diễn ra</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={showEventList}>
                             <Text style={styles.title}>Xem tất cả</Text>
                         </TouchableOpacity>
                     </View>
@@ -99,9 +106,12 @@ const Home = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
 
-                    <FlatList showsHorizontalScrollIndicator={true} data={data} keyExtractor={(item) => item.id} renderItem={({ item, index }) => <EventItemHot item={item} key={index} />} />
+                    {/* <FlatList data={data} keyExtractor={(item) => item.id} renderItem={({ item, index }) => <EventItemHot item={item} key={index} />} /> */}
+
+                    {EventHotList}
                 </View>
-            </View>
+                <View style={{ marginBottom: 140 }}></View>
+            </ScrollView>
         </View>
     );
 };
@@ -116,6 +126,7 @@ const styles = StyleSheet.create({
     container: {},
     header: {
         marginTop: 10,
+        marginBottom: 5,
     },
     eventItem: {},
     title: {

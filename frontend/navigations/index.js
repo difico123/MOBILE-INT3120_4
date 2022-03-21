@@ -30,7 +30,7 @@ export default function Nav() {
 
     return (
         <NavigationContainer>
-            <SafeAreaProvider>{!authLogin ? <AuthStack /> : <Tabs />}</SafeAreaProvider>
+            <SafeAreaProvider>{!authLogin ? <AuthStack /> : <AppStack />}</SafeAreaProvider>
         </NavigationContainer>
     );
 }

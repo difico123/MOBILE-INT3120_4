@@ -49,8 +49,11 @@ const styles = StyleSheet.create({
     },
     dateContainer: {
         position: "absolute",
-        borderRadius: 5,
-        padding: 20,
+        borderRadius: 10,
+        width: 80,
+        height: 80,
+        justifyContent: "center",
+        alignItems: "center",
         top: 0,
         right: 0,
         borderWidth: 1,
@@ -58,7 +61,7 @@ const styles = StyleSheet.create({
         elevation: 10,
     },
     dateText: {
-        fontSize: 20,
+        fontSize: 27,
         fontWeight: "bold",
         color: "#FFFFFF",
     },

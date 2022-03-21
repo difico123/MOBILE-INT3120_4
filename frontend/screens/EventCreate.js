@@ -22,7 +22,7 @@ const EventCreate = ({ navigation }) => {
             });
         } else {
             navigation.setOptions({
-                tabBarStyle: { display: "flex", position: "absolute", bottom: 15, left: 20, right: 20, elevation: 1, backgroundColor: "#FFFFFF", borderRadius: 10, height: 70, paddingBottom: 10, paddingTop: 5, gap: 0 },
+                tabBarStyle: { display: "flex", position: "absolute", bottom: 10, left: 10, right: 10, elevation: 1, backgroundColor: "#FFFFFF", borderRadius: 10, height: 70, paddingBottom: 10, paddingTop: 5, gap: 0 },
             });
         }
     }, [isToggleNav]);
@@ -33,17 +33,23 @@ const EventCreate = ({ navigation }) => {
                 <MaterialCommunityIcons size={30} style={[styles.icon]} name="notebook-outline" color="black" type />
                 <Text style={styles.title}>Đăng bài viết</Text>
             </View>
-            <View style={styles.inputContainer}>
-                <TextInput style={styles.input} onFocus={onFocus} onBlur={onBlur}></TextInput>
-            </View>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={styles.inputContainer}>
+                    <TextInput style={styles.input} onFocus={onFocus} onBlur={onBlur}></TextInput>
+                </View>
 
-            <EventPostBtn title="Thể loại sự kiện" text="party" iconName="notebook-outline" />
-            <EventPostBtn title="Địa điểm" text="Đống Đa" iconName="map-marker" bgColor="rgba(38, 72, 113, 0.68)" />
-            <EventPostBtn title="Số lượng người" text="30" iconName="group" bgColor="rgba(120, 147, 126, 0.68)" />
+                <EventPostBtn title="Thể loại sự kiện" text="party" iconName="notebook-outline" />
+                <EventPostBtn title="Địa điểm" text="Đống Đa" iconName="map-marker" bgColor="rgba(38, 72, 113, 0.68)" />
+                <EventPostBtn title="Số lượng người" text="30" iconName="group" bgColor="rgba(120, 147, 126, 0.68)" />
 
-            <View style={{ marginTop: 15 }}>
-                <CustomButton text="Đăng bài viết" bgColor="rgba(38, 72, 113, .7)" />
-            </View>
+                <EventPostBtn title="Thể loại sự kiện" text="party" iconName="notebook-outline" />
+                <EventPostBtn title="Địa điểm" text="Đống Đa" iconName="map-marker" bgColor="rgba(38, 72, 113, 0.68)" />
+                <EventPostBtn title="Số lượng người" text="30" iconName="group" bgColor="rgba(120, 147, 126, 0.68)" />
+
+                <View style={{ marginTop: 15, marginBottom: 120 }}>
+                    <CustomButton text="Đăng bài viết" bgColor="rgba(38, 72, 113, .7)" />
+                </View>
+            </ScrollView>
         </View>
     );
 };
@@ -58,6 +64,7 @@ const styles = StyleSheet.create({
     titleContainer: {
         flexDirection: "row",
         alignItems: "center",
+        marginBottom: 5,
     },
     title: {
         fontSize: 16,
@@ -66,7 +73,7 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         width: "100%",
-        height: "30%",
+        height: 150,
         borderWidth: 1,
         marginTop: 10,
         paddingHorizontal: 10,
@@ -74,4 +81,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
     },
     input: {},
+    scrollView: {
+        height: "3000%",
+    },
 });
