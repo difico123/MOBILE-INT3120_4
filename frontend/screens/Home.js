@@ -1,14 +1,16 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView } from "react-native";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView, VirtualizedList } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Icon } from "react-native-elements";
 import { useSelector, useDispatch } from "react-redux";
-
-import SearchBar from "../components/SearchBar";
-import HeaderLogo from "../components/HeaderLogo";
-import EventItemIncomming from "../components/EventItemIncomming";
-import EventItemHot from "../components/EventItemHot";
-import CommonStyle from "../components/common/CommonStyle";
 import { useNavigation } from "@react-navigation/native";
+
+import SearchBar from "../components/InputComponent/SearchBar";
+import HeaderLogo from "../components/Layout/HeaderLogo";
+import EventItemIncomming from "../components/EventItem/EventItemIncomming";
+import EventItemHot from "../components/EventItem/EventItemHot";
+import CommonStyle from "../components/common/CommonStyle";
+
+import { MAIN_COLOR, BORDER_COLOR } from "../components/common/CommonStyle";
 
 const Home = ({ navigation }) => {
     const [isToggleNav, setToggleNav] = useState(false);
@@ -27,7 +29,7 @@ const Home = ({ navigation }) => {
         } else {
             navigation.setOptions({
                 tabBarLabel: "Home",
-                tabBarStyle: { display: "flex", position: "absolute", bottom: 10, left: 10, right: 10, elevation: 1, backgroundColor: "#FFFFFF", borderRadius: 10, height: 70, paddingBottom: 10, paddingTop: 5, gap: 0 },
+                tabBarStyle: { display: "flex", position: "absolute", bottom: 10, left: 10, right: 10, elevation: 1, backgroundColor: "#FFFFFF", borderRadius: 10, height: 70, paddingBottom: 10, paddingTop: 5, borderWidth: 1, borderColor: BORDER_COLOR },
             });
         }
     }, [isToggleNav]);
@@ -75,10 +77,11 @@ const Home = ({ navigation }) => {
             screen: "MapScreen",
         },
     ];
-
+    const getItemCount = (data) => 50;
     const showEventList = () => {
         nav.navigate("EventList");
     };
+
     const EventHotList = data.map((item, index) => <EventItemHot item={item} key={index} />);
 
     return (
@@ -109,6 +112,7 @@ const Home = ({ navigation }) => {
                     {/* <FlatList data={data} keyExtractor={(item) => item.id} renderItem={({ item, index }) => <EventItemHot item={item} key={index} />} /> */}
 
                     {EventHotList}
+                    {/* <VirtualizedList data={data} initialNumToRender={4} renderItem={(item, index) => <EventItemHot item={item} key={index} />} keyExtractor={(item, index) => index} getItemCount={getItemCount} getItem={() => {}} /> */}
                 </View>
                 <View style={{ marginBottom: 140 }}></View>
             </ScrollView>

@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import EventList from "../screens/EventList";
+import EventList from "../screens/EventTab/EventList";
 import Home from "../screens/Home";
 import Tabs from "./Tabs";
 

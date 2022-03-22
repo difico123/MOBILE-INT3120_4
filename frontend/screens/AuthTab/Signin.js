@@ -1,14 +1,14 @@
 import { View, Text, Button, TextInput, TouchableOpacity, StyleSheet, useWindowDimensions, ScrollView, Image } from "react-native";
 import React, { useEffect, useState } from "react";
-// import { connect } from "react-redux";
-import { facebookLogin } from "../redux/actions/auth_actions";
-import { useDispatch, useSelector } from "react-redux";
-import { getFBLoginUser, setLogin } from "../redux/actions/auth_actions";
-import SocialSignInButtons from "../components/SocialSignInButtons.js";
-import CustomButton from "../components/CustomButton";
-import CustomInput from "../components/CustomInput";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+
+import { facebookLogin } from "../../redux/actions/auth_actions";
+import { getFBLoginUser, setLogin } from "../../redux/actions/auth_actions";
+import SocialSignInButtons from "../../components/ButtonComponent/SocialSignInButtons.js";
+import CustomButton from "../../components/ButtonComponent/CustomButton";
+import CustomInput from "../../components/InputComponent/CustomInput";
 
 const Signin = () => {
     const [email, setEmail] = useState("");
@@ -72,12 +72,13 @@ const Signin = () => {
 const styles = StyleSheet.create({
     root: {
         alignItems: "center",
+        justifyContent: "center",
         padding: 20,
     },
     logo: {
-        width: "90%",
+        width: "100%",
         maxWidth: 300,
-        maxHeight: 200,
+        maxHeight: 250,
         resizeMode: "contain",
     },
     buttons: {

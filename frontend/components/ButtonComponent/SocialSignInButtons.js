@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
-import { facebookLogin, setLogin, getLoginUser } from "../redux/actions/auth_actions";
+import { facebookLogin, setLogin, getLoginUser } from "../../redux/actions/auth_actions";
 import { useSelector, useDispatch } from "react-redux";
 import CustomButton from "./CustomButton";
-import AuthService from "../service/AuthService";
+import AuthService from "../../service/AuthService";
 
 const SocialSignInButtons = ({ loading, setLoading }) => {
     const dispatch = useDispatch();

@@ -2,6 +2,7 @@ import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { Icon } from "react-native-elements";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import CommonStyle, { BORDER_COLOR } from "../common/CommonStyle";
 
 const EventPostBtn = ({ title, iconName, bgColor, text }) => {
     return (
@@ -28,7 +29,6 @@ const styles = StyleSheet.create({
     btnContainer: {
         flexDirection: "row",
         alignItems: "center",
-
         width: "100%",
         height: 50,
         marginTop: 20,
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
         overflow: "hidden",
     },
     selected: {
-        flex: 2,
+        flex: 1,
         paddingHorizontal: 10,
     },
     text: {
