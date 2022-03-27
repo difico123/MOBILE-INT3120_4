@@ -27,6 +27,7 @@ export default function Nav() {
 
     useEffect(() => {
         dispatch(getLoginUser());
+        console.log(auth);
     }, []);
 
     return (
