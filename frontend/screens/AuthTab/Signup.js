@@ -1,33 +1,62 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity, useWindowDimensions, ScrollView } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useState } from "react";
+import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView } from "react-native";
+import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-
 import CustomInput from "../../components/InputComponent/CustomInput";
 import CustomButton from "../../components/ButtonComponent/CustomButton";
+import AuthService from "../../service/AuthService";
+import { validateUser, validateEmail, validatePassword } from "../../utils/Validate";
 
 const Signup = () => {
     const { height } = useWindowDimensions();
     const navigation = useNavigation();
 
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [passwordRepeat, setPasswordRepeat] = useState("");
+    const [user, setUser] = useState({
+        username: "",
+        email: "",
+        password: "",
+        repeatPw: "",
+    });
 
-    const auth = useSelector((state) => state.authReducers.auth);
-    const onSignUnPressed = () => {
-        console.warn("onSignUnPressed", email, password);
-    };
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState({
+        status: false,
+        msg: "",
+    });
+    const [signUpMsg, setSignUpMsg] = useState("");
 
     const onSignInPressed = () => {
-        console.warn("onSignInGooglePressed");
         navigation.navigate("Signin");
     };
 
     const onSignUpPressed = () => {
-        console.warn("onsignuppressed");
+        if (validateUser(user.username).status) {
+            setError(validateUser(user.username));
+        } else if (validateEmail(user.email).status) {
+            setError(validateEmail(user.email));
+        } else if (validatePassword(user.password).status) {
+            setError(validatePassword(user.password));
+        } else if (user.password !== user.repeatPw) {
+            setError({ status: true, msg: "Mật khẩu không khớp" });
+        } else {
+            setLoading(true);
+            setError({ status: false, msg: "" });
+            AuthService.signUp(user)
+                .then((res) => {
+                    console.log(user);
+                    setSignUpMsg("Bạn đã đăng kí tài khoản thành công!");
+                    setTimeout(() => {
+                        setLoading(false);
+                        navigation.navigate("Signin");
+                    }, 1000);
+                })
+                .catch((err) => {
+                    setLoading(false);
+                    console.log("err", err.response.data.message);
+                    setError({ status: true, msg: "Tài khoản đã có người sử dụng" });
+                });
+        }
     };
+
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.root}>
@@ -39,11 +68,44 @@ const Signup = () => {
                         }}
                     />
                     <Text style={styles.title}>TẠO TÀI KHOẢN MỚI</Text>
-                    <CustomInput placeholder="Tên người dùng" value={username} setValue={setUsername} icon={{ name: "user", type: "font-awesome" }} />
-                    <CustomInput placeholder="Email" value={email} setValue={setEmail} icon={{ name: "email" }} />
-                    <CustomInput placeholder="Mật khẩu" value={password} setValue={setPassword} secureTextEntry={true} icon={{ name: "lock" }} />
-                    <CustomInput placeholder="Nhập lại mật khẩu" value={passwordRepeat} setValue={setPasswordRepeat} secureTextEntry={true} icon={{ name: "lock" }} />
-                    <CustomButton text="Đăng ký tài khoản" onPress={onSignUnPressed} />
+                    <CustomInput
+                        placeholder="Tên người dùng"
+                        value={user.username}
+                        setValue={(value) => {
+                            setUser({ ...user, username: value });
+                        }}
+                        icon={{ name: "user", type: "font-awesome" }}
+                    />
+                    <CustomInput
+                        placeholder="Email"
+                        value={user.email}
+                        setValue={(value) => {
+                            setUser({ ...user, email: value });
+                        }}
+                        icon={{ name: "email" }}
+                    />
+
+                    <CustomInput
+                        placeholder="Mật khẩu"
+                        value={user.password}
+                        setValue={(value) => {
+                            setUser({ ...user, password: value });
+                        }}
+                        secureTextEntry={true}
+                        icon={{ name: "lock" }}
+                    />
+                    <CustomInput
+                        placeholder="Nhập lại mật khẩu"
+                        value={user.repeatPw}
+                        setValue={(value) => {
+                            setUser({ ...user, repeatPw: value });
+                        }}
+                        secureTextEntry={true}
+                        icon={{ name: "lock" }}
+                    />
+                    {error.status && <Text style={{ color: "red", padding: 10 }}>{error.msg}</Text>}
+                    {!error.status && signUpMsg > 1 && <Text style={{ color: "green", padding: 10 }}>{signUpMsg}</Text>}
+                    <CustomButton text="Đăng ký tài khoản" onPress={onSignUpPressed} loading={loading} />
                     <CustomButton text="Đã có tài khoản? Đăng nhập ngay" bgColor="transparent" onPress={onSignInPressed} type="tertiary" />
                 </View>
             </View>

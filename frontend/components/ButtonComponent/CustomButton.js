@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { View, Text, StyleSheet, Pressable, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, Pressable, TouchableOpacity, ActivityIndicator, width } from "react-native";
 import React from "react";
 import { Icon } from "react-native-elements";
 
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
         color: "#000000",
     },
     container: {
-        width: "100%",
+        width: width,
         padding: 15,
         marginVertical: 5,
         alignItems: "center",

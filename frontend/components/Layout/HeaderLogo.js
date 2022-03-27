@@ -25,7 +25,7 @@ const HeaderLogo = () => {
                         uri: auth.user?.imageUrl,
                     }}
                 />
-                <Text style={styles.name}>{auth.user?.name}</Text>
+                <Text style={styles.name}>{auth.user?.username}</Text>
             </View>
         </View>
     );

@@ -25,16 +25,26 @@ const doFacebookLogin = async (dispatch) => {
         } else {
             // type === 'cancel'
             dispatch({ type: LOGOUT, token: null });
-            await AsyncStorage.setItem("fbLogin", null);
+            await AsyncStorage.removeItem("fbLogin");
         }
     } catch ({ message }) {
         alert(`Facebook Login Error: ${message}`);
     }
 };
 
-export const getLoginUser = (user) => async (dispatch) => {
+export const getLoginUser = () => async (dispatch) => {
     try {
-        dispatch({ type: GET_USER_INFO, user: user });
+        let token = await AsyncStorage.getItem("token");
+        if (token) {
+            await AuthService.getUserInfo(token)
+                .then((res) => {
+                    dispatch({ type: GET_USER_INFO, user: res.data.data });
+                    dispatch({ type: LOGIN_SUCCESS, token: token });
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
     } catch (err) {
         console.log(err);
     }
@@ -49,7 +59,7 @@ export const facebookLogin = () => async (dispatch) => {
                     const data = { ...res.data };
                     const user = {
                         id: data.id,
-                        name: data.name,
+                        username: data.name,
                         imageUrl: data.picture.data.url,
                     };
                     dispatch({ type: GET_USER_INFO, user });
@@ -70,6 +80,8 @@ export const facebookLogin = () => async (dispatch) => {
 export const setLogin = (token) => async (dispatch) => {
     try {
         dispatch({ type: LOGIN_SUCCESS, token: token });
+        await AsyncStorage.setItem("token", token);
+        dispatch(getLoginUser());
     } catch (err) {
         console.warn(err);
     }
@@ -78,6 +90,7 @@ export const setLogin = (token) => async (dispatch) => {
 export const setLogout = () => async (dispatch) => {
     try {
         dispatch({ type: LOGOUT });
+        await AsyncStorage.removeItem("token");
     } catch (err) {
         console.warn(err);
     }

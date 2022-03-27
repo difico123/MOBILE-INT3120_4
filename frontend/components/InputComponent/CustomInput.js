@@ -1,13 +1,24 @@
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, width, Dimensions, TouchableOpacity } from "react-native";
 import React from "react";
 import { Icon } from "react-native-elements";
+const windowWidth = Dimensions.get("window").width;
 
-const CustomInput = ({ icon, value, setValue, ...props }) => {
+const CustomInput = ({ style, icon, value, setValue, onPress, iconRight, ...props }) => {
     let iconInput = !icon ? "" : <Icon {...icon} />;
+    let icon2 =
+        props.placeholder !== "Password" ? (
+            ""
+        ) : (
+            <TouchableOpacity onPress={onPress}>
+                <Icon {...iconRight} />
+            </TouchableOpacity>
+        );
+
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, style]}>
             <Text>{iconInput}</Text>
             <TextInput style={styles.input} value={value} onChangeText={setValue} {...props} />
+            <Text style={styles.iconEye}>{icon2}</Text>
         </View>
     );
 };
@@ -15,7 +26,7 @@ const CustomInput = ({ icon, value, setValue, ...props }) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#FFFFFF",
-        width: "90%",
+        width: windowWidth * 0.9,
         borderWidth: 1,
         borderColor: "black",
         borderRadius: 5,
@@ -30,6 +41,10 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         width: "100%",
         height: "100%",
+    },
+    iconEye: {
+        position: "absolute",
+        right: 10,
     },
 });
 export default CustomInput;

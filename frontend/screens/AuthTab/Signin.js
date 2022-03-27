@@ -1,18 +1,23 @@
 import { View, Text, Button, TextInput, TouchableOpacity, StyleSheet, useWindowDimensions, ScrollView, Image } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 
 import { facebookLogin } from "../../redux/actions/auth_actions";
 import { getFBLoginUser, setLogin } from "../../redux/actions/auth_actions";
 import SocialSignInButtons from "../../components/ButtonComponent/SocialSignInButtons.js";
 import CustomButton from "../../components/ButtonComponent/CustomButton";
 import CustomInput from "../../components/InputComponent/CustomInput";
+import AuthSerVice from "../../service/AuthService";
+import { validateUser, validatePassword } from "../../utils/Validate";
 
 const Signin = () => {
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState({
+        status: false,
+        msg: "",
+    });
     const dispatch = useDispatch();
     const auth = useSelector((state) => state.authReducers.auth);
     const { height } = useWindowDimensions();
@@ -24,18 +29,33 @@ const Signin = () => {
     });
     const navigation = useNavigation();
 
-    const submit = () => {
-        console.log("ok");
-    };
-
     const onSignInPressed = async (e) => {
-        setLoading({ ...loading, login: true });
-        await axios.get(`https://my-json-server.typicode.com/Code-Pop/Touring-Vue-Router/events`).then((user) => {
-            console.log("userrrrrrrrrrrrrr", user.data);
+        if (validateUser(username).status) {
+            setError(validateUser(username));
+        } else if (validatePassword(password).status) {
+            setError(validatePassword(password));
+        } else {
+            setLoading({ ...loading, login: true });
+            AuthSerVice.signIn({ username: username, password })
+                .then((res) => {
+                    dispatch(setLogin(res.data.data.access_token));
+                    setLoading({ ...loading, login: false });
 
-            dispatch(setLogin("abc"));
-            setLoading({ ...loading, login: false });
-        });
+                    setError({
+                        status: false,
+                        msg: "",
+                    });
+                })
+                .catch((err) => {
+                    setLoading({ ...loading, login: false });
+                    console.log(err.response.data);
+
+                    setError({
+                        status: true,
+                        msg: "Tài khoản hoặc mật khẩu không đúng",
+                    });
+                });
+        }
     };
 
     const onForgotPasswordPressed = () => {
@@ -46,6 +66,23 @@ const Signin = () => {
         console.warn("onsignuppressed");
         navigation.navigate("Signup");
     };
+    const [showPw, setShowPw] = useState({
+        name: "eye-slash",
+        status: true,
+    });
+    const onEyePress = () => {
+        if (!showPw.status) {
+            setShowPw({
+                name: "eye-slash",
+                status: true,
+            });
+        } else {
+            setShowPw({
+                name: "eye",
+                status: false,
+            });
+        }
+    };
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.root}>
@@ -55,9 +92,9 @@ const Signin = () => {
                         uri: "https://intphcm.com/data/upload/logo-the-thao-dep.jpg",
                     }}
                 />
-                <CustomInput placeholder="Email" value={email} setValue={setEmail} icon={{ name: "email" }} />
-                <CustomInput placeholder="Password" value={password} setValue={setPassword} secureTextEntry={true} icon={{ name: "lock" }} />
-
+                <CustomInput placeholder="Username" value={username} setValue={setUsername} icon={{ name: "user", type: "font-awesome" }} />
+                <CustomInput placeholder="Password" value={password} setValue={setPassword} secureTextEntry={showPw.status} icon={{ name: "lock" }} iconRight={{ name: showPw.name, type: "font-awesome" }} onPress={onEyePress} />
+                {error.status && <Text style={{ color: "red", paddingTop: 5 }}>{error.msg}</Text>}
                 <View style={styles.buttons}>
                     <CustomButton text="Đăng Nhập" onPress={onSignInPressed} loading={loading.login} />
                     <SocialSignInButtons loading={loading} setLoading={setLoading} />
