@@ -28,17 +28,17 @@ export const InfoBox = ({ name, isPassWord, hasImage, onPress, children }) => {
       <View style={styles.title}>
         <Text style={styles.titleText}>{name}</Text>
         <TouchableOpacity>
-          <Text style={styles.editButton}  onPress={ hasImage ? pickImage : onPress}>
+          <Text
+            style={styles.editButton}
+            onPress={hasImage ? pickImage : onPress}
+          >
             Edit
           </Text>
         </TouchableOpacity>
       </View>
 
       {hasImage && (
-        <Image
-          style={styles.avatar}
-          source={require("../assets/avatar.jpg")}
-        />
+        <Image style={styles.avatar} source={require("../assets/avatar.jpg")} />
       )}
 
       {children}
@@ -52,6 +52,8 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderWidth: 2,
     borderRadius: 10,
+    marginHorizontal: 5,
+    marginTop: 5,
   },
   box_v2: {
     backgroundColor: "rgb(27,27,27)",
@@ -59,6 +61,8 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderWidth: 2,
     borderRadius: 10,
+    marginHorizontal: 5,
+    marginTop: 5,
   },
   title: {
     flexDirection: "row",

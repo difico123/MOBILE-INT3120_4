@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   content: {
-    marginHorizontal: 10,
+    marginHorizontal: 10
   },
   buttonBox: {
     marginHorizontal: 20,
