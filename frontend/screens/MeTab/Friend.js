@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
 import { FriendItem } from "../../components/FriendItem";
-import SearchBar from "../../components/SearchBar";
-
+import SearchBar from "../../components/InputComponent/SearchBar";
 export const Friend = () => {
   const [isToggleNav, setToggleNav] = useState(false);
   const [searchEvent, setSearchEvent] = useState("");

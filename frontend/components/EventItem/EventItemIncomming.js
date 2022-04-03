@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import CommonStyle from "./common/CommonStyle";
+import CommonStyle, { BORDER_COLOR, MAIN_COLOR, SECOND_COLOR } from "../common/CommonStyle";
 
 const EventItemIncomming = ({ onPress, item }) => {
     return (
@@ -42,7 +42,8 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         borderRadius: 15,
         overflow: "hidden",
-        borderWidth: 2,
+        borderWidth: 1,
+        borderColor: BORDER_COLOR,
     },
     header: {
         marginTop: 10,
@@ -57,7 +58,8 @@ const styles = StyleSheet.create({
         top: 0,
         right: 0,
         borderWidth: 1,
-        backgroundColor: "#008BEF",
+        backgroundColor: MAIN_COLOR,
+        borderColor: BORDER_COLOR,
         elevation: 10,
     },
     dateText: {
@@ -78,9 +80,8 @@ const styles = StyleSheet.create({
         position: "relative",
         top: 0,
         width: "100%",
-        height: "75%",
+        height: "100%",
         resizeMode: "contain",
-        borderWidth: 1,
     },
     eventItem: {},
     title: {

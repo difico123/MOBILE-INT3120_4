@@ -1,6 +1,7 @@
 import { View, Text, Image, StyleSheet, useWindowDimensions } from "react-native";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import CommonStyle, { BORDER_COLOR } from "../common/CommonStyle";
 
 const HeaderLogo = () => {
     const { height } = useWindowDimensions();
@@ -24,7 +25,7 @@ const HeaderLogo = () => {
                         uri: auth.user?.imageUrl,
                     }}
                 />
-                <Text style={styles.name}>{auth.user?.name}</Text>
+                <Text style={styles.name}>{auth.user?.username}</Text>
             </View>
         </View>
     );
@@ -36,14 +37,17 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: 2,
+        padding: 5,
         marginHorizontal: 5,
     },
     avt: {
-        width: 50,
-        resizeMode: "contain",
-        height: 50,
-        borderRadius: 1000,
+        width: 40,
+        height: 40,
+        backgroundColor: "black",
+        zIndex: 1000,
+        transform: [{ translateX: -5 }],
+        borderRadius: 50,
+        overflow: "hidden",
     },
     logo: {
         width: 50,
@@ -58,9 +62,9 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         shadowColor: "red",
     },
-
     borderWidth: {
         borderWidth: 1,
+        borderColor: BORDER_COLOR,
         borderRadius: 400,
     },
     name: {

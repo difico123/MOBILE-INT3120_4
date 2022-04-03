@@ -2,7 +2,7 @@ import { LOGIN_SUCCESS, LOGOUT, GET_USER_INFO } from "../actions/type";
 const initialState = {
     user: {
         id: "",
-        name: "",
+        username: "",
         imageUrl: "",
     },
     token: "",

@@ -3,9 +3,10 @@ import React, { useState, useEffect } from "react";
 import { Icon } from "react-native-elements";
 import { useSelector, useDispatch } from "react-redux";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import EventPostBtn from "../components/EventPostBtn";
 
-import CustomButton from "../components/CustomButton";
+import EventPostBtn from "../../components/EventItem/EventPostBtn";
+import { BORDER_COLOR } from "../../components/common/CommonStyle";
+import CustomButton from "../../components/ButtonComponent/CustomButton";
 
 const EventCreate = ({ navigation }) => {
     const [isToggleNav, setToggleNav] = useState(false);
@@ -22,7 +23,7 @@ const EventCreate = ({ navigation }) => {
             });
         } else {
             navigation.setOptions({
-                tabBarStyle: { display: "flex", position: "absolute", bottom: 10, left: 10, right: 10, elevation: 1, backgroundColor: "#FFFFFF", borderRadius: 10, height: 70, paddingBottom: 10, paddingTop: 5, gap: 0 },
+                tabBarStyle: { display: "flex", position: "absolute", bottom: 10, left: 10, right: 10, elevation: 1, backgroundColor: "#FFFFFF", borderRadius: 10, height: 70, paddingBottom: 10, paddingTop: 5, borderWidth: 1, borderColor: BORDER_COLOR },
             });
         }
     }, [isToggleNav]);
@@ -37,10 +38,6 @@ const EventCreate = ({ navigation }) => {
                 <View style={styles.inputContainer}>
                     <TextInput style={styles.input} onFocus={onFocus} onBlur={onBlur}></TextInput>
                 </View>
-
-                <EventPostBtn title="Thể loại sự kiện" text="party" iconName="notebook-outline" />
-                <EventPostBtn title="Địa điểm" text="Đống Đa" iconName="map-marker" bgColor="rgba(38, 72, 113, 0.68)" />
-                <EventPostBtn title="Số lượng người" text="30" iconName="group" bgColor="rgba(120, 147, 126, 0.68)" />
 
                 <EventPostBtn title="Thể loại sự kiện" text="party" iconName="notebook-outline" />
                 <EventPostBtn title="Địa điểm" text="Đống Đa" iconName="map-marker" bgColor="rgba(38, 72, 113, 0.68)" />

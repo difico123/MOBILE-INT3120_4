@@ -9,13 +9,15 @@ import {
   ScrollView,
   StatusBar,
 } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
 import React from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
-import CustomTextBox from "../../components/CustomTextBox";
-import { useSelector, useDispatch } from "react-redux";
+
+import CustomTextBox from "../../components/InputComponent/CustomTextBox";
 import { setLogout } from "../../redux/actions/auth_actions";
 import { useNavigation } from "@react-navigation/native";
 import Profile from "./Profile";
+
 const Me = () => {
   const dispatch = useDispatch();
   const onSignOut = () => {

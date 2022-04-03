@@ -1,13 +1,16 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import EventList from "../screens/EventList";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaView, View, Text, StyleSheet } from "react-native";
+
 import Home from "../screens/Home";
 import Me from "../screens/MeTab/Me";
-import EventListLike from "../screens/EventListLike";
-import EventCreate from "../screens/EventCreate";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import HeaderLogo from "../components/Layout/HeaderLogo";
+import EventList from "../screens/EventTab/EventList";
+import EventCreate from "../screens/EventTab/EventCreate";
+import EventListLike from "../screens/EventTab/EventListLike";
+import { BORDER_COLOR, MAIN_COLOR, SECOND_COLOR } from "../components/common/CommonStyle";
+
 const Tab = createBottomTabNavigator();
-import HeaderLogo from "../components/HeaderLogo";
 
 const Tabs = () => {
     return (
@@ -15,7 +18,7 @@ const Tabs = () => {
             <View style={{ marginTop: 20, marginBottom: 20 }}>
                 <HeaderLogo />
             </View>
-            <Tab.Navigator screenOptions={{ tabBarStyle: { display: "flex", position: "absolute", bottom: 10, left: 10, right: 10, elevation: 1, backgroundColor: "#FFFFFF", zIndex: 10, borderRadius: 10, height: 70, paddingBottom: 10, paddingTop: 5, gap: 0 } }} initialRouteName="Home">
+            <Tab.Navigator screenOptions={{ tabBarStyle: { display: "flex", position: "absolute", bottom: 10, left: 10, right: 10, elevation: 1, backgroundColor: "#FFFFFF", zIndex: 10, borderRadius: 10, height: 70, paddingBottom: 10, paddingTop: 5, borderWidth: 1, borderColor: BORDER_COLOR } }} initialRouteName="Home">
                 <Tab.Screen
                     name="Home"
                     component={Home}
@@ -27,7 +30,7 @@ const Tabs = () => {
                         tabBarStyle: { display: "none" },
                         tabBarIcon: ({ color, size, focused }) => (
                             <View style={{ height: focused ? 50 : 40, alignItems: "center", textAlign: "center" }}>
-                                <MaterialCommunityIcons name="home" color={focused ? "rgba(75,119,190,1)" : "rgba(173, 216, 230,1)"} size={focused ? 50 : 40} />
+                                <MaterialCommunityIcons name="home" color={focused ? MAIN_COLOR : SECOND_COLOR} size={focused ? 50 : 40} />
                             </View>
                         ),
                     }}
@@ -42,7 +45,7 @@ const Tabs = () => {
                         tabBarBadge: 12,
                         tabBarIcon: ({ color, size, focused }) => (
                             <View style={{ height: focused ? 50 : 40, alignItems: "center", textAlign: "center" }}>
-                                <MaterialCommunityIcons name="heart" color={focused ? "rgba(75,119,190,1)" : "rgba(173, 216, 230,1)"} size={focused ? 50 : 40} />
+                                <MaterialCommunityIcons name="heart" color={focused ? MAIN_COLOR : SECOND_COLOR} size={focused ? 50 : 40} />
                             </View>
                         ),
                     }}
@@ -56,7 +59,7 @@ const Tabs = () => {
                         headerShown: false,
                         tabBarIcon: ({ color, size, focused }) => (
                             <View style={{ height: focused ? 50 : 40, alignItems: "center", textAlign: "center" }}>
-                                <MaterialCommunityIcons name="calendar" color={focused ? "rgba(75,119,190,1)" : "rgba(173, 216, 230,1)"} size={focused ? 50 : 40} />
+                                <MaterialCommunityIcons name="calendar" color={focused ? MAIN_COLOR : SECOND_COLOR} size={focused ? 50 : 40} />
                             </View>
                         ),
                     }}
@@ -70,7 +73,7 @@ const Tabs = () => {
                         headerShown: false,
                         tabBarIcon: ({ color, size, focused }) => (
                             <View style={{ height: focused ? 50 : 40, alignItems: "center", textAlign: "center" }}>
-                                <MaterialCommunityIcons name="account-box-outline" color={focused ? "rgba(75,119,190,1)" : "rgba(173, 216, 230,1)"} size={focused ? 50 : 40} />
+                                <MaterialCommunityIcons name="account-box-outline" color={focused ? MAIN_COLOR : SECOND_COLOR} size={focused ? 50 : 40} />
                             </View>
                         ),
                     }}

@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Image } from "react-native";
 import React from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
+import CommonStyle, { BORDER_COLOR, MAIN_COLOR } from "../common/CommonStyle";
 const EventItemHot = ({ item }) => {
     return (
         <View>
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
         height: 100,
         width: "100%",
         borderWidth: 1,
+        borderColor: BORDER_COLOR,
         borderRadius: 15,
         overflow: "hidden",
         marginBottom: 15,
@@ -44,9 +45,12 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     image: {
-        width: "30%",
-        height: "100%",
+        width: "40%",
+        height: 100,
         borderRadius: 10,
+        resizeMode: "contain",
+        overflow: "hidden",
+        transform: [{ translateX: -10 }],
     },
     contentWrap: {
         flexDirection: "row",

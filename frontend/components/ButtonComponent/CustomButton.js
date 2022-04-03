@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { View, Text, StyleSheet, Pressable, TouchableOpacity, ActivityIndicator } from 'react-native';
-import React from 'react';
-import { Icon } from 'react-native-elements';
+import { View, Text, StyleSheet, Pressable, TouchableOpacity, ActivityIndicator, width } from "react-native";
+import React from "react";
+import { Icon } from "react-native-elements";
 
 const CustomButton = ({ icon, onPress, text, type = 'primary', bgColor, ftColor, loading = false, ...props }) => {
     let iconBtn = !icon ? '' : <Icon style={icon.style} {...icon} />;
@@ -17,37 +17,37 @@ export default CustomButton;
 
 const styles = StyleSheet.create({
     color_primary: {
-        backgroundColor: '#3B71F3',
+        backgroundColor: "#3B71F3",
     },
     text_primary: {
-        color: '#FFFFFF',
+        color: "#FFFFFF",
     },
     color_tertiary: {
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent",
     },
     text_tertiary: {
-        color: '#000000',
+        color: "#000000",
     },
     container: {
-        width: '100%',
+        width: width,
         padding: 15,
         marginVertical: 5,
-        alignItems: 'center',
+        alignItems: "center",
         borderRadius: 5,
-        flexDirection: 'row',
+        flexDirection: "row",
     },
 
     text: {
-        fontWeight: 'bold',
-        color: 'white',
-        justifyContent: 'center',
-        textAlign: 'center',
-        width: '100%',
+        fontWeight: "bold",
+        color: "white",
+        justifyContent: "center",
+        textAlign: "center",
+        width: "100%",
     },
     loading: {
-        position: 'absolute',
-        left: '50%',
-        textAlign: 'center',
+        position: "absolute",
+        left: "50%",
+        textAlign: "center",
     },
     title: {
         color: 'white',

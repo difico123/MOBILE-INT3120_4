@@ -10,7 +10,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Axios from "axios";
-import { getFBLoginUser } from "../redux/actions/auth_actions";
+import { getFBLoginUser, getLoginUser } from "../redux/actions/auth_actions";
 
 export default function Nav() {
     const [authLogin, setAuthLogin] = useState(false);
@@ -20,13 +20,14 @@ export default function Nav() {
     useEffect(() => {
         if (auth.token) {
             setAuthLogin(true);
-            console.log(auth, "abc");
         } else {
             setAuthLogin(false);
         }
     }, [auth.token]);
 
-    useEffect(() => {}, []);
+    useEffect(() => {
+        dispatch(getLoginUser());
+    }, []);
 
     return (
         <NavigationContainer>
