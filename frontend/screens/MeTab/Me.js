@@ -25,6 +25,7 @@ const Me = () => {
   };
   const navigation = useNavigation();
 
+  const auth = useSelector((state) => state.authReducers.auth);
   const onProfilePress = () => {
     navigation.navigate("Profile");
   };
@@ -41,7 +42,7 @@ const Me = () => {
           <View style={styles.top}>
             <Image
               style={styles.avatar}
-              source={require("../../assets/avatar.jpg")}
+              source={{ uri : auth?.user?.avatar }}
             />
             {/* <TouchableOpacity>
               <Icon style={styles.camera} name="camera"/>

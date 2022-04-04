@@ -1,44 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import UserService from "../service/UserService";
+import { useSelector } from "react-redux";
 
-export const InfoBox = ({ name, isPassWord, hasImage, onPress, children }) => {
+export const InfoBox = ({
+  name,
+  isPassWord,
+  hasImage,
+  onPress,
+  imageUrl,
+  children,
+}) => {
   let boxStyle = styles.box;
   if (isPassWord) boxStyle = styles.box_v2;
-
-  const [image, setImage] = useState(null);
-
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImage(result.uri);
-    }
-  };
   return (
     <View style={boxStyle}>
       <View style={styles.title}>
         <Text style={styles.titleText}>{name}</Text>
         <TouchableOpacity>
-          <Text
-            style={styles.editButton}
-            onPress={hasImage ? pickImage : onPress}
-          >
+          <Text style={styles.editButton} onPress={onPress}>
             Edit
           </Text>
         </TouchableOpacity>
       </View>
 
       {hasImage && (
-        <Image style={styles.avatar} source={require("../assets/avatar.jpg")} />
+        <Image
+          style={styles.avatar}
+          source={{
+            uri: imageUrl,
+          }}
+        />
       )}
 
       {children}
