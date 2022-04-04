@@ -27,7 +27,6 @@ const updatePassword = async (token, data) => {
       "Content-Type": "application/json",
     },
   };
-  console.log(data);
   const response = await axios.put(API + "/password", data, config);
   return response.data.data;
 };

@@ -50,7 +50,7 @@ export const InfoChange = () => {
     UserService.updateUser(auth.token, JSON.stringify(data))
       .then((result) => {
         setLoading({ ...loading, updated: false });
-        navigation.navigate("Profile");
+        navigation.navigate("Profile", {isUpdated: true});
         alert("Updated successfully");
       })
       .catch((error) => setLoading({ ...loading, login: false }));

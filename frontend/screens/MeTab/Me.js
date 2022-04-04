@@ -31,7 +31,7 @@ const Me = () => {
   };
   const onFriendPress = () => {
     navigation.navigate("Friend");
-  }
+  };
   return (
     <View>
       <ScrollView
@@ -42,7 +42,9 @@ const Me = () => {
           <View style={styles.top}>
             <Image
               style={styles.avatar}
-              source={{ uri : auth?.user?.avatar }}
+              source={{
+                uri: "https://res.cloudinary.com/dbiexlh94/image/upload/v1649067893/qyajclvkpxtsylao2rcf.jpg",
+              }}
             />
             {/* <TouchableOpacity>
               <Icon style={styles.camera} name="camera"/>
@@ -90,6 +92,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     maxWidth: "100%",
     maxHeight: "100%",
+    width: 250,
+    height: 250,
   },
   camera: {
     color: "black",
@@ -103,7 +107,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   content: {
-    marginHorizontal: 10
+    marginHorizontal: 10,
   },
   buttonBox: {
     marginHorizontal: 20,

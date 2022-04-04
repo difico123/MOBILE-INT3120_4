@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import UserService from "../../service/UserService";
 import * as ImagePicker from "expo-image-picker";
-export default Profile = () => {
+export default Profile = (nav = null) => {
   const navigation = useNavigation();
   const auth = useSelector((state) => state.authReducers.auth);
   const [user, setUser] = useState(null);
@@ -14,7 +14,16 @@ export default Profile = () => {
     setUser(userApi);
   }, []);
 
-  const [imageUrl, setImageUrl] = useState("");
+  if (nav.route.params?.isUpdated === true) {
+    UserService.getUser(auth.token)
+      .then((user) => {
+        setUser(user);
+        nav.route.params.isUpdated = false;
+      })
+      .catch((error) => console.log(error));
+  }
+
+  const [imageUrl, setImageUrl] = useState(auth.user?.avatar);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -51,7 +60,7 @@ export default Profile = () => {
           setImageUrl(data.secure_url);
           return data.secure_url;
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log("pick image", err));
     }
   };
   return (
@@ -65,6 +74,7 @@ export default Profile = () => {
       <InfoBox
         name="Details"
         onPress={() => navigation.navigate("Change Information")}
+        user={user}
       >
         <Text
           style={styles.textDetail}

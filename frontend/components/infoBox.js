@@ -78,5 +78,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 50,
     maxWidth: "40%",
     maxHeight: "60%",
+    height: 200,
+    width: 200,
   },
 });
