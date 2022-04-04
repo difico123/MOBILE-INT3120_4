@@ -10,11 +10,11 @@ import {
   StatusBar,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import React from "react";
+import React, { useEffect } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import CustomTextBox from "../../components/InputComponent/CustomTextBox";
-import { setLogout } from "../../redux/actions/auth_actions";
+import { getLoginUser, setLogout } from "../../redux/actions/auth_actions";
 import { useNavigation } from "@react-navigation/native";
 import Profile from "./Profile";
 
@@ -43,7 +43,7 @@ const Me = () => {
             <Image
               style={styles.avatar}
               source={{
-                uri: "https://res.cloudinary.com/dbiexlh94/image/upload/v1649067893/qyajclvkpxtsylao2rcf.jpg",
+                uri: auth.user?.avatar,
               }}
             />
             {/* <TouchableOpacity>
