@@ -10,8 +10,8 @@ export default Profile = (nav = null) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const auth = useSelector((state) => state.authReducers.auth);
-  const [user, setUser] = useState({});
-  const [imageUrl, setImageUrl] = useState(user.avatar);
+  const [user, setUser] = useState(auth.user);
+  const [imageUrl, setImageUrl] = useState(user?.avatar);
   useEffect(async () => {
     const userApi = await UserService.getUser(auth.token);
     setUser(userApi);
@@ -20,7 +20,6 @@ export default Profile = (nav = null) => {
   }, []);
 
   if (nav.route.params?.isUpdated === true) {
-    console.log("updated");
     UserService.getUser(auth.token)
       .then((user) => {
         setUser(user);

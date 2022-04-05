@@ -1,39 +1,52 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  FlatList,
+  SafeAreaView,
+} from "react-native";
+import { useSelector } from "react-redux";
 import { FriendItem } from "../../components/FriendItem";
 import SearchBar from "../../components/InputComponent/SearchBar";
+import FriendService from "../../service/FriendService";
 export const Friend = () => {
   const [isToggleNav, setToggleNav] = useState(false);
   const [searchEvent, setSearchEvent] = useState("");
+
+  const auth = useSelector((state) => state.authReducers.auth);
+  const [friends, setFriends] = useState([]);
+  useEffect(async () => {
+    const record = await FriendService.getMyFriends(auth.token);
+    setFriends(record.items);
+  });
+  // console.log(friends);
   return (
-    <View style={styles.main}>
-      <View style={styles.header}>
+    <SafeAreaView>
+      <View style={styles.main}>
         <View style={styles.header}>
-          <SearchBar
-            placeholder="Tìm kiếm"
-            setToggleNav={setToggleNav}
-            setValue={setSearchEvent}
-            value={searchEvent}
-          />
+          <View style={styles.header}>
+            <SearchBar
+              placeholder="Tìm kiếm"
+              setToggleNav={setToggleNav}
+              setValue={setSearchEvent}
+              value={searchEvent}
+            />
+          </View>
         </View>
+        <ScrollView>
+          {friends.map((friend) => (
+            <View style={styles.item} key={friend.id}>
+              <FriendItem
+                name={`${friend.first_name + " " + friend.last_name}`}
+                avatar={friend.avatar}
+              ></FriendItem>
+            </View>
+          ))}
+          <View style={{ marginBottom: 100 }}></View>
+        </ScrollView>
       </View>
-      <ScrollView>
-        <View style={styles.item}>
-          <FriendItem
-            name="Nông Lương Đức"
-            avatar="https://www.w3schools.com/howto/img_avatar.png"
-          ></FriendItem>
-        </View>
-        <View style={styles.item}>
-          <FriendItem
-            name="Nông Lương Đức"
-            avatar="https://www.w3schools.com/howto/img_avatar.png"
-          ></FriendItem>
-        </View>
-        <View style={{ marginBottom: 100 }}>
-        </View>
-      </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -47,5 +60,5 @@ const styles = StyleSheet.create({
   },
   item: {
     marginRight: 200,
-  }
+  },
 });

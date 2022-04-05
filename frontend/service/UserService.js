@@ -1,5 +1,5 @@
 import axios from "axios";
-const API = "http://172.30.192.1:5002/api/users/me";
+const API = "http://172.27.160.1:5002/api/users/me";
 const getUser = async (token) => {
   let config = {
     headers: {
