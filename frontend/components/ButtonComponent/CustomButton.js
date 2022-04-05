@@ -3,11 +3,11 @@ import { View, Text, StyleSheet, Pressable, TouchableOpacity, ActivityIndicator,
 import React from "react";
 import { Icon } from "react-native-elements";
 
-const CustomButton = ({ icon, onPress, text, type = "primary", bgColor, ftColor, loading = false }) => {
-    let iconBtn = !icon ? "" : <Icon style={icon.style} {...icon} />;
+const CustomButton = ({ icon, onPress, text, type = 'primary', bgColor, ftColor, loading = false, ...props }) => {
+    let iconBtn = !icon ? '' : <Icon style={icon.style} {...icon} />;
     return (
         <TouchableOpacity onPress={onPress} style={[styles.container, styles[`color_${type}`], bgColor ? { backgroundColor: bgColor } : {}]}>
-            <Text>{iconBtn}</Text>
+            <Text style={props.title ? styles.title : ""}>{props.title ?? iconBtn}</Text>
             {!loading ? <Text style={[styles.text, styles[`text_${type}`], ftColor ? { color: ftColor } : {}]}>{text}</Text> : <ActivityIndicator style={styles.loading} size="large" color="#FFA500" />}
         </TouchableOpacity>
     );
@@ -49,4 +49,9 @@ const styles = StyleSheet.create({
         left: "50%",
         textAlign: "center",
     },
+    title: {
+        color: 'white',
+        textAlign: 'center',
+        marginLeft: 100
+    }
 });

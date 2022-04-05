@@ -22,7 +22,7 @@ const HeaderLogo = () => {
                 <Image
                     style={[styles.avt, { marginBottom: 5 }]}
                     source={{
-                        uri: auth.user?.imageUrl,
+                        uri: auth.user?.avatar,
                     }}
                 />
                 <Text style={styles.name}>{auth.user?.username}</Text>
