@@ -8,7 +8,7 @@ export const FriendItem = ({ name, avatar }) => {
         <Avatar
           rounded
           source={{
-            uri: "https://www.w3schools.com/howto/img_avatar.png",
+            uri: avatar,
           }}
         />
       </View>

@@ -5,25 +5,30 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import UserService from "../../service/UserService";
 import * as ImagePicker from "expo-image-picker";
+import { getLoginUser, setLogin } from "../../redux/actions/auth_actions";
 export default Profile = (nav = null) => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const auth = useSelector((state) => state.authReducers.auth);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(auth.user);
+  const [imageUrl, setImageUrl] = useState(user?.avatar);
   useEffect(async () => {
     const userApi = await UserService.getUser(auth.token);
     setUser(userApi);
+    setImageUrl(userApi.avatar);
+    // dispatch(getLoginUser());
   }, []);
 
   if (nav.route.params?.isUpdated === true) {
     UserService.getUser(auth.token)
       .then((user) => {
         setUser(user);
+        dispatch(setLogin(auth.token));
         nav.route.params.isUpdated = false;
       })
       .catch((error) => console.log(error));
   }
 
-  const [imageUrl, setImageUrl] = useState(auth.user?.avatar);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -58,6 +63,7 @@ export default Profile = (nav = null) => {
             .then((result) => alert("Success"))
             .catch((err) => alert("Fail"));
           setImageUrl(data.secure_url);
+          dispatch(setLogin(auth.token));
           return data.secure_url;
         })
         .catch((err) => console.log("pick image", err));
