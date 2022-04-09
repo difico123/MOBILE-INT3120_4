@@ -8,9 +8,11 @@ import EventList from "../screens/EventTab/EventList";
 import Home from "../screens/Home";
 import Tabs from "./Tabs";
 import Profile from "../screens/MeTab/Profile";
-import {PasswordChange} from "../screens/MeTab/PasswordChange";
+import { PasswordChange } from "../screens/MeTab/PasswordChange";
 import { InfoChange } from "../screens/MeTab/InfoChange";
 import { Friend } from "../screens/MeTab/Friend";
+import MapScreen from "../screens/MapScreen/MapScreen";
+
 const Stack = createNativeStackNavigator();
 const Navigation = () => {
     return (
@@ -20,7 +22,18 @@ const Navigation = () => {
             <Stack.Screen name="Profile" component={Profile} />
             <Stack.Screen name="Change Password" component={PasswordChange} />
             <Stack.Screen name="Change Information" component={InfoChange} />
-            <Stack.Screen name="Friend" component={Friend} />
+            <Stack.Screen name="MapScreen" component={MapScreen} />
+            <Stack.Screen
+                name="Friend"
+                component={Friend}
+                options={{
+                    title: "Bạn bè",
+                    headerStyle: {
+                        backgroundColor: "transparent",
+                        elevator: 0,
+                    },
+                }}
+            />
         </Stack.Navigator>
     );
 };

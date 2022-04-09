@@ -1,6 +1,6 @@
 import axios from "axios";
 // const FB_BASE_URL = "http://192.168.43.182:5002/";
-const FB_BASE_URL = "http://172.27.160.1:5002/";
+const FB_BASE_URL = "http://192.168.1.153:5002/";
 
 const getFbUser = async (token) => {
     return axios.get(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,picture.height(500)`);

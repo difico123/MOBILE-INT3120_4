@@ -1,19 +1,19 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { Icon } from "react-native-elements";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import CommonStyle, { BORDER_COLOR } from "../common/CommonStyle";
 
-const EventPostBtn = ({ title, iconName, bgColor, text }) => {
+const EventPostBtn = ({ title, iconName, bgColor, text, onPress }) => {
     return (
         <View style={[styles.btnContainer, { backgroundColor: bgColor || "#D8BBBB" }]}>
-            <View style={styles.option}>
-                <Text style={styles.title}>{title}</Text>
+            <View style={styles.selected}>
+                <Text style={styles.text}>{title}</Text>
                 <MaterialCommunityIcons size={30} style={[styles.icon]} name={iconName} color="black" />
             </View>
-            <View style={styles.selected}>
-                <Text style={styles.text}>{text}</Text>
-            </View>
+            <TouchableOpacity style={styles.option} onPress={onPress}>
+                <Text style={styles.title}>{text}</Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -36,18 +36,19 @@ const styles = StyleSheet.create({
         overflow: "hidden",
     },
     selected: {
-        flex: 1,
+        flex: 3,
         paddingHorizontal: 10,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
     },
     text: {
         color: "#FFFFFF",
         fontWeight: "700",
     },
     option: {
-        flex: 2,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
+        flex: 5,
+        justifyContent: "center",
         backgroundColor: "#F3E1E1",
         height: "100%",
         borderRadius: 10,
@@ -55,5 +56,7 @@ const styles = StyleSheet.create({
     },
     icon: {
         paddingHorizontal: 10,
+        position: "absolute",
+        right: 0,
     },
 });
