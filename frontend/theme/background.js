@@ -6,4 +6,6 @@ export const background = {
     gray: "rgba(38, 72, 113, 0.68)",
     lightPink: "#F3E1E1",
     lightPurple: "rgba(38, 72, 113, 0.7)",
+    activeCategory: "#F1FAD3",
+    inActiveCategory: "#E3E5F1",
 };

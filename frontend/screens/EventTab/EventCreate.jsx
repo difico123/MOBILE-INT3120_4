@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, ScrollView, Modal, Pressable, Switch, ImageBackground, Dimensions } from "react-native";
+import { View, Text, StyleSheet, TextInput, ScrollView, FlatList } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Icon } from "react-native-elements";
 import moment from "moment";
@@ -9,13 +9,13 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import EventPostBtn from "../../components/EventItem/EventPostBtn";
 import { BORDER_COLOR } from "../../components/common/CommonStyle";
 import CustomButton from "../../components/ButtonComponent/CustomButton";
+import CustomInput from "../../components/InputComponent/CustomInput";
+import SlideModal from "../../components/modal/SlideModal";
+import CustomSwitch from "../../components/switch/Switch";
+import { Category, CategoryList } from "./component";
 import { background } from "../../theme";
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
-
 const EventCreate = ({ navigation }) => {
-    console.log(background.black);
     const [modalVisible, setModalVisible] = useState(false);
     const [isToggleNav, setToggleNav] = useState(false);
     const [timeStart, setTimeStart] = useState(moment().format("h:mm a Do M "));
@@ -74,49 +74,27 @@ const EventCreate = ({ navigation }) => {
     };
     const [isEnabled, setIsEnabled] = useState(false);
     const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-    const image = { uri: "https://reactjs.org/logo-og.png" };
+
     return (
         <View style={styles.container}>
             <View style={styles.titleContainer}>
                 <MaterialCommunityIcons size={30} style={[styles.icon]} name="notebook-outline" color="black" type />
                 <Text style={styles.title}>Đăng bài viết</Text>
             </View>
-            <ImageBackground source={image} blurRadius={1} resizeMode="cover" style={styles.image}>
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalVisible}
-                    statusBarTranslucent={false}
-                    onRequestClose={() => {
-                        Alert.alert("Modal has been closed.");
-                        setModalVisible(!modalVisible);
-                    }}
-                >
-                    <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
-                            <Text style={styles.modalText}>Hello World!</Text>
-                            <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setModalVisible(!modalVisible)}>
-                                <Text style={styles.textStyle}>Hide Modal</Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                </Modal>
-            </ImageBackground>
+            <SlideModal setModalVisible={setModalVisible} modalVisible={modalVisible}>
+                <View>
+                    <Text style={styles.modalText}>Chọn thể loại</Text>
+                    <CategoryList />
+                </View>
+            </SlideModal>
 
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.inputTitle}>
-                    <TextInput style={styles.input} onFocus={onFocus} onBlur={onBlur}></TextInput>
-                    <Switch
-                        style={styles.switch}
-                        trackColor={{ false: "#767577", true: "#81b0ff" }}
-                        thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
-                        onValueChange={toggleSwitch}
-                        value={isEnabled}
-                    />
+                <View style={styles.inputTitleContainer}>
+                    <TextInput style={styles.input} onFocus={onFocus} onBlur={onBlur} placeholder="Tiêu đề"></TextInput>
+                    <CustomSwitch isEnabled={isEnabled} toggleSwitch={toggleSwitch} />
                 </View>
                 <View style={styles.inputContainer}>
-                    <TextInput style={styles.input} onFocus={onFocus} onBlur={onBlur}></TextInput>
+                    <TextInput style={styles.input} onFocus={onFocus} onBlur={onBlur} placeholder="Mô tả"></TextInput>
                 </View>
                 <View>
                     <EventPostBtn title="Giờ bắt đầu" onPress={showDatePicker} iconName="clock" text={timeStart} bgColor={background.lightGray} />
@@ -173,35 +151,24 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         borderRadius: 15,
     },
-    input: {
+    inputTitleContainer: {
+        height: 50,
         borderWidth: 1,
+        flexDirection: "row",
+        borderWidth: 1,
+        marginTop: 10,
+        paddingHorizontal: 10,
+        paddingLeft: 15,
+        paddingVertical: 5,
+        borderRadius: 15,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    input: {
         width: "90%",
     },
     scrollView: {
         height: "3000%",
-    },
-    centeredView: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 22,
-    },
-    modalView: {
-        backgroundColor: "white",
-        padding: 35,
-        width: windowWidth,
-        height: windowHeight * 0.9,
-        position: "absolute",
-        top: 40,
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
     },
     button: {
         borderRadius: 20,
@@ -221,7 +188,8 @@ const styles = StyleSheet.create({
     },
     modalText: {
         marginBottom: 15,
+        fontWeight: "bold",
+        fontSize: 18,
         textAlign: "center",
     },
-    switch: {},
 });
