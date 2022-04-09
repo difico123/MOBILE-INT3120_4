@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import UserService from "../../service/UserService";
 import * as ImagePicker from "expo-image-picker";
 import { getLoginUser, setLogin } from "../../redux/actions/auth_actions";
+import UploadImageService from "../../service/UploadImageService";
 export default Profile = (nav = null) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -43,30 +44,18 @@ export default Profile = (nav = null) => {
     if (!result.cancelled) {
       let base64Img = `data:image/jpg;base64,${result.base64}`;
 
-      //Add your cloud name
-      let apiUrl = "https://api.cloudinary.com/v1_1/dbiexlh94/image/upload";
-
       let data = {
         file: base64Img,
         upload_preset: "mobile_app",
       };
-      fetch(apiUrl, {
-        body: JSON.stringify(data),
-        headers: {
-          "content-type": "application/json",
-        },
-        method: "POST",
-      })
-        .then(async (r) => {
-          let data = await r.json();
-          UserService.updateUser(auth.token, { avatar: data.secure_url })
+      const getUrl = await UploadImageService.uploadImage(JSON.stringify(data));
+      if (getUrl) {
+        UserService.updateUser(auth.token, { avatar: getUrl })
             .then((result) => alert("Success"))
             .catch((err) => alert("Fail"));
-          setImageUrl(data.secure_url);
+          setImageUrl(getUrl);
           dispatch(setLogin(auth.token));
-          return data.secure_url;
-        })
-        .catch((err) => console.log("pick image", err));
+      }
     }
   };
   return (

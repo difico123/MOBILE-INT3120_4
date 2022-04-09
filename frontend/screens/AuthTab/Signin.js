@@ -48,7 +48,7 @@ const Signin = () => {
                 })
                 .catch((err) => {
                     setLoading({ ...loading, login: false });
-                    console.log(err.response.data);
+                    console.log(err?.response?.data);
 
                     setError({
                         status: true,
