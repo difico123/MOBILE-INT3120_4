@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { facebookLogin } from "../../redux/actions/auth_actions";
 import { getFBLoginUser, setLogin } from "../../redux/actions/auth_actions";
-import SocialSignInButtons from "../../components/ButtonComponent/SocialSignInButtons.js";
+import SocialSignInButtons from "../../components/ButtonComponent/SocialSignInButtons";
 import CustomButton from "../../components/ButtonComponent/CustomButton";
 import CustomInput from "../../components/InputComponent/CustomInput";
 import AuthSerVice from "../../service/AuthService";
@@ -93,7 +93,15 @@ const Signin = () => {
                     }}
                 />
                 <CustomInput placeholder="Username" value={username} setValue={setUsername} icon={{ name: "user", type: "font-awesome" }} />
-                <CustomInput placeholder="Password" value={password} setValue={setPassword} secureTextEntry={showPw.status} icon={{ name: "lock" }} iconRight={{ name: showPw.name, type: "font-awesome" }} onPress={onEyePress} />
+                <CustomInput
+                    placeholder="Password"
+                    value={password}
+                    setValue={setPassword}
+                    secureTextEntry={showPw.status}
+                    icon={{ name: "lock" }}
+                    iconRight={{ name: showPw.name, type: "font-awesome" }}
+                    onPress={onEyePress}
+                />
                 {error.status && <Text style={{ color: "red", paddingTop: 5 }}>{error.msg}</Text>}
                 <View style={styles.buttons}>
                     <CustomButton text="Đăng Nhập" onPress={onSignInPressed} loading={loading.login} />

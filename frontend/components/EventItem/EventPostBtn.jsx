@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import React from "react";
 import { Icon } from "react-native-elements";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -11,9 +11,9 @@ const EventPostBtn = ({ title, iconName, bgColor, text, onPress }) => {
                 <Text style={styles.text}>{title}</Text>
                 <MaterialCommunityIcons size={30} style={[styles.icon]} name={iconName} color="black" />
             </View>
-            <TouchableOpacity style={styles.option} onPress={onPress}>
+            <Pressable style={styles.option} onPress={onPress}>
                 <Text style={styles.title}>{text}</Text>
-            </TouchableOpacity>
+            </Pressable>
         </View>
     );
 };
