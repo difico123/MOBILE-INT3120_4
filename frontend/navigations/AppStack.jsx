@@ -12,6 +12,7 @@ import { PasswordChange } from "../screens/MeTab/PasswordChange";
 import { InfoChange } from "../screens/MeTab/InfoChange";
 import { Friend } from "../screens/MeTab/Friend";
 import MapScreen from "../screens/MapScreen/MapScreen";
+import { DetailEvent } from "../screens/Event/DetailEvent";
 
 const Stack = createNativeStackNavigator();
 const Navigation = () => {
@@ -34,6 +35,8 @@ const Navigation = () => {
                     },
                 }}
             />
+            
+            <Stack.Screen name="DetailEvent" component={DetailEvent} />
         </Stack.Navigator>
     );
 };

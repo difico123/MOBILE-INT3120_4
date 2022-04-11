@@ -18,6 +18,7 @@ export const Friend = () => {
   const [friends, setFriends] = useState([]);
   useEffect(async () => {
     const record = await FriendService.getMyFriends(auth.token);
+    console.log("here", record);
     setFriends(record.items);
   }, []);
   // console.log(friends);
@@ -35,7 +36,7 @@ export const Friend = () => {
           </View>
         </View>
         <ScrollView>
-          {friends.map((friend) => (
+          {friends && friends.length > 0 && friends.map((friend) => (
             <View style={styles.item} key={friend.id}>
               <FriendItem
                 name={`${friend.first_name + " " + friend.last_name}`}

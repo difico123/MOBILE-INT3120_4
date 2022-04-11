@@ -1,5 +1,6 @@
 import axios from "axios";
-const API = "https://api.cloudinary.com/v1_1/dbiexlh94/image/upload";
+import APP from "../config/app";
+const API = APP.CLOUDINARY_API;
 const uploadImage = async (file) => {
   try {
     let config = {

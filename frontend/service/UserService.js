@@ -1,5 +1,6 @@
 import axios from "axios";
-const API = "http://172.27.160.1:5002/api/users/me";
+import APP from "../config/app";
+const API = `${APP.BASE_API}users/me`;
 const getUser = async (token) => {
   let config = {
     headers: {

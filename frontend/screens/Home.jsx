@@ -110,6 +110,10 @@ const Home = ({ navigation }) => {
     <EventItemHot item={item} key={index} />
   ));
 
+  const goToDetail = (id) => {
+    nav.navigate("DetailEvent", {id});
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -137,7 +141,7 @@ const Home = ({ navigation }) => {
             horizontal
             keyExtractor={(item) => item.id}
             renderItem={({ item, index }) => (
-              <EventItemIncomming item={item} key={index} />
+              <EventItemIncomming item={item} key={index} onPress={() => goToDetail(item.id)} />
             )}
           />
         </View>
