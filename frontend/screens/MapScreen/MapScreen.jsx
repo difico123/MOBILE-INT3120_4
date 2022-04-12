@@ -17,20 +17,10 @@ export default function MapScreen() {
         longitude: 0,
     });
 
-    const marker = React.useRef({
-        latitude: 0,
-        longitude: 0,
-    });
     const [isLoading, setLoading] = React.useState(false);
 
     const onRegionChange = (region) => {
-        // setLocation({ ...region });
-        // setLocation
-        // console.log(region);
         console.log(region);
-        // setMark({ latitude: region.latitude, longitude: region.longitude });
-        marker.current.latitude = region.latitude;
-        marker.current.longitude = region.longitude;
     };
 
     const handlePress = () => {
@@ -41,13 +31,11 @@ export default function MapScreen() {
         setLoading(true);
     }, []);
 
-    console.log("ok");
-
     if (isLoading) {
         return (
             <View style={styles.container}>
                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
-                    <View style="search">
+                    <View>
                         <GooglePlacesAutocomplete
                             placeholder="Search"
                             styles={{
@@ -91,14 +79,6 @@ export default function MapScreen() {
                             title={"marker.title"}
                             description={"marker.description"}
                         />
-                        <Marker
-                            coordinate={{
-                                latitude: marker.current.latitude,
-                                longitude: marker.current.longitude,
-                            }}
-                            title={"marker.title"}
-                            description={"marker.description"}
-                        />
                     </MapView>
                 </KeyboardAvoidingView>
 
@@ -120,19 +100,16 @@ export default function MapScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // justifyContent: "center",
-        marginTop: 20,
     },
     map: {
         width: Dimensions.get("window").width,
-        height: Dimensions.get("window").height / 1.8,
+        height: Dimensions.get("window").height * 0.6,
     },
     search: {
         top: 0,
         width: "100%",
         height: 100,
         borderWidth: 10,
-        // marginTop: 100,
         margin: 2,
     },
 });

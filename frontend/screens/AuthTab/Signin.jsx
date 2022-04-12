@@ -1,5 +1,5 @@
-import { View, Text, Button, TextInput, TouchableOpacity, StyleSheet, useWindowDimensions, ScrollView, Image } from "react-native";
-import React, { useEffect, useState, useRef } from "react";
+import { View, Text, StyleSheet, useWindowDimensions, ScrollView, Image } from "react-native";
+import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -63,7 +63,6 @@ const Signin = () => {
     };
 
     const onSignUpPressed = () => {
-        console.warn("onsignuppressed");
         navigation.navigate("Signup");
     };
     const [showPw, setShowPw] = useState({

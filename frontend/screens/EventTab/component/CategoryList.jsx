@@ -1,20 +1,19 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
-import React from "react";
-import { categories } from "../data/category";
-import { Category } from ".";
+import React, { memo } from "react";
+import { Category } from "./Category";
 
-export const CategoryList = ({ handlecheckCategory, data }) => {
-    const { flatList, container } = styles;
+export const CategoryList = memo(({ onPress, data, select }) => {
+    const { flatList } = styles;
     return (
         <FlatList
             contentContainerStyle={flatList}
             numColumns={2}
-            data={categories}
+            data={data}
             keyExtractor={(category) => String(category.id)}
-            renderItem={({ item }) => <Category id={item.id} name={item.name} image={item.image} onPress={handlecheckCategory} />}
+            renderItem={({ item }) => <Category id={item.id} name={item.name} image={item.image} onPress={onPress} select={select} />}
         />
     );
-};
+});
 
 const styles = StyleSheet.create({
     container: {

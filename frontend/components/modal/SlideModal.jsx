@@ -5,6 +5,9 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const SlideModal = ({ modalVisible, setModalVisible, children }) => {
+    const handleClose = () => {
+        setModalVisible(false);
+    };
     return (
         <View>
             <Modal
@@ -18,7 +21,7 @@ const SlideModal = ({ modalVisible, setModalVisible, children }) => {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <TouchableOpacity onPress={() => setModalVisible(false)}>
+                        <TouchableOpacity onPress={handleClose}>
                             <Text style={styles.close}>Đóng</Text>
                         </TouchableOpacity>
                         {children}

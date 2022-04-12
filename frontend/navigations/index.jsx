@@ -1,15 +1,11 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Button } from "react-native";
 import React, { useEffect, useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
 import AuthStack from "./AuthStack";
 import AppStack from "./AppStack";
-import Tabs from "./Tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Axios from "axios";
 import { getFBLoginUser, getLoginUser } from "../redux/actions/auth_actions";
 
 export default function Nav() {

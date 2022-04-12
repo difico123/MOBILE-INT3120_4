@@ -2,6 +2,7 @@
 import { View, Text, StyleSheet, Pressable, TouchableOpacity, ActivityIndicator, width } from "react-native";
 import React from "react";
 import { Icon } from "react-native-elements";
+import { background, color } from "../../theme";
 
 const CustomButton = ({ icon, onPress, text, type = "primary", bgColor, ftColor, loading = false, ...props }) => {
     let iconBtn = !icon ? "" : <Icon style={icon.style} {...icon} />;
@@ -22,6 +23,12 @@ export default CustomButton;
 const styles = StyleSheet.create({
     color_primary: {
         backgroundColor: "#3B71F3",
+    },
+    color_category: {
+        backgroundColor: background.activeCategory,
+    },
+    text_category: {
+        color: color.activeText,
     },
     text_primary: {
         color: "#FFFFFF",

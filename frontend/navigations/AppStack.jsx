@@ -12,6 +12,8 @@ import { PasswordChange } from "../screens/MeTab/PasswordChange";
 import { InfoChange } from "../screens/MeTab/InfoChange";
 import { Friend } from "../screens/MeTab/Friend";
 import MapScreen from "../screens/MapScreen/MapScreen";
+import EventCreateMe from "../screens/EventTab/EventCreateMe";
+import EventCreate from "../screens/EventTab/EventCreate";
 
 const Stack = createNativeStackNavigator();
 const Navigation = () => {
@@ -23,6 +25,8 @@ const Navigation = () => {
             <Stack.Screen name="Change Password" component={PasswordChange} />
             <Stack.Screen name="Change Information" component={InfoChange} />
             <Stack.Screen name="MapScreen" component={MapScreen} />
+            <Stack.Screen name="EventCreateMe" component={EventCreateMe} />
+            <Stack.Screen name="EventCreate" component={EventCreate} />
             <Stack.Screen
                 name="Friend"
                 component={Friend}
