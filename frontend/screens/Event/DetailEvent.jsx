@@ -6,8 +6,11 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Button,
 } from "react-native";
+import CustomButton from "../../components/ButtonComponent/CustomButton";
 import { ImageButton } from "../../components/ButtonComponent/ImageButton";
+import { SmallButton } from "../../components/ButtonComponent/SmallButton";
 import { EventInfo } from "../../components/EventItem/EventInfo";
 
 export const DetailEvent = (navigation) => {
@@ -25,58 +28,91 @@ export const DetailEvent = (navigation) => {
     start: "8am 15 May",
     end: "10am 15 May",
     host: "Do Duc Tam",
-    description: "Ki niem sinh nhat 22 tuoi cua An",
+    description: "Ki niem sinh nhat 22 tuoi cua An Ki niem sinh nhat 22 tuoi cua An Ki niem sinh nhat 22 tuoi cua An",
     topic: "birthday",
   };
+  const onJoinPress = () => {
+    alert("Joined successfully");
+  };
+  const onLikePress = () => {
+    alert("Liked successfully");
+  };
+  const onRatePress = () => {
+    alert("on rate");
+  };
+  const onSharePress = () => {
+    alert("on share");
+  };
+  const onEditPress = () => {
+    alert("on edit");
+  };
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.bannerContainer}>
-        <Image
-          style={styles.banner}
-          source={{
-            uri: data.image,
-          }}
-        />
-      </View>
-      <View style={styles.body}>
-        <EventInfo
-          styleBox={styles.titleContainer}
-          styleTitle={styles.title}
-          title={data.title}
-          styleInfo={styles.time}
-          info={data.start + " - " + data.end}
-        ></EventInfo>
-        <View style={styles.main}>
-          <Text style={styles.titleMain}>Chi tiết sự kiện</Text>
-
-          <EventInfo title="Host" info={data.host}></EventInfo>
-          <EventInfo title="Sự kiện" info={data.title}></EventInfo>
-
-          <EventInfo title="Bắt đầu" info={data.start}></EventInfo>
-          <EventInfo title="Kết thúc" info={data.end}></EventInfo>
-
-          <EventInfo title="Địa điểm" info={data.location}></EventInfo>
-
-          <EventInfo title="Mô tả" info={data.description}></EventInfo>
-          <Text style={{ paddingVertical: 2, fontWeight: "600" }}>
-            #topic {data.topic}
-          </Text>
+    <View style={styles.container}>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.bannerContainer}>
+          <Image
+            style={styles.banner}
+            source={{
+              uri: data.image,
+            }}
+          />
         </View>
-      </View>
+        <View style={styles.body}>
+          <View style={styles.introContainer}>
+            <Text style={styles.introTime}>
+              {data.start + " - " + data.end}
+            </Text>
+            <Text style={styles.introTitle}>{data.title}</Text>
+            <Text style={styles.introLocation}>{data.location}</Text>
+          </View>
+          <View style={styles.main}>
+            <Text style={styles.titleMain}>Chi tiết sự kiện</Text>
+
+            {/* <EventInfo info={data.host} source={require('../../assets/sand-clock.png')}></EventInfo>| */}
+            
+            <EventInfo info={"1h45"} source={require('../../assets/sand-clock.png')}></EventInfo>
+            <EventInfo info={`Event by ${data.host}`} source={require('../../assets/flag.png')}></EventInfo>
+
+            <EventInfo info={data.location} source={require('../../assets/pin.png')}></EventInfo>
+
+            <EventInfo info={data.description} source={require('../../assets/info.png')}></EventInfo>
+            <View style={{ flexDirection: "row" }}>
+              <SmallButton title={data.topic}></SmallButton>
+            </View>
+          </View>
+        </View>
+        <View style={{ marginTop: 100 }}></View>
+      </ScrollView>
+
       <View style={styles.actionContainer}>
         <View style={styles.actions}>
-          <ImageButton source={require("../../assets/join.png")}></ImageButton>
-          <ImageButton source={require("../../assets/rate.png")}></ImageButton>
-          <ImageButton source={require("../../assets/sharing.png")}></ImageButton>
-          <ImageButton source={require("../../assets/pencil.png")}></ImageButton>
+          <ImageButton
+            source={require("./data/image/action/join.png")}
+            onPress={onJoinPress}
+          ></ImageButton>
+          <ImageButton
+            source={require("./data/image/action/heart.png")}
+            onPress={onLikePress}
+          ></ImageButton>
+          <ImageButton
+            source={require("./data/image/action/rate.png")}
+            onPress={onRatePress}
+          ></ImageButton>
+          <ImageButton
+            source={require("./data/image/action/sharing.png")}
+            onPress={onSharePress}
+          ></ImageButton>
+          <ImageButton
+            source={require("./data/image/action/pencil.png")}
+            onPress={onEditPress}
+          ></ImageButton>
         </View>
       </View>
-      <View style={{ marginBottom: -320 }}></View>
-    </ScrollView>
+    </View>
   );
 };
 const styles = StyleSheet.create({
-  container: {},
+  container: { flex: 1, alignItems: "center" },
   body: {},
   bannerContainer: {
     justifyContent: "space-between",
@@ -125,10 +161,37 @@ const styles = StyleSheet.create({
     color: "black",
   },
   actionContainer: {
-    marginTop: 50,
+    // maxHeight: 50,
+    // marginTop: 50,
+    flex: 0.2,
+    position: "absolute",
+    bottom: 10,
+    justifyContent: "center",
+    borderRadius: 10,
+    backgroundColor: "#FFFFFF",
+    width: "95%",
+    shadowColor: "grey",
+    borderColor: "grey",
   },
   actions: {
     flexDirection: "row",
     justifyContent: "center",
+    height: 50,
+  },
+  introContainer: {
+    marginHorizontal: 20,
+    // marginTop: 10
+  },
+  introTime: {
+    color: "#5A5C60",
+    fontSize: 15,
+  },
+  introTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+  },
+  introLocation: {
+    color: "#5A5C60",
+    fontSize: 15,
   },
 });

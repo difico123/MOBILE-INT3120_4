@@ -107,7 +107,7 @@ const Home = ({ navigation }) => {
   };
 
   const EventHotList = data.map((item, index) => (
-    <EventItemHot item={item} key={index} />
+    <EventItemHot item={item} key={index} onPress={() => goToDetail(item.id)}/>
   ));
 
   const goToDetail = (id) => {

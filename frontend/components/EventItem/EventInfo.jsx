@@ -1,10 +1,10 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Image } from "react-native";
 
-export const EventInfo = ({ styleBox, styleTitle, title, styleInfo, info }) => {
+export const EventInfo = ({ styleBox, styleInfo, info, source }) => {
   return (
     <View style={styleBox ?? styles.contentBox}>
-      <Text style={styleTitle ?? styles.titleContent}>{title}</Text>
+      <Image source={source} style={styles.icon}></Image> 
       <Text style={styleInfo ?? styles.content}>{info}</Text>
     </View>
   );
@@ -15,16 +15,24 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     flexDirection: "row",
     padding: 10,
+    flex: 1,
   },
   titleContent: {
     color: "black",
     fontWeight: "bold",
     fontSize: 18,
+    flex: 0.1,
   },
   content: {
     marginLeft: "auto",
-    color: "#FFBF13",
-    fontWeight: "bold",
+    // color: "#FFBF13",
+    color: "black",
+    // fontWeight: "700",
     fontSize: 18,
+    flex: 0.9
   },
+  icon: {
+    width: 20,
+    height: 20,
+  }
 });
