@@ -1,21 +1,36 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import React from "react";
+import React, { memo } from "react";
 import { border, color, background } from "../../theme";
-const EventCreateMeItem = ({ name }) => {
+export const EventCreateMeItem = memo(({ name, status }) => {
     return (
-        <View style={styles.container}>
-            <Image
-                style={styles.image}
-                source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/330px-Image_created_with_a_mobile_phone.png" }}
-            />
-            <Text style={styles.title}>{name}</Text>
+        <View style={styles.containerWrap}>
+            <View style={styles.container}>
+                <Image
+                    style={styles.image}
+                    source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/330px-Image_created_with_a_mobile_phone.png" }}
+                />
+
+                <Text style={styles.title}>{name}</Text>
+            </View>
+            <View style={[styles.status, { backgroundColor: status ? background.active : background.inactive }]}></View>
         </View>
     );
-};
-
-export default EventCreateMeItem;
+});
 
 const styles = StyleSheet.create({
+    containerWrap: {
+        padding: 2,
+    },
+    status: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: 20,
+        height: 20,
+        borderRadius: 50,
+        borderWidth: 2,
+        zIndex: 99,
+    },
     container: {
         borderWidth: 1,
         height: "100%",

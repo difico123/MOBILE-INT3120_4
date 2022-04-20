@@ -22,13 +22,13 @@ const CustomDateTimePicker = ({ title, onPressTime, onPressDate, time, date }) =
             <View style={dateTimeWrap}>
                 <View style={monthWrap}>
                     <TouchableOpacity onPress={onPressDate} style={icon}>
-                        <Icon type="font-awesome" name="calendar"></Icon>
+                        <Icon type="font-awesome" color={color.white} name="calendar"></Icon>
                     </TouchableOpacity>
                     <Text style={text}>{formatDate}</Text>
                 </View>
                 <View style={timeWrap}>
                     <TouchableOpacity onPress={onPressTime} style={icon}>
-                        <Icon type="font-awesome" name="clock-o"></Icon>
+                        <Icon type="font-awesome" color={color.white} name="clock-o"></Icon>
                     </TouchableOpacity>
                     <Text style={text}>{formatTime}</Text>
                 </View>
@@ -45,11 +45,12 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         overflow: "hidden",
         flexDirection: "row",
-        height: 50,
-        backgroundColor: background.lightGray,
+        height: 55,
+        borderColor: background.lightPurple,
+        borderWidth: 2,
     },
     title: {
-        color: color.white,
+        color: color.blackText,
         fontWeight: "bold",
     },
     titleWrap: {
@@ -75,15 +76,18 @@ const styles = StyleSheet.create({
         flex: 2,
         flexDirection: "row",
         padding: 5,
-        borderRadius: 10,
-        backgroundColor: background.lightPink,
+        borderRadius: 8,
+        backgroundColor: background.gray,
         justifyContent: "center",
         alignItems: "center",
         paddingHorizontal: 20,
+        borderWidth: 2,
+        borderColor: color.activeText,
     },
     text: {
         marginLeft: 15,
         fontWeight: "bold",
+        color: color.white,
     },
     icon: {},
 });

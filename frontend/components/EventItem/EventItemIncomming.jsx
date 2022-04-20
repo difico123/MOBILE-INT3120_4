@@ -1,11 +1,11 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet, Pressable, Image } from "react-native";
 import React from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import CommonStyle, { BORDER_COLOR, MAIN_COLOR, SECOND_COLOR } from "../common/CommonStyle";
 
 const EventItemIncomming = ({ onPress, item }) => {
     return (
-        <TouchableOpacity style={styles.container} onPress={onPress}>
+        <Pressable style={styles.container} onPress={onPress}>
             <Image style={styles.image} source={{ uri: item.image }} />
 
             <View style={styles.dateContainer}>
@@ -27,7 +27,7 @@ const EventItemIncomming = ({ onPress, item }) => {
                     <Image style={styles.avt} source={{ uri: item.image }} />
                 </View>
             </View>
-        </TouchableOpacity>
+        </Pressable>
     );
 };
 

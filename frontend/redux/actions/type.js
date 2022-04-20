@@ -4,3 +4,5 @@ export const GET_USER_INFO = "get_user_info";
 
 export const ADD_EVENT = "add_event";
 export const EDIT_EVENT = "edit_event";
+export const DELETE_EVENT = "delete_event";
+export const SET_ROUTER = "set_router";

@@ -2,17 +2,18 @@ import { StyleSheet, Text, View, Modal, TouchableOpacity, Dimensions } from "rea
 import React from "react";
 import { Icon } from "react-native-elements";
 import { color } from "../../theme";
+import { background } from "../../theme";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const SlideModal = ({ modalVisible, setModalVisible, children }) => {
+const FadeModal = ({ modalVisible, setModalVisible, children }) => {
     const handleClose = () => {
         setModalVisible(false);
     };
     return (
         <View>
             <Modal
-                animationType="slide"
+                animationType="fade"
                 transparent={true}
                 visible={modalVisible}
                 statusBarTranslucent={false}
@@ -35,7 +36,7 @@ const SlideModal = ({ modalVisible, setModalVisible, children }) => {
     );
 };
 
-export default SlideModal;
+export default FadeModal;
 
 const styles = StyleSheet.create({
     close: {
@@ -46,12 +47,10 @@ const styles = StyleSheet.create({
     },
     modalView: {
         backgroundColor: "white",
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        width: windowWidth,
-        height: windowHeight * 0.88,
-        position: "absolute",
-        bottom: 0,
+        borderRadius: 20,
+        padding: 10,
+        maxWidth: windowWidth * 0.9,
+        maxHeight: windowHeight * 0.5,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -60,9 +59,11 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
-        backgroundColor: "white",
     },
     centeredView: {
         flex: 1,
+        backgroundColor: background.blur,
+        alignItems: "center",
+        justifyContent: "center",
     },
 });

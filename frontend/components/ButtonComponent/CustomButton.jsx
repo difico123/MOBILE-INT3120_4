@@ -25,13 +25,13 @@ const styles = StyleSheet.create({
         backgroundColor: "#3B71F3",
     },
     color_category: {
-        backgroundColor: background.activeCategory,
+        backgroundColor: background.gray,
     },
     text_category: {
-        color: color.activeText,
+        color: color.white,
     },
     text_primary: {
-        color: "#FFFFFF",
+        color: color.white,
     },
     color_tertiary: {
         backgroundColor: "transparent",
