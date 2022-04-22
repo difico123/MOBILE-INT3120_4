@@ -6,9 +6,12 @@ import { toEventResource } from "../../resources/events/EventResource";
 import EventService from "../../service/EventService";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogin } from "../../redux/actions/auth_actions";
+import { addItem, removeItem } from "../../redux/actions/favorite_actions";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 const EventItemHot = ({ item, onPress, onFresh }) => {
-  const event = toEventResource(item);
+  const event = item;
   const auth = useSelector((state) => state.authReducers.auth);
+  const favorite = useSelector((state) => state.authReducers.favorite);
   const dispatch = useDispatch();
 
   const [liked, setLiked] = useState(false);
@@ -19,7 +22,7 @@ const EventItemHot = ({ item, onPress, onFresh }) => {
       setLiked(isLiked);
     };
     getLikedStatus();
-  }, [liked, onFresh]);
+  }, [liked, onFresh, favorite]);
   const onPressLiked = async () => {
     const likeOrDislike = await EventService.likeOrDislikeEvent(
       auth.token,
@@ -27,7 +30,16 @@ const EventItemHot = ({ item, onPress, onFresh }) => {
       liked ? "dislike" : "like"
     );
     if (likeOrDislike) {
-      alert(liked ? "Đã xóa khỏi danh sách yêu thích" : "Đã thêm vào danh sách yêu thích");
+      alert(
+        liked
+          ? "Đã xóa khỏi danh sách yêu thích"
+          : "Đã thêm vào danh sách yêu thích"
+      );
+      if (liked) {
+        dispatch(removeItem(event));
+      } else {
+        dispatch(addItem(event));
+      }
       setLiked(!liked);
     } else {
       alert("Vui lòng tải lại trang");

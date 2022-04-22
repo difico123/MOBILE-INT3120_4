@@ -13,6 +13,6 @@ const styles = StyleSheet.create({
     maxHeight: 40,
     maxWidth: 40,
     marginHorizontal: 15,
-    marginVertical: 5
+    marginVertical: 5,
   },
 });

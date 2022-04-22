@@ -8,33 +8,61 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CustomButton from "../../components/ButtonComponent/CustomButton";
 import { ImageButton } from "../../components/ButtonComponent/ImageButton";
 import { SmallButton } from "../../components/ButtonComponent/SmallButton";
 import { EventInfo } from "../../components/EventItem/EventInfo";
+import { addItem, removeItem } from "../../redux/actions/favorite_actions";
 import { toEventResource } from "../../resources/events/EventResource";
 import EventService from "../../service/EventService";
 
 export const DetailEvent = (navigation) => {
   const auth = useSelector((state) => state.authReducers.auth);
+  const dispatch = useDispatch();
+
   const itemId = navigation.route.params.id;
   const [event, setEvent] = useState({});
+  const [liked, setLiked] = useState(false);
   useEffect(() => {
     const getEvent = async () => {
       const record = await EventService.getById(auth.token, itemId);
-      setEvent(toEventResource(record));
+      setEvent(await toEventResource(record, auth.token));
+      const likedRecord = await EventService.getEvents(auth.token, {
+        type: "like",
+      });
+      const isLiked = likedRecord.some((item) => item.id === event.id);
+      setLiked(isLiked);
     };
     getEvent();
   }, []);
 
-
   const onJoinPress = () => {
     alert("Joined successfully");
   };
-  const onLikePress = () => {
-    alert("Liked successfully");
+  const onLikePress = async () => {
+    const likeOrDislike = await EventService.likeOrDislikeEvent(
+      auth.token,
+      event.id,
+      liked ? "dislike" : "like"
+    );
+    if (likeOrDislike) {
+      alert(
+        liked
+          ? "Đã xóa khỏi danh sách yêu thích"
+          : "Đã thêm vào danh sách yêu thích"
+      );
+      if (liked) {
+        dispatch(removeItem(event));
+      } else {
+        dispatch(addItem(event));
+      }
+      setLiked(!liked);
+    } else {
+      alert("Vui lòng tải lại trang");
+    }
   };
+
   const onRatePress = () => {
     alert("on rate");
   };
@@ -51,9 +79,10 @@ export const DetailEvent = (navigation) => {
           <Image
             style={styles.banner}
             source={{
-              uri: event.images && event.images.length > 0
-                ? event.images[0]
-                : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS42dec7jSJc9r9eJNqo-6s7S-JMANOe5_1uNd3ca6ZHObtoOGuf5ejxVzhODUTiIiA2lI&usqp=CAU",
+              uri:
+                event.images && event.images.length > 0
+                  ? event.images[0]
+                  : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS42dec7jSJc9r9eJNqo-6s7S-JMANOe5_1uNd3ca6ZHObtoOGuf5ejxVzhODUTiIiA2lI&usqp=CAU",
             }}
           />
         </View>
@@ -71,11 +100,11 @@ export const DetailEvent = (navigation) => {
             {/* <EventInfo info={data.host} source={require('../../assets/sand-clock.png')}></EventInfo>| */}
 
             <EventInfo
-              info={"1h45"}
+              info={event.duration}
               source={require("../../assets/sand-clock.png")}
             ></EventInfo>
             <EventInfo
-              info={event.host_id}
+              info={event.host?.first_name + " " + event.host?.last_name}
               source={require("../../assets/flag.png")}
               type="host"
             ></EventInfo>
@@ -104,7 +133,11 @@ export const DetailEvent = (navigation) => {
             onPress={onJoinPress}
           ></ImageButton>
           <ImageButton
-            source={require("./data/image/action/heart.png")}
+            source={
+              liked
+                ? require("./data/image/action/heart-red.png")
+                : require("./data/image/action/heart.png")
+            }
             onPress={onLikePress}
           ></ImageButton>
           <ImageButton

@@ -1,4 +1,8 @@
-export const toEventResource = (resource) => {
+import { secondToHms } from "../../helpers/helpers";
+import UserService from "../../service/UserService";
+
+export const toEventResource = async (resource, token = null) => {
+  const host = token ? await UserService.getUserById(token, resource.host_id) : {};
   return {
     description: resource.description,
     end_at: resource.end_at.split("T")[1],
@@ -10,6 +14,7 @@ export const toEventResource = (resource) => {
     start_at: resource.start_at.split("T")[1],
     status: resource.status,
     topic: resource.topic,
-    duration: new Date(resource.end_at) - new Date(resource.start_at),
+    duration: secondToHms((new Date(resource.end_at) - new Date(resource.start_at))/1000),
+    host
   };
 };

@@ -4,12 +4,15 @@ import EventItemHot from "../../components/EventItem/EventItemHot";
 import SearchBar from "../../components/InputComponent/SearchBar";
 import { useNavigation } from "@react-navigation/native";
 import EventService from "../../service/EventService";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addItem, updateList } from "../../redux/actions/favorite_actions";
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
 };
 const EventListLike = ({ params }) => {
   
+  const favorite = useSelector((state) => state.authReducers.favorite);
+  const dispatch = useDispatch();
   const [refreshing, setRefreshing] = React.useState(false);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -23,6 +26,7 @@ const EventListLike = ({ params }) => {
       const record = await EventService.getEvents(auth.token, { type: "like" });
       setLikedEvents([]);
       setLikedEvents(record);
+      dispatch(updateList(record));
     };
     getLikedEvents();
   }, [refreshing]);
@@ -31,7 +35,7 @@ const EventListLike = ({ params }) => {
   const goToDetail = (id) => {
     nav.navigate("DetailEvent", { id });
   };
-  const EventHotList = likedEvents.map((item, index) => (
+  const EventHotList = favorite.map((item, index) => (
     <EventItemHot item={item} key={index} onPress={() => goToDetail(item.id)} />
   ));
 
