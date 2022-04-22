@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -8,29 +8,27 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
+import { useSelector } from "react-redux";
 import CustomButton from "../../components/ButtonComponent/CustomButton";
 import { ImageButton } from "../../components/ButtonComponent/ImageButton";
 import { SmallButton } from "../../components/ButtonComponent/SmallButton";
 import { EventInfo } from "../../components/EventItem/EventInfo";
+import { toEventResource } from "../../resources/events/EventResource";
+import EventService from "../../service/EventService";
 
 export const DetailEvent = (navigation) => {
-  console.log("hey");
+  const auth = useSelector((state) => state.authReducers.auth);
   const itemId = navigation.route.params.id;
-  const data = {
-    id: "121",
-    title: "birthday",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS42dec7jSJc9r9eJNqo-6s7S-JMANOe5_1uNd3ca6ZHObtoOGuf5ejxVzhODUTiIiA2lI&usqp=CAU",
-    date: "15",
-    month: "May",
-    location: "Đống Đa",
-    screen: "MapScreen",
-    start: "8am 15 May",
-    end: "10am 15 May",
-    host: "Do Duc Tam",
-    description: "Ki niem sinh nhat 22 tuoi cua An Ki niem sinh nhat 22 tuoi cua An Ki niem sinh nhat 22 tuoi cua An",
-    topic: "birthday",
-  };
+  const [event, setEvent] = useState({});
+  useEffect(() => {
+    const getEvent = async () => {
+      const record = await EventService.getById(auth.token, itemId);
+      setEvent(toEventResource(record));
+    };
+    getEvent();
+  }, []);
+
+
   const onJoinPress = () => {
     alert("Joined successfully");
   };
@@ -53,31 +51,46 @@ export const DetailEvent = (navigation) => {
           <Image
             style={styles.banner}
             source={{
-              uri: data.image,
+              uri: event.images && event.images.length > 0
+                ? event.images[0]
+                : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS42dec7jSJc9r9eJNqo-6s7S-JMANOe5_1uNd3ca6ZHObtoOGuf5ejxVzhODUTiIiA2lI&usqp=CAU",
             }}
           />
         </View>
         <View style={styles.body}>
           <View style={styles.introContainer}>
             <Text style={styles.introTime}>
-              {data.start + " - " + data.end}
+              {event.start_at + " - " + event.end_at}
             </Text>
-            <Text style={styles.introTitle}>{data.title}</Text>
-            <Text style={styles.introLocation}>{data.location}</Text>
+            <Text style={styles.introTitle}>{event.event_name}</Text>
+            <Text style={styles.introLocation}>{event.location}</Text>
           </View>
           <View style={styles.main}>
             <Text style={styles.titleMain}>Chi tiết sự kiện</Text>
 
             {/* <EventInfo info={data.host} source={require('../../assets/sand-clock.png')}></EventInfo>| */}
-            
-            <EventInfo info={"1h45"} source={require('../../assets/sand-clock.png')}></EventInfo>
-            <EventInfo info={`Event by ${data.host}`} source={require('../../assets/flag.png')}></EventInfo>
 
-            <EventInfo info={data.location} source={require('../../assets/pin.png')}></EventInfo>
+            <EventInfo
+              info={"1h45"}
+              source={require("../../assets/sand-clock.png")}
+            ></EventInfo>
+            <EventInfo
+              info={event.host_id}
+              source={require("../../assets/flag.png")}
+              type="host"
+            ></EventInfo>
 
-            <EventInfo info={data.description} source={require('../../assets/info.png')}></EventInfo>
+            <EventInfo
+              info={event.location}
+              source={require("../../assets/pin.png")}
+            ></EventInfo>
+
+            <EventInfo
+              info={event.description}
+              source={require("../../assets/info.png")}
+            ></EventInfo>
             <View style={{ flexDirection: "row" }}>
-              <SmallButton title={data.topic}></SmallButton>
+              <SmallButton title={event.topic}></SmallButton>
             </View>
           </View>
         </View>

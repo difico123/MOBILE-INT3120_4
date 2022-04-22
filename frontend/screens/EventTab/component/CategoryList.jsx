@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
 import React from "react";
 import { categories } from "../data/category";
-import { Category } from ".";
+import { Category } from "./Category";
 
 export const CategoryList = ({ handlecheckCategory, data }) => {
     const { flatList, container } = styles;

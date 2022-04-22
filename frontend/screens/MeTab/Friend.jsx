@@ -18,10 +18,8 @@ export const Friend = () => {
   const [friends, setFriends] = useState([]);
   useEffect(async () => {
     const record = await FriendService.getMyFriends(auth.token);
-    console.log("here", record);
     setFriends(record.items);
   }, []);
-  // console.log(friends);
   return (
     <SafeAreaView>
       <View style={styles.main}>

@@ -42,7 +42,6 @@ const Signup = () => {
             setError({ status: false, msg: "" });
             AuthService.signUp(user)
                 .then((res) => {
-                    console.log(user);
                     setSignUpMsg("Bạn đã đăng kí tài khoản thành công!");
                     setTimeout(() => {
                         setLoading(false);

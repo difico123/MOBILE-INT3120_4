@@ -6,16 +6,27 @@ import CommonStyle, {
   MAIN_COLOR,
   SECOND_COLOR,
 } from "../common/CommonStyle";
+import { MONTH } from "../../config/date";
 
 const EventItemIncomming = ({ onPress, item }) => {
-  //console.log(onPress);
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image style={styles.image} source={{ uri: item.image }} />
+      <Image
+        style={styles.image}
+        source={{
+          uri: item.images
+            ? item.images[0]
+            : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS42dec7jSJc9r9eJNqo-6s7S-JMANOe5_1uNd3ca6ZHObtoOGuf5ejxVzhODUTiIiA2lI&usqp=CAU",
+        }}
+      />
 
       <View style={styles.dateContainer}>
-        <Text style={styles.dateText}>{item.date}</Text>
-        <Text style={styles.monthText}>{item.month}</Text>
+        <Text style={styles.dateText}>
+          {item.start_at.split("T")[0].split("-")[2]}
+        </Text>
+        <Text style={styles.monthText}>
+          {MONTH[item.start_at.split("T")[0].split("-")[1]]}
+        </Text>
       </View>
       <View style={styles.titleContainer}>
         <View>
@@ -26,7 +37,7 @@ const EventItemIncomming = ({ onPress, item }) => {
               color="orange"
               type="font-awesome"
             />
-            <Text style={[styles.title]}>{item.title}</Text>
+            <Text style={[styles.title]}>{item.event_name}</Text>
           </View>
           <View style={styles.titleWrap}>
             <MaterialCommunityIcons
@@ -34,11 +45,18 @@ const EventItemIncomming = ({ onPress, item }) => {
               name="map-marker-outline"
               color="red"
             />
-            <Text style={styles.title}>{item.location}</Text>
+            <Text style={styles.title}>{item.lat}</Text>
           </View>
         </View>
         <View>
-          <Image style={styles.avt} source={{ uri: item.image }} />
+          <Image
+            style={styles.avt}
+            source={{
+              uri: item.images
+                ? item.images[0]
+                : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS42dec7jSJc9r9eJNqo-6s7S-JMANOe5_1uNd3ca6ZHObtoOGuf5ejxVzhODUTiIiA2lI&usqp=CAU",
+            }}
+          />
         </View>
       </View>
     </TouchableOpacity>

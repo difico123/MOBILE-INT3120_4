@@ -10,9 +10,7 @@ const getMyFriends = async (token, query = null) => {
       },
     };
   
-    console.log(API, token);
     const response = await axios.get(API, config);
-    console.log(response);
     return response.data.data;
   } catch (err) {
     console.log(err);

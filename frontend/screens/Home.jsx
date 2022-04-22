@@ -7,6 +7,7 @@ import {
   Image,
   ScrollView,
   VirtualizedList,
+  RefreshControl,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Icon } from "react-native-elements";
@@ -20,10 +21,21 @@ import EventItemHot from "../components/EventItem/EventItemHot";
 import CommonStyle from "../components/common/CommonStyle";
 
 import { MAIN_COLOR, BORDER_COLOR } from "../components/common/CommonStyle";
+import EventService from "../service/EventService";
 
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+};
 const Home = ({ navigation }) => {
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
   const [isToggleNav, setToggleNav] = useState(false);
   const [searchEvent, setSearchEvent] = useState("");
+  const [allEvents, setAllEvents] = useState([]);
 
   const auth = useSelector((state) => state.authReducers.auth);
   const dispatch = useDispatch();
@@ -58,61 +70,35 @@ const Home = ({ navigation }) => {
   }, [isToggleNav]);
 
   useEffect(() => {
-    // console.log(auth.user);
-  }, []);
+    const getAll = async () => {
+      setAllEvents(await EventService.getEvents(auth.token));
+    };
+    getAll();
+  }, [refreshing]);
 
-  const data = [
-    {
-      id: "121",
-      title: "birthday",
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS42dec7jSJc9r9eJNqo-6s7S-JMANOe5_1uNd3ca6ZHObtoOGuf5ejxVzhODUTiIiA2lI&usqp=CAU",
-      date: "15",
-      month: "May",
-      location: "Đống Đa",
-      screen: "MapScreen",
-    },
-    {
-      id: "123",
-      title: "get a ride",
-      image: "https://links.papareact.com/3pn",
-      date: "15",
-      month: "May",
-      location: "Đống Đa",
-      screen: "MapScreen",
-    },
-
-    {
-      id: "124",
-      title: "get a ride",
-      image: "https://links.papareact.com/28w",
-      date: "15",
-      month: "May",
-      location: "Đống Đa",
-      screen: "MapScreen",
-    },
-    {
-      id: "1224",
-      title: "get a ride",
-      image: "https://links.papareact.com/28w",
-      date: "15",
-      month: "May",
-      location: "Đống Đa",
-      screen: "MapScreen",
-    },
-  ];
-  const getItemCount = (data) => 50;
+  const getItemCount = allEvents.length;
   const showEventList = () => {
     nav.navigate("EventList");
   };
 
-  const EventHotList = data.map((item, index) => (
-    <EventItemHot item={item} key={index} onPress={() => goToDetail(item.id)}/>
+  const EventHotList = allEvents.map((item, index) => (
+    <EventItemHot item={item} key={index} onPress={() => goToDetail(item.id)} onFresh={refreshing}/>
   ));
 
   const goToDetail = (id) => {
-    nav.navigate("DetailEvent", {id});
-  }
+    nav.navigate("DetailEvent", { id });
+  };
+
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  useEffect(() => {
+    const updateUpcomingEvent = async () => {
+      const record = await EventService.getEvents(auth.token, {
+        start_at: new Date("2022-03-28T14:51:10").getTime(),
+      });
+      setUpcomingEvents(record);
+    };
+    updateUpcomingEvent();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -124,7 +110,13 @@ const Home = ({ navigation }) => {
           value={searchEvent}
         />
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View style={styles.eventContainer}>
           <View style={[CommonStyle.spaceBetween]}>
             <TouchableOpacity>
@@ -137,11 +129,15 @@ const Home = ({ navigation }) => {
 
           <FlatList
             showsHorizontalScrollIndicator={false}
-            data={data}
+            data={upcomingEvents}
             horizontal
             keyExtractor={(item) => item.id}
             renderItem={({ item, index }) => (
-              <EventItemIncomming item={item} key={index} onPress={() => goToDetail(item.id)} />
+              <EventItemIncomming
+                item={item}
+                key={index}
+                onPress={() => goToDetail(item.id)}
+              />
             )}
           />
         </View>

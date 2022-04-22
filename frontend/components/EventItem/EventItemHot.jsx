@@ -1,15 +1,54 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import CommonStyle, { BORDER_COLOR, MAIN_COLOR } from "../common/CommonStyle";
-const EventItemHot = ({ item, onPress }) => {
+import { toEventResource } from "../../resources/events/EventResource";
+import EventService from "../../service/EventService";
+import { useDispatch, useSelector } from "react-redux";
+import { setLogin } from "../../redux/actions/auth_actions";
+const EventItemHot = ({ item, onPress, onFresh }) => {
+  const event = toEventResource(item);
+  const auth = useSelector((state) => state.authReducers.auth);
+  const dispatch = useDispatch();
+
+  const [liked, setLiked] = useState(false);
+  useEffect(() => {
+    const getLikedStatus = async () => {
+      const record = await EventService.getEvents(auth.token, { type: "like" });
+      const isLiked = record.some((item) => item.id === event.id);
+      setLiked(isLiked);
+    };
+    getLikedStatus();
+  }, [liked, onFresh]);
+  const onPressLiked = async () => {
+    const likeOrDislike = await EventService.likeOrDislikeEvent(
+      auth.token,
+      event.id,
+      liked ? "dislike" : "like"
+    );
+    if (likeOrDislike) {
+      alert(liked ? "Đã xóa khỏi danh sách yêu thích" : "Đã thêm vào danh sách yêu thích");
+      setLiked(!liked);
+    } else {
+      alert("Vui lòng tải lại trang");
+    }
+  };
+
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
-        <Image style={styles.image} source={{ uri: item.image }} />
+        <Image
+          style={styles.image}
+          source={{
+            uri:
+              event.images && event.images.length > 0
+                ? event.images[0]
+                : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS42dec7jSJc9r9eJNqo-6s7S-JMANOe5_1uNd3ca6ZHObtoOGuf5ejxVzhODUTiIiA2lI&usqp=CAU",
+          }}
+        />
         <View style={styles.contentContainer}>
           <View style={styles.contentWrap}>
-            <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.title}>{event.event_name}</Text>
           </View>
           <View style={styles.contentWrap}>
             <MaterialCommunityIcons
@@ -19,7 +58,7 @@ const EventItemHot = ({ item, onPress }) => {
               color="orange"
               type="font-awesome"
             />
-            <Text style={[styles.text]}>{item.title}</Text>
+            <Text style={[styles.text]}>{event.event_name}</Text>
           </View>
           <View style={styles.contentWrap}>
             <MaterialCommunityIcons
@@ -29,16 +68,19 @@ const EventItemHot = ({ item, onPress }) => {
               color="red"
               type="font-awesome"
             />
-            <Text style={[styles.text]}>{item.location}</Text>
+            <Text style={[styles.text]}>{event.location}</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.heartContainer} onPress={() => alert("love " + item.id)}>
+        <TouchableOpacity
+          style={styles.heartContainer}
+          onPress={() => onPressLiked()}
+        >
           <View>
             <MaterialCommunityIcons
               style={[styles.heart]}
               size={30}
-              name="heart-outline"
-              color="black"
+              name="heart"
+              color={liked ? "red" : "grey"}
               type="font-awesome"
             />
           </View>
