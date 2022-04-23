@@ -19,7 +19,7 @@ export const Friend = () => {
   useEffect(async () => {
     const record = await FriendService.getMyFriends(auth.token);
     setFriends(record.items);
-  });
+  }, []);
   // console.log(friends);
   return (
     <SafeAreaView>
