@@ -1,1 +1,1 @@
-export const text = { black: "#533E3E" };
+export const border = { black: "#533E3E" };

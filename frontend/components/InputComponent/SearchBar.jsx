@@ -1,8 +1,8 @@
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { Icon } from "react-native-elements";
 
-const SearchBar = ({ value, setValue, setToggleNav, ...props }) => {
+const SearchBar = ({ value, setValue, onPress, setToggleNav, ...props }) => {
     const onFocus = () => {
         setToggleNav(true);
     };
@@ -12,7 +12,9 @@ const SearchBar = ({ value, setValue, setToggleNav, ...props }) => {
     return (
         <View style={styles.container}>
             <TextInput {...props} style={styles.input} onChangeText={setValue} value={value} onFocus={onFocus} onBlur={onBlur} />
-            <Icon name="search" style={styles.icon} type="font-awesome"></Icon>
+            <TouchableOpacity onPress={onPress}>
+                <Icon name="search" style={styles.icon} type="font-awesome"></Icon>
+            </TouchableOpacity>
         </View>
     );
 };

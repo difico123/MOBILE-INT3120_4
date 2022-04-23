@@ -3,13 +3,13 @@ import React from "react";
 import { checkedCategory, categories } from "../data/image";
 
 import { color, background } from "../../../theme";
-export const Category = ({ id, onPress, name, selected = false, image }) => {
+export const Category = ({ id, onPress, name, select, image }) => {
     const { container, activeBg, inActiveBg, activeTx, inActiveTx, checked, logo } = styles;
     return (
-        <TouchableOpacity style={[container, selected ? activeBg : inActiveBg]} onPress={() => onPress(id)}>
+        <TouchableOpacity style={[container, select === id ? activeBg : inActiveBg]} onPress={() => onPress(id)}>
             <Image style={logo} source={categories[image || "diamond"]} />
-            <Text style={selected ? activeTx : inActiveTx}>{name}</Text>
-            {selected && <Image style={checked} source={checkedCategory} />}
+            <Text style={select === id ? activeTx : inActiveTx}>{name}</Text>
+            {select === id && <Image style={checked} source={checkedCategory} />}
         </TouchableOpacity>
     );
 };

@@ -57,7 +57,6 @@ const styles = StyleSheet.create({
         height: 50,
     },
     avatarContainer: {
-        marginTop: 25,
         flexDirection: "row",
         alignItems: "center",
 

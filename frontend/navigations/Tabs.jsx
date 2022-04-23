@@ -6,7 +6,7 @@ import Home from "../screens/Home";
 import Me from "../screens/MeTab/Me";
 import HeaderLogo from "../components/Layout/HeaderLogo";
 import EventList from "../screens/EventTab/EventList";
-import EventCreate from "../screens/EventTab/EventCreate";
+import EventCreateMe from "../screens/EventTab/EventCreateMe";
 import EventListLike from "../screens/EventTab/EventListLike";
 import { BORDER_COLOR, MAIN_COLOR, SECOND_COLOR } from "../components/common/CommonStyle";
 import { useSelector } from "react-redux";
@@ -20,7 +20,27 @@ const Tabs = () => {
             <View style={{ marginTop: 20, marginBottom: 20 }}>
                 <HeaderLogo />
             </View>
-            <Tab.Navigator screenOptions={{ tabBarStyle: { display: "flex", position: "absolute", bottom: 10, left: 10, right: 10, elevation: 1, backgroundColor: "#FFFFFF", zIndex: 10, borderRadius: 10, height: 70, paddingBottom: 10, paddingTop: 5, borderWidth: 1, borderColor: BORDER_COLOR } }} initialRouteName="Home">
+            <Tab.Navigator
+                screenOptions={{
+                    tabBarStyle: {
+                        display: "flex",
+                        position: "absolute",
+                        bottom: 10,
+                        left: 10,
+                        right: 10,
+                        elevation: 1,
+                        backgroundColor: "#FFFFFF",
+                        zIndex: 10,
+                        borderRadius: 10,
+                        height: 70,
+                        paddingBottom: 10,
+                        paddingTop: 5,
+                        borderWidth: 1,
+                        borderColor: BORDER_COLOR,
+                    },
+                }}
+                initialRouteName="Home"
+            >
                 <Tab.Screen
                     name="Home"
                     component={Home}
@@ -53,8 +73,8 @@ const Tabs = () => {
                     }}
                 />
                 <Tab.Screen
-                    name="EventCreate"
-                    component={EventCreate}
+                    name="EventCreateMe"
+                    component={EventCreateMe}
                     options={{
                         tabBarLabel: "Sự kiện",
                         tabBarShowLabel: false,

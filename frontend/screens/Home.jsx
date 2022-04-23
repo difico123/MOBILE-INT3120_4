@@ -69,6 +69,10 @@ const Home = ({ navigation }) => {
   }, [isToggleNav]);
 
   useEffect(() => {
+    // console.log(auth.user);
+  }, []);
+
+  useEffect(() => {
     const getAll = async () => {
       setAllEvents(await EventService.getEvents(auth.token));
     };
@@ -81,7 +85,12 @@ const Home = ({ navigation }) => {
   };
 
   const EventHotList = allEvents.map((item, index) => (
-    <EventItemHot item={item} key={index} onPress={() => goToDetail(item.id)} onFresh={refreshing}/>
+    <EventItemHot
+      item={item}
+      key={index}
+      onPress={() => goToDetail(item.id)}
+      onFresh={refreshing}
+    />
   ));
 
   const goToDetail = (id) => {
@@ -92,13 +101,12 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     const updateUpcomingEvent = async () => {
       const record = await EventService.getEvents(auth.token, {
-        start_at: new Date().getTime()
+        start_at: new Date().getTime(),
       });
       setUpcomingEvents(await toEventCollection(record));
     };
     updateUpcomingEvent();
   }, [refreshing]);
-
 
   return (
     <View style={styles.container}>
@@ -141,19 +149,6 @@ const Home = ({ navigation }) => {
             )}
           />
         </View>
-        <View style={styles.eventContainer}>
-          <View style={[CommonStyle.spaceBetween, styles.hotEventTitle]}>
-            <TouchableOpacity>
-              <Text style={styles.title}>Sự kiện đang HOT</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* <FlatList data={data} keyExtractor={(item) => item.id} renderItem={({ item, index }) => <EventItemHot item={item} key={index} />} /> */}
-
-          {EventHotList}
-          {/* <VirtualizedList data={data} initialNumToRender={4} renderItem={(item, index) => <EventItemHot item={item} key={index} />} keyExtractor={(item, index) => index} getItemCount={getItemCount} getItem={() => {}} /> */}
-        </View>
-        <View style={{ marginBottom: 140 }}></View>
       </ScrollView>
     </View>
   );

@@ -3,10 +3,11 @@ import React from "react";
 import { Icon } from "react-native-elements";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import CommonStyle, { BORDER_COLOR } from "../common/CommonStyle";
+import { color, background } from "../../theme";
 
 const EventPostBtn = ({ title, iconName, bgColor, text, onPress }) => {
     return (
-        <View style={[styles.btnContainer, { backgroundColor: bgColor || "#D8BBBB" }]}>
+        <View style={[styles.btnContainer, { backgroundColor: bgColor || "white" }]}>
             <View style={styles.selected}>
                 <Text style={styles.text}>{title}</Text>
                 <MaterialCommunityIcons size={30} style={[styles.icon]} name={iconName} color="black" />
@@ -25,33 +26,39 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
         marginLeft: 5,
+        color: color.white,
     },
     btnContainer: {
         flexDirection: "row",
         alignItems: "center",
         width: "100%",
-        height: 50,
+        height: 60,
         marginTop: 20,
         borderRadius: 10,
         overflow: "hidden",
+        borderWidth: 2,
+        borderColor: background.gray,
     },
     selected: {
-        flex: 3,
+        flex: 2,
         paddingHorizontal: 10,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
     },
     text: {
-        color: "#FFFFFF",
+        color: color.blackText,
         fontWeight: "700",
     },
     option: {
         flex: 5,
         justifyContent: "center",
-        backgroundColor: "#F3E1E1",
+        backgroundColor: background.gray,
         height: "100%",
-        borderRadius: 10,
+        borderRadius: 8,
+        padding: 5,
+        borderWidth: 2,
+        borderColor: color.activeText,
         paddingHorizontal: 10,
     },
     icon: {
