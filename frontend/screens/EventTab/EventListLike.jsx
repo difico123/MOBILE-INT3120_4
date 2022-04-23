@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, RefreshControl } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  RefreshControl,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import EventItemHot from "../../components/EventItem/EventItemHot";
 import SearchBar from "../../components/InputComponent/SearchBar";
@@ -6,11 +13,8 @@ import { useNavigation } from "@react-navigation/native";
 import EventService from "../../service/EventService";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem, updateList } from "../../redux/actions/favorite_actions";
-const wait = (timeout) => {
-  return new Promise((resolve) => setTimeout(resolve, timeout));
-};
+import { wait } from "../../helpers/helpers";
 const EventListLike = ({ params }) => {
-  
   const favorite = useSelector((state) => state.authReducers.favorite);
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = React.useState(false);
@@ -20,22 +24,22 @@ const EventListLike = ({ params }) => {
   }, []);
 
   const auth = useSelector((state) => state.authReducers.auth);
-  const [likedEvents, setLikedEvents] = useState([]);
+  const [likedEvents, setLikedEvents] = useState(favorite);
   useEffect(() => {
     const getLikedEvents = async () => {
       const record = await EventService.getEvents(auth.token, { type: "like" });
       setLikedEvents([]);
       setLikedEvents(record);
-      dispatch(updateList(record));
+      record.length !== favorite.length ? dispatch(updateList(record)) : "";
     };
     getLikedEvents();
-  }, [refreshing]);
+  }, [refreshing, favorite]);
 
   const nav = useNavigation();
   const goToDetail = (id) => {
     nav.navigate("DetailEvent", { id });
   };
-  const EventHotList = favorite.map((item, index) => (
+  const myFavoriteEvents = likedEvents.map((item, index) => (
     <EventItemHot item={item} key={index} onPress={() => goToDetail(item.id)} />
   ));
 
@@ -53,7 +57,7 @@ const EventListLike = ({ params }) => {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         >
-          {EventHotList}
+          {myFavoriteEvents}
           <View style={{ marginBottom: 200 }}></View>
         </ScrollView>
       </SafeAreaView>

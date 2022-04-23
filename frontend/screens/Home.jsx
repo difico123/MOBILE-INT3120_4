@@ -22,10 +22,9 @@ import CommonStyle from "../components/common/CommonStyle";
 
 import { MAIN_COLOR, BORDER_COLOR } from "../components/common/CommonStyle";
 import EventService from "../service/EventService";
+import { toEventCollection } from "../resources/events/EventResource";
+import { wait } from "../helpers/helpers";
 
-const wait = (timeout) => {
-  return new Promise((resolve) => setTimeout(resolve, timeout));
-};
 const Home = ({ navigation }) => {
   const [refreshing, setRefreshing] = React.useState(false);
   const onRefresh = React.useCallback(() => {
@@ -93,12 +92,13 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     const updateUpcomingEvent = async () => {
       const record = await EventService.getEvents(auth.token, {
-        start_at: new Date("2022-03-28T14:51:10").getTime(),
+        start_at: new Date().getTime()
       });
-      setUpcomingEvents(record);
+      setUpcomingEvents(await toEventCollection(record));
     };
     updateUpcomingEvent();
-  }, []);
+  }, [refreshing]);
+
 
   return (
     <View style={styles.container}>

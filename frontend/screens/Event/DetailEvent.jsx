@@ -1,3 +1,5 @@
+import moment from "moment";
+import "moment/locale/vi";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -7,16 +9,22 @@ import {
   ScrollView,
   TouchableOpacity,
   Button,
+  ActivityIndicator,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import CustomButton from "../../components/ButtonComponent/CustomButton";
 import { ImageButton } from "../../components/ButtonComponent/ImageButton";
 import { SmallButton } from "../../components/ButtonComponent/SmallButton";
+import { BORDER_COLOR, MAIN_COLOR } from "../../components/common/CommonStyle";
 import { EventInfo } from "../../components/EventItem/EventInfo";
+import { SimpleLoading } from "../../components/LoadingComponent/simpleLoading";
+import { MONTH } from "../../config/date";
+import { wait } from "../../helpers/helpers";
 import { addItem, removeItem } from "../../redux/actions/favorite_actions";
 import { toEventResource } from "../../resources/events/EventResource";
 import EventService from "../../service/EventService";
 
+moment.locale("vi");
 export const DetailEvent = (navigation) => {
   const auth = useSelector((state) => state.authReducers.auth);
   const dispatch = useDispatch();
@@ -24,18 +32,28 @@ export const DetailEvent = (navigation) => {
   const itemId = navigation.route.params.id;
   const [event, setEvent] = useState({});
   const [liked, setLiked] = useState(false);
+  const [isLoading, setLoading] = useState(true);
+  const [ready, setReady] = useState(false);
   useEffect(() => {
     const getEvent = async () => {
       const record = await EventService.getById(auth.token, itemId);
       setEvent(await toEventResource(record, auth.token));
-      const likedRecord = await EventService.getEvents(auth.token, {
-        type: "like",
-      });
-      const isLiked = likedRecord.some((item) => item.id === event.id);
-      setLiked(isLiked);
+      setLoading(false);
     };
     getEvent();
   }, []);
+
+  useEffect(() => {
+    const isLiked = async () => {
+      const likedRecord = await EventService.getEvents(auth.token, {
+        type: "like",
+      });
+      const checkLiked = likedRecord.some((item) => item.id === event.id);
+      setLiked(checkLiked);
+      wait(1000).then(() => setReady(true));
+    };
+    isLiked();
+  }, [event]);
 
   const onJoinPress = () => {
     alert("Joined successfully");
@@ -72,89 +90,101 @@ export const DetailEvent = (navigation) => {
   const onEditPress = () => {
     alert("on edit");
   };
-  return (
-    <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.bannerContainer}>
-          <Image
-            style={styles.banner}
-            source={{
-              uri:
-                event.images && event.images.length > 0
-                  ? event.images[0]
-                  : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS42dec7jSJc9r9eJNqo-6s7S-JMANOe5_1uNd3ca6ZHObtoOGuf5ejxVzhODUTiIiA2lI&usqp=CAU",
-            }}
-          />
-        </View>
-        <View style={styles.body}>
-          <View style={styles.introContainer}>
-            <Text style={styles.introTime}>
-              {event.start_at + " - " + event.end_at}
-            </Text>
-            <Text style={styles.introTitle}>{event.event_name}</Text>
-            <Text style={styles.introLocation}>{event.location}</Text>
+  return isLoading || !ready ? (
+    <SimpleLoading></SimpleLoading>
+  ) : (
+    Object.keys(event).length > 0 && (
+      <View style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.bannerContainer}>
+            <Image
+              style={styles.banner}
+              source={{
+                uri:
+                  event.images && event.images.length > 0
+                    ? event.images[0]
+                    : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS42dec7jSJc9r9eJNqo-6s7S-JMANOe5_1uNd3ca6ZHObtoOGuf5ejxVzhODUTiIiA2lI&usqp=CAU",
+              }}
+            />
           </View>
-          <View style={styles.main}>
-            <Text style={styles.titleMain}>Chi tiết sự kiện</Text>
+          <View style={styles.body}>
+            <View style={styles.introContainer}>
+              <View>
+                <Text style={styles.introTime}>
+                  {/* {event.start_at + " - " + event.end_at} */}
+                  {event.start_date
+                    ? moment(event.start_date).calendar().includes("/")
+                      ? moment(event.start_date).format("Do MMMM, h:mm")
+                      : moment(event.start_date).calendar()
+                    : ""}
+                </Text>
+                <Text style={styles.introTitle}>{event.event_name}</Text>
+                <Text style={styles.introLocation}>{event.location}</Text>
+              </View>
 
-            {/* <EventInfo info={data.host} source={require('../../assets/sand-clock.png')}></EventInfo>| */}
+              <View style={styles.dateContainer}>
+                <Text style={styles.dateText}>
+                  {event.start_date?.split("T")[0].split("-")[2]}
+                </Text>
+                <Text style={styles.monthText}>
+                  {MONTH[event.start_date?.split("T")[0].split("-")[1]]}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.main}>
+              <Text style={styles.titleMain}>Chi tiết sự kiện</Text>
 
-            <EventInfo
-              info={event.duration}
-              source={require("../../assets/sand-clock.png")}
-            ></EventInfo>
-            <EventInfo
-              info={event.host?.first_name + " " + event.host?.last_name}
-              source={require("../../assets/flag.png")}
-              type="host"
-            ></EventInfo>
+              {/* <EventInfo info={data.host} source={require('../../assets/sand-clock.png')}></EventInfo>| */}
+              {event.duration ? (
+                <EventInfo
+                  info={event.duration}
+                  source={require("../../assets/sand-clock.png")}
+                ></EventInfo>
+              ) : <Text style={{ height: 0 }}></Text>}
+              <EventInfo
+                info={event.host?.first_name + " " + event.host?.last_name}
+                source={require("../../assets/flag.png")}
+                type="host"
+              ></EventInfo>
 
-            <EventInfo
-              info={event.location}
-              source={require("../../assets/pin.png")}
-            ></EventInfo>
+              <EventInfo
+                info={event.location}
+                source={require("../../assets/pin.png")}
+              ></EventInfo>
 
-            <EventInfo
-              info={event.description}
-              source={require("../../assets/info.png")}
-            ></EventInfo>
-            <View style={{ flexDirection: "row" }}>
-              <SmallButton title={event.topic}></SmallButton>
+              <EventInfo
+                info={event.description}
+                source={require("../../assets/info.png")}
+              ></EventInfo>
+              <View style={{ flexDirection: "row" }}>
+                <SmallButton title={event.topic}></SmallButton>
+              </View>
+            </View>
+          </View>
+          <View style={{ marginTop: 100 }}></View>
+        </ScrollView>
+
+        <View style={styles.actionContainer}>
+          <View style={styles.actions}>
+            <View style={styles.going}>
+              <Text style={styles.optionText}>Tham gia</Text>
+            </View>
+            <TouchableOpacity
+              style={{
+                ...styles.liked,
+                ...{ backgroundColor: liked ? MAIN_COLOR : "grey" },
+              }}
+              onPress={onLikePress}
+            >
+              <Text style={styles.optionText}>Quan tâm</Text>
+            </TouchableOpacity>
+            <View style={styles.other}>
+              <Text style={styles.optionText}>...</Text>
             </View>
           </View>
         </View>
-        <View style={{ marginTop: 100 }}></View>
-      </ScrollView>
-
-      <View style={styles.actionContainer}>
-        <View style={styles.actions}>
-          <ImageButton
-            source={require("./data/image/action/join.png")}
-            onPress={onJoinPress}
-          ></ImageButton>
-          <ImageButton
-            source={
-              liked
-                ? require("./data/image/action/heart-red.png")
-                : require("./data/image/action/heart.png")
-            }
-            onPress={onLikePress}
-          ></ImageButton>
-          <ImageButton
-            source={require("./data/image/action/rate.png")}
-            onPress={onRatePress}
-          ></ImageButton>
-          <ImageButton
-            source={require("./data/image/action/sharing.png")}
-            onPress={onSharePress}
-          ></ImageButton>
-          <ImageButton
-            source={require("./data/image/action/pencil.png")}
-            onPress={onEditPress}
-          ></ImageButton>
-        </View>
       </View>
-    </View>
+    )
   );
 };
 const styles = StyleSheet.create({
@@ -223,6 +253,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     height: 50,
+    flex: 1,
   },
   introContainer: {
     marginHorizontal: 20,
@@ -239,5 +270,57 @@ const styles = StyleSheet.create({
   introLocation: {
     color: "#5A5C60",
     fontSize: 15,
+  },
+  dateContainer: {
+    position: "absolute",
+    borderRadius: 10,
+    width: 80,
+    height: 80,
+    justifyContent: "center",
+    alignItems: "center",
+    top: 0,
+    right: 0,
+    borderWidth: 1,
+    backgroundColor: MAIN_COLOR,
+    borderColor: BORDER_COLOR,
+    elevation: 10,
+    marginBottom: 10,
+  },
+  dateText: {
+    fontSize: 27,
+    fontWeight: "bold",
+    color: "#FFFFFF",
+  },
+  monthText: {
+    fontSize: 16,
+    color: "#FFFFFF",
+  },
+  going: {
+    backgroundColor: MAIN_COLOR,
+    flex: 0.3,
+    justifyContent: "center",
+    borderRadius: 10,
+    height: 40,
+  },
+  liked: {
+    backgroundColor: "grey",
+    marginLeft: 10,
+    flex: 0.5,
+    justifyContent: "center",
+    borderRadius: 10,
+    height: 40,
+  },
+  other: {
+    backgroundColor: MAIN_COLOR,
+    marginLeft: 10,
+    flex: 0.2,
+    justifyContent: "center",
+    borderRadius: 10,
+    height: 40,
+  },
+  optionText: {
+    textAlign: "center",
+    fontWeight: "bold",
+    color: "#FFFFFF",
   },
 });

@@ -14,7 +14,7 @@ const EventItemIncomming = ({ onPress, item }) => {
       <Image
         style={styles.image}
         source={{
-          uri: item.images
+          uri: item.images.length > 0
             ? item.images[0]
             : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS42dec7jSJc9r9eJNqo-6s7S-JMANOe5_1uNd3ca6ZHObtoOGuf5ejxVzhODUTiIiA2lI&usqp=CAU",
         }}
@@ -22,10 +22,10 @@ const EventItemIncomming = ({ onPress, item }) => {
 
       <View style={styles.dateContainer}>
         <Text style={styles.dateText}>
-          {item.start_at.split("T")[0].split("-")[2]}
+          {item.start_date.split("T")[0].split("-")[2]}
         </Text>
         <Text style={styles.monthText}>
-          {MONTH[item.start_at.split("T")[0].split("-")[1]]}
+          {MONTH[item.start_date.split("T")[0].split("-")[1]]}
         </Text>
       </View>
       <View style={styles.titleContainer}>
@@ -45,14 +45,14 @@ const EventItemIncomming = ({ onPress, item }) => {
               name="map-marker-outline"
               color="red"
             />
-            <Text style={styles.title}>{item.lat}</Text>
+            <Text style={styles.title}>{item.location}</Text>
           </View>
         </View>
         <View>
           <Image
             style={styles.avt}
             source={{
-              uri: item.images
+              uri: item.images.length > 0
                 ? item.images[0]
                 : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS42dec7jSJc9r9eJNqo-6s7S-JMANOe5_1uNd3ca6ZHObtoOGuf5ejxVzhODUTiIiA2lI&usqp=CAU",
             }}

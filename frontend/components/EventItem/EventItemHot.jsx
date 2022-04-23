@@ -9,12 +9,19 @@ import { setLogin } from "../../redux/actions/auth_actions";
 import { addItem, removeItem } from "../../redux/actions/favorite_actions";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 const EventItemHot = ({ item, onPress, onFresh }) => {
-  const event = item;
+  const [event, setEvent] = useState(item);
   const auth = useSelector((state) => state.authReducers.auth);
   const favorite = useSelector((state) => state.authReducers.favorite);
   const dispatch = useDispatch();
 
   const [liked, setLiked] = useState(false);
+  useEffect(()=> {
+    const getUpdatedEvent = async () => {
+      const record = await EventService.getById(auth.token, item.id);
+      setEvent(await toEventResource(record, auth.token));
+    }
+    getUpdatedEvent();
+  }, []);
   useEffect(() => {
     const getLikedStatus = async () => {
       const record = await EventService.getEvents(auth.token, { type: "like" });

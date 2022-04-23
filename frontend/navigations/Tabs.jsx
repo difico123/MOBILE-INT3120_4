@@ -9,10 +9,12 @@ import EventList from "../screens/EventTab/EventList";
 import EventCreate from "../screens/EventTab/EventCreate";
 import EventListLike from "../screens/EventTab/EventListLike";
 import { BORDER_COLOR, MAIN_COLOR, SECOND_COLOR } from "../components/common/CommonStyle";
+import { useSelector } from "react-redux";
 
 const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
+    const favorite = useSelector((state) => state.authReducers.favorite);
     return (
         <>
             <View style={{ marginTop: 20, marginBottom: 20 }}>
@@ -42,7 +44,7 @@ const Tabs = () => {
                         tabBarLabel: "Đã Thích",
                         tabBarShowLabel: false,
                         headerShown: false,
-                        tabBarBadge: 12,
+                        tabBarBadge: favorite.length,
                         tabBarIcon: ({ color, size, focused }) => (
                             <View style={{ height: focused ? 50 : 40, alignItems: "center", textAlign: "center" }}>
                                 <MaterialCommunityIcons name="heart" color={focused ? MAIN_COLOR : SECOND_COLOR} size={focused ? 50 : 40} />
