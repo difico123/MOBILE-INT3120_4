@@ -2,8 +2,10 @@ import { View, Text, Image, StyleSheet, useWindowDimensions } from "react-native
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import CommonStyle, { BORDER_COLOR } from "../common/CommonStyle";
+import { useNavigation } from "@react-navigation/native";
 
 const HeaderLogo = () => {
+    const nav = useNavigation();
     const { height } = useWindowDimensions();
     const auth = useSelector((state) => state.authReducers.auth);
     return (
@@ -18,7 +20,8 @@ const HeaderLogo = () => {
                 <Text style={styles.title}>SOCIENT</Text>
             </View>
 
-            <View style={[styles.avatarContainer, styles.borderWidth]}>
+            <View style={[styles.avatarContainer, styles.borderWidth]}
+                    onPress={() => nav.navigate("Profile")}>
                 <Image
                     style={[styles.avt, { marginBottom: 5 }]}
                     source={{

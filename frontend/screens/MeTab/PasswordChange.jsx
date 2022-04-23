@@ -125,7 +125,7 @@ export const PasswordChange = () => {
 
       <View style={styles.confirmButton}>
         <CustomButton
-          title="Confirm"
+          text="Confirm"
           onPress={onConfirmPress}
           loading={loading.updated}
         ></CustomButton>

@@ -20,7 +20,6 @@ export const Friend = () => {
     const record = await FriendService.getMyFriends(auth.token);
     setFriends(record.items);
   }, []);
-  // console.log(friends);
   return (
     <SafeAreaView>
       <View style={styles.main}>
@@ -35,7 +34,7 @@ export const Friend = () => {
           </View>
         </View>
         <ScrollView>
-          {friends.map((friend) => (
+          {friends && friends.length > 0 && friends.map((friend) => (
             <View style={styles.item} key={friend.id}>
               <FriendItem
                 name={`${friend.first_name + " " + friend.last_name}`}

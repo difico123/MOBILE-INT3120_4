@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
+import { categories } from "../data/category";
 import React, { memo } from "react";
 import { Category } from "./Category";
 
