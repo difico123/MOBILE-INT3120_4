@@ -26,6 +26,7 @@ import { toEventCollection } from "../resources/events/EventResource";
 import { wait } from "../helpers/helpers";
 
 const Home = ({ navigation }) => {
+  console.log("event");
   const [refreshing, setRefreshing] = React.useState(false);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -149,6 +150,19 @@ const Home = ({ navigation }) => {
             )}
           />
         </View>
+        <View style={styles.eventContainer}>
+          <View style={[CommonStyle.spaceBetween, styles.hotEventTitle]}>
+            <TouchableOpacity>
+              <Text style={styles.title}>Sự kiện đang HOT</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* <FlatList data={data} keyExtractor={(item) => item.id} renderItem={({ item, index }) => <EventItemHot item={item} key={index} />} /> */}
+
+          {EventHotList}
+          {/* <VirtualizedList data={data} initialNumToRender={4} renderItem={(item, index) => <EventItemHot item={item} key={index} />} keyExtractor={(item, index) => index} getItemCount={getItemCount} getItem={() => {}} /> */}
+        </View>
+        <View style={{ marginBottom: 140 }}></View>
       </ScrollView>
     </View>
   );
