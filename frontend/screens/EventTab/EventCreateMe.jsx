@@ -115,8 +115,9 @@ const EventCreateMe = ({ navigation }) => {
                         </View>
                     </TouchableOpacity>
                     <View style={styles.plusWrap}>
-                        <Icon name="filter" type="font-awesome" color={background.gray} />
-                        <Text style={[styles.add, styles.title]}>{selectedValue}</Text>
+                        <Text style={[styles.filter, styles.title]}>{selectedValue}</Text>
+                        {/* <Icon name="filter" type="font-awesome" color={background.gray} /> */}
+
                         <Picker style={[styles.picker]} selectedValue={selectedValue} style={{ width: 35 }} onValueChange={onChangePicker}>
                             <Picker.Item label={dataPicker.all} value={dataPicker.all} disabled={true} />
                             <Picker.Item label={dataPicker.active} value={dataPicker.active} />
@@ -234,6 +235,9 @@ const styles = StyleSheet.create({
     },
     add: {
         marginLeft: 7,
+    },
+    filter: {
+        marginRight: 7,
     },
     main: {
         marginTop: 10,

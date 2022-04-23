@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import MapView, { Marker, AnimatedRegion, MarkerAnimated, Animated } from "react-native-maps";
 import { StyleSheet, Text, View, Dimensions, ActivityIndicator, KeyboardAvoidingView, TouchableOpacity } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
@@ -41,7 +41,7 @@ const data = [
     },
 ];
 export default function MapScreen({ navigation }) {
-    const [location, setLocation] = React.useState({
+    const [location, setLocation] = useState({
         latitude: -122,
         longitude: 37,
         latitudeDelta: 0.25,
@@ -50,20 +50,24 @@ export default function MapScreen({ navigation }) {
     });
 
     useEffect(() => {
+        setLoading(true);
+
         (async () => {
+            console.log("lo", location.name);
+
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== "granted") {
                 return;
             }
             let location = await Location.getCurrentPositionAsync({});
-            setLocation(location);
+            // setLocation({ locatio});
         })();
     }, []);
 
     const [isLoading, setLoading] = React.useState(false);
 
     const onRegionChange = (region) => {
-        console.log(region);
+        // console.log(region);
     };
     const handlePressSearch = (data, details = null) => {
         let { lat, lng } = details.geometry.location;
@@ -84,10 +88,6 @@ export default function MapScreen({ navigation }) {
         };
         navigation.navigate("EventCreate", { location: locationParams });
     };
-
-    React.useEffect(() => {
-        setLoading(true);
-    }, []);
 
     if (isLoading) {
         return (
@@ -142,7 +142,6 @@ export default function MapScreen({ navigation }) {
                                     />
                                 );
                             })}
-
                             <Marker
                                 draggable
                                 coordinate={{
