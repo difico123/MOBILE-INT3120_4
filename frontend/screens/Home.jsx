@@ -122,9 +122,9 @@ const Home = ({ navigation }) => {
             <TouchableOpacity>
               <Text style={styles.title}>Sự kiện sắp diễn ra</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={showEventList}>
+            {/* <TouchableOpacity onPress={showEventList}>
               <Text style={styles.title}>Xem tất cả</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
           <FlatList
