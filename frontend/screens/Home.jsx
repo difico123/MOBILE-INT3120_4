@@ -30,8 +30,6 @@ const Home = ({ navigation }) => {
     const dispatch = useDispatch();
     const nav = useNavigation();
 
-    console.log("event", allEvents);
-
     useEffect(() => {
         if (isToggleNav) {
             navigation.setOptions({
@@ -59,10 +57,6 @@ const Home = ({ navigation }) => {
             });
         }
     }, [isToggleNav]);
-
-    useEffect(() => {
-        // console.log(auth.user);
-    }, []);
 
     useEffect(() => {
         const getAll = async () => {

@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CrudSwipeoutButton from "../../components/ButtonComponent/CrudSwipeoutButton";
 import FadeModal from "../../components/modal/FadeModal";
 import { deleteEvent, setRouter } from "../../redux/actions";
+import EventService from "../../service/EventService";
 
 const dataPicker = {
     all: "Tất cả",
@@ -59,6 +60,14 @@ const EventCreateMe = ({ navigation }) => {
 
     useEffect(() => {
         setEventList([...events]);
+    }, []);
+
+    useEffect(() => {
+        (async () => {
+            await EventService.getHealcheck().then((res) => {
+                console.log("res", res);
+            });
+        })();
     }, []);
 
     const handleSearch = () => {

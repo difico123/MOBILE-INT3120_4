@@ -17,7 +17,7 @@ export default function EventList() {
         // setLocation({ ...region });
         // setLocation
         // console.log(region);
-        console.log(region);
+        // console.log(region);
     };
 
     React.useEffect(() => {

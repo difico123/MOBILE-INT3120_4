@@ -53,8 +53,6 @@ export default function MapScreen({ navigation }) {
         setLoading(true);
 
         (async () => {
-            console.log("lo", location.name);
-
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== "granted") {
                 return;
