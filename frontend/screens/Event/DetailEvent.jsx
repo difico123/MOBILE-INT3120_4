@@ -16,13 +16,17 @@ import CustomButton from "../../components/ButtonComponent/CustomButton";
 import { ImageButton } from "../../components/ButtonComponent/ImageButton";
 import { SmallButton } from "../../components/ButtonComponent/SmallButton";
 import { BORDER_COLOR, MAIN_COLOR } from "../../components/common/CommonStyle";
+import { DateCard } from "../../components/EventItem/DateCard";
 import { EventInfo } from "../../components/EventItem/EventInfo";
 import { SimpleLoading } from "../../components/LoadingComponent/simpleLoading";
+import SlideModal from "../../components/modal/SlideModal";
 import { MONTH } from "../../config/date";
 import { wait } from "../../helpers/helpers";
 import { addItem, removeItem } from "../../redux/actions/favorite_actions";
 import { toEventResource } from "../../resources/events/EventResource";
 import EventService from "../../service/EventService";
+import UserService from "../../service/UserService";
+import { HostModal } from "./HostModal";
 
 moment.locale("vi");
 export const DetailEvent = (navigation) => {
@@ -34,6 +38,9 @@ export const DetailEvent = (navigation) => {
   const [liked, setLiked] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [ready, setReady] = useState(false);
+  const [host, setHost] = useState({});
+
+  const [modalHostVisible, setModalHostVisible] = useState(false);
   useEffect(() => {
     const getEvent = async () => {
       const record = await EventService.getById(auth.token, itemId);
@@ -90,11 +97,29 @@ export const DetailEvent = (navigation) => {
   const onEditPress = () => {
     alert("on edit");
   };
+
+  const seeHostInfo = async () => {
+    console.log("host info click");
+    const getHostInfo = async () => {
+      const host = await UserService.getUserById(auth.token, event.host_id);
+      if (host) {
+        setHost(host);
+        setModalHostVisible(true);
+      } else alert("Something went wrong.\nCan't get host information now");
+    };
+    getHostInfo();
+  };
+  console.log(host, "host info click");
   return isLoading || !ready ? (
     <SimpleLoading></SimpleLoading>
   ) : (
     Object.keys(event).length > 0 && (
       <View style={styles.container}>
+        <HostModal
+          modalHostVisible={modalHostVisible}
+          setModalHostVisible={setModalHostVisible}
+          host={host}
+        ></HostModal>
         <ScrollView style={styles.scrollView}>
           <View style={styles.bannerContainer}>
             <Image
@@ -109,7 +134,7 @@ export const DetailEvent = (navigation) => {
           </View>
           <View style={styles.body}>
             <View style={styles.introContainer}>
-              <View>
+              <View style={{ flex: 0.6 }}>
                 <Text style={styles.introTime}>
                   {/* {event.start_at + " - " + event.end_at} */}
                   {event.start_date
@@ -121,15 +146,7 @@ export const DetailEvent = (navigation) => {
                 <Text style={styles.introTitle}>{event.event_name}</Text>
                 <Text style={styles.introLocation}>{event.location}</Text>
               </View>
-
-              <View style={styles.dateContainer}>
-                <Text style={styles.dateText}>
-                  {event.start_date?.split("T")[0].split("-")[2]}
-                </Text>
-                <Text style={styles.monthText}>
-                  {MONTH[event.start_date?.split("T")[0].split("-")[1]]}
-                </Text>
-              </View>
+              <DateCard item={event}></DateCard>
             </View>
             <View style={styles.main}>
               <Text style={styles.titleMain}>Chi tiết sự kiện</Text>
@@ -140,11 +157,14 @@ export const DetailEvent = (navigation) => {
                   info={event.duration}
                   source={require("../../assets/sand-clock.png")}
                 ></EventInfo>
-              ) : <Text style={{ height: 0 }}></Text>}
+              ) : (
+                <Text style={{ height: 0 }}></Text>
+              )}
               <EventInfo
                 info={event.host?.first_name + " " + event.host?.last_name}
                 source={require("../../assets/flag.png")}
-                type="host"
+                host={{ id: event.host_id }}
+                onPress={seeHostInfo}
               ></EventInfo>
 
               <EventInfo
@@ -258,6 +278,8 @@ const styles = StyleSheet.create({
   introContainer: {
     marginHorizontal: 20,
     // marginTop: 10
+    flex: 1,
+    flexDirection: "row",
   },
   introTime: {
     color: "#5A5C60",
@@ -270,30 +292,6 @@ const styles = StyleSheet.create({
   introLocation: {
     color: "#5A5C60",
     fontSize: 15,
-  },
-  dateContainer: {
-    position: "absolute",
-    borderRadius: 10,
-    width: 80,
-    height: 80,
-    justifyContent: "center",
-    alignItems: "center",
-    top: 0,
-    right: 0,
-    borderWidth: 1,
-    backgroundColor: MAIN_COLOR,
-    borderColor: BORDER_COLOR,
-    elevation: 10,
-    marginBottom: 10,
-  },
-  dateText: {
-    fontSize: 27,
-    fontWeight: "bold",
-    color: "#FFFFFF",
-  },
-  monthText: {
-    fontSize: 16,
-    color: "#FFFFFF",
   },
   going: {
     backgroundColor: MAIN_COLOR,

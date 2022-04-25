@@ -1,11 +1,24 @@
 import React from "react";
 import { View, StyleSheet, Text, Image } from "react-native";
 
-export const EventInfo = ({ styleBox, styleInfo, info, source, type }) => {
+export const EventInfo = ({
+  styleBox,
+  styleInfo,
+  info,
+  source,
+  host,
+  onPress,
+}) => {
   const content =
-    type && type == "host" ? (
+    host ? (
       <Text>
-        Event by <Text style={{ fontWeight: "bold" }} onPress={() => alert("go to host")}>{info}</Text>
+        Event by{" "}
+        <Text
+          style={{ fontWeight: "bold" }}
+          onPress={onPress}
+        >
+          {info}
+        </Text>
       </Text>
     ) : (
       <Text>{info}</Text>

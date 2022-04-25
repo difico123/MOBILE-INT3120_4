@@ -1,11 +1,14 @@
 import { secondToHms } from "../../helpers/helpers";
+import LocationService from "../../service/LocationService";
 import UserService from "../../service/UserService";
-
 export const toEventResource = async (resource, token = null) => {
-  console.log(resource);
   const host = token
     ? await UserService.getUserById(token, resource.host_id)
     : {};
+  const location = await LocationService.getLocationByLatAndLong(
+    resource.lat,
+    resource.long
+  );
   return {
     description: resource.description,
     end_at:
@@ -16,7 +19,7 @@ export const toEventResource = async (resource, token = null) => {
     host_id: resource.host_id,
     id: resource.id,
     images: resource.images,
-    location: "Not handled",
+    location: location,
     start_at:
       resource.end_at.split("T")[0] == resource.start_at.split("T")[0]
         ? resource.start_at.split("T")[1]

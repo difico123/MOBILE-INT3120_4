@@ -74,11 +74,11 @@ const styles = StyleSheet.create({
   },
   avatar: {
     borderRadius: 100,
-    marginTop: 30,
-    marginHorizontal: 50,
-    maxWidth: "40%",
-    maxHeight: "60%",
-    height: 200,
-    width: 200,
+    marginTop: 20,
+    marginHorizontal: 20,
+    // maxWidth: "40%",
+    // maxHeight: "60%",
+    height: 130,
+    width: 130,
   },
 });

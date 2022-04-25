@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Picker, SafeAreaView } from "react-native";
+import { StyleSheet, View, Picker, SafeAreaView, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import CustomButton from "../../components/ButtonComponent/CustomButton";
 import CustomDatePicker from "../../components/InputComponent/CustomDatePicker";
@@ -64,7 +64,7 @@ export const InfoChange = () => {
       .catch((error) => setLoading({ ...loading, login: false }));
   };
   return (
-    <SafeAreaView>
+    <ScrollView>
       <View style={styles.main}>
         <CustomInput
           titleInput="Họ"
@@ -118,7 +118,8 @@ export const InfoChange = () => {
           ></CustomButton>
         </View>
       </View>
-    </SafeAreaView>
+      <View style={{ marginBottom: 200 }}></View>
+    </ScrollView>
   );
 };
 

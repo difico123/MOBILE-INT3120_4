@@ -44,6 +44,7 @@ const getUserById = async (token, userId) => {
     return response.data.data;
   } catch (e) {
     console.log(e);
+    return null;
   }
 };
 export default { getUser, updateUser, updatePassword, getUserById };

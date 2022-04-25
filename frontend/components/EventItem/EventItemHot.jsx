@@ -15,11 +15,11 @@ const EventItemHot = ({ item, onPress, onFresh }) => {
   const dispatch = useDispatch();
 
   const [liked, setLiked] = useState(false);
-  useEffect(()=> {
+  useEffect(() => {
     const getUpdatedEvent = async () => {
       const record = await EventService.getById(auth.token, item.id);
       setEvent(await toEventResource(record, auth.token));
-    }
+    };
     getUpdatedEvent();
   }, []);
   useEffect(() => {
@@ -69,7 +69,7 @@ const EventItemHot = ({ item, onPress, onFresh }) => {
           <View style={styles.contentWrap}>
             <Text style={styles.title}>{event.event_name}</Text>
           </View>
-          <View style={styles.contentWrap}>
+          {/* <View style={styles.contentWrap}>
             <MaterialCommunityIcons
               size={30}
               style={[styles.icon]}
@@ -78,7 +78,7 @@ const EventItemHot = ({ item, onPress, onFresh }) => {
               type="font-awesome"
             />
             <Text style={[styles.text]}>{event.event_name}</Text>
-          </View>
+          </View> */}
           <View style={styles.contentWrap}>
             <MaterialCommunityIcons
               size={30}
@@ -87,7 +87,11 @@ const EventItemHot = ({ item, onPress, onFresh }) => {
               color="red"
               type="font-awesome"
             />
-            <Text style={[styles.text]}>{event.location}</Text>
+            <Text style={[styles.text]}>
+              {event.location?.length > 25
+                ? event.location.slice(0, 25) + "..."
+                : event.location}
+            </Text>
           </View>
         </View>
         <TouchableOpacity
@@ -135,9 +139,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 10,
     alignItems: "center",
+    marginBottom: 0
   },
   title: {
-    fontSize: 20,
+    fontSize: 15,
     fontWeight: "700",
   },
   contentContainer: {
@@ -152,7 +157,8 @@ const styles = StyleSheet.create({
     // width: 30,
     // height: 20,
   },
-  text: {},
+  text: {
+  },
   icon: {
     marginRight: 10,
   },

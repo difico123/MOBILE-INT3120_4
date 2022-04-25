@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 5,
         marginHorizontal: 5,
+        marginTop: 20
     },
     avt: {
         width: 40,
