@@ -6,20 +6,32 @@ import {
   FlatList,
   SafeAreaView,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FriendItem } from "../../components/FriendItem";
 import SearchBar from "../../components/InputComponent/SearchBar";
+import { updateListFriend } from "../../redux/actions/friend_action";
 import FriendService from "../../service/FriendService";
 export const Friend = () => {
   const [isToggleNav, setToggleNav] = useState(false);
   const [searchEvent, setSearchEvent] = useState("");
+  const dispatch = useDispatch();
 
   const auth = useSelector((state) => state.authReducers.auth);
   const [friends, setFriends] = useState([]);
   useEffect(async () => {
     const record = await FriendService.getMyFriends(auth.token);
+    console.log(record, "record");
     setFriends(record.items);
+    
+    (async () => {
+      dispatch(
+        updateListFriend(
+          (await FriendService.getMyFriends(auth.token)).pagination.total_items
+        )
+      );
+    })();
   }, []);
+  console.log(friends, "my friends");
   return (
     <SafeAreaView>
       <View style={styles.main}>

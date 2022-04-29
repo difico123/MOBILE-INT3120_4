@@ -16,7 +16,6 @@ export const StatisticItem = ({ title, children, touchable, onPress }) => {
           {children}
         </View>
       )}
-      <HorizontalLine></HorizontalLine>
     </View>
   );
 };

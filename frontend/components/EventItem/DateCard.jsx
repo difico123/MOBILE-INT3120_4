@@ -5,7 +5,7 @@ import { BORDER_COLOR, MAIN_COLOR } from "../common/CommonStyle";
 
 export const DateCard = ({ item}) => (
   <View style={styles.dateContainer}>
-    <Text style={styles.dateText}>{new Date(item.start_date).getDate()}</Text>
+    <Text style={styles.dateText}>{moment(item.start_date).format("DD")}</Text>
     <Text style={styles.monthText}>
       {moment(item.start_date).format("MMMM")}
     </Text>

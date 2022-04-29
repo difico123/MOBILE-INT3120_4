@@ -43,7 +43,14 @@ const Navigation = () => {
                 }}
             />
             
-            <Stack.Screen name="DetailEvent" component={DetailEvent} />
+            <Stack.Screen name="DetailEvent" component={DetailEvent} 
+                options={{
+                    title: "Chi tiết sự kiện",
+                    headerStyle: {
+                        backgroundColor: "transparent",
+                        elevator: 0,
+                    },
+                }} />
             <Stack.Screen name="Profile" component={Profile} options={option("Thông tin cá nhân")} />
             <Stack.Screen name="Change Password" component={PasswordChange} options={option("Thay đổi mật khẩu")} />
             <Stack.Screen name="Change Information" component={InfoChange} options={option("Thay đổi thông tin")} />

@@ -1,12 +1,12 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { MAIN_COLOR } from "../common/CommonStyle";
 
-export const SimpleStatistic = ({ number, title }) => (
-  <View style={styles.container}>
+export const SimpleStatistic = ({ number, title, onPress }) => (
+  <Pressable style={styles.container} onPress={onPress}>
     <Text style={styles.number}>{number}</Text>
     <Text style={styles.title}>{title}</Text>
-  </View>
+  </Pressable>
 );
 
 const styles = StyleSheet.create({

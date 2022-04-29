@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, useWindowDimensions } from "react-native";
+import { View, Text, Image, StyleSheet, useWindowDimensions, Pressable } from "react-native";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import CommonStyle, { BORDER_COLOR } from "../common/CommonStyle";
@@ -20,7 +20,7 @@ const HeaderLogo = () => {
                 <Text style={styles.title}>SOCIENT</Text>
             </View>
 
-            <View style={[styles.avatarContainer, styles.borderWidth]}
+            <Pressable style={[styles.avatarContainer, styles.borderWidth]}
                     onPress={() => nav.navigate("Profile")}>
                 <Image
                     style={[styles.avt, { marginBottom: 5 }]}
@@ -29,7 +29,7 @@ const HeaderLogo = () => {
                     }}
                 />
                 <Text style={styles.name}>{auth.user?.username}</Text>
-            </View>
+            </Pressable>
         </View>
     );
 };
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 5,
         marginHorizontal: 5,
-        marginTop: 20
+        // marginTop: 20
     },
     avt: {
         width: 40,
@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     logo: {
         width: 50,
         height: 50,
+        borderRadius: 100,
     },
     avatarContainer: {
         flexDirection: "row",

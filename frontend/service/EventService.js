@@ -14,7 +14,7 @@ const getEvents = async (token, params = null) => {
     if (params) {
       url += "?" + queryString.stringify(params);
     }
-    const response = await axios.get(url, config);
+    const response = await axios.get(decodeURIComponent(url), config);
     return response.data.data.items;
   } catch (err) {
     console.log("error", err);
@@ -37,7 +37,7 @@ const getById = async (token, id) => {
   }
 };
 
-const likeOrDislikeEvent = async (token, id, type = "like") => {
+const toggleLikedEvent = async (token, id, type = "like") => {
   try {
     let config = {
       method: type == "like" ? "post" : "delete",
@@ -47,11 +47,35 @@ const likeOrDislikeEvent = async (token, id, type = "like") => {
         "Content-Type": "application/json",
       },
     };
+    console.log(config);
     await axios(config);
     return true;
   } catch (err) {
-    console.log("error in likeOrDislikeEvent", err);
+    console.log("error in toggleLikedEvent", err);
     return false;
   }
 };
-export default { getEvents, getById, likeOrDislikeEvent };
+
+const toggleJoinedPublicEvent = async (token, id, type = "join") => {
+  try {
+    let config = {
+      method: type == "join" ? "post" : "delete",
+      url: `${API}/${id}/join`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
+    await axios(config);
+    return true;
+  } catch (err) {
+    console.log("error in toggleJoinedPublicEvent", err);
+    return false;
+  }
+};
+export default {
+  getEvents,
+  getById,
+  toggleLikedEvent,
+  toggleJoinedPublicEvent,
+};

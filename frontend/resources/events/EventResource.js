@@ -31,6 +31,8 @@ export const toEventResource = async (resource, token = null) => {
     ),
     host,
     start_date: resource.start_at,
+    liked: resource.liked,
+    joined: resource.joined
   };
 };
 

@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     alignItems: "center",
     borderRadius: 5,
-    flexDirection: "row",
+    flexDirection: "row"
   },
 
   text: {

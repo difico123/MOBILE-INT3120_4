@@ -27,6 +27,7 @@ import { toEventResource } from "../../resources/events/EventResource";
 import EventService from "../../service/EventService";
 import UserService from "../../service/UserService";
 import { HostModal } from "./HostModal";
+import { OptionsModal } from "./OptionsModal";
 
 moment.locale("vi");
 export const DetailEvent = (navigation) => {
@@ -36,9 +37,11 @@ export const DetailEvent = (navigation) => {
   const itemId = navigation.route.params.id;
   const [event, setEvent] = useState({});
   const [liked, setLiked] = useState(false);
+  const [joined, setJoined] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [ready, setReady] = useState(false);
   const [host, setHost] = useState({});
+  const [modalOptionsVisible, setModalOptionsVisible] = useState(false);
 
   const [modalHostVisible, setModalHostVisible] = useState(false);
   useEffect(() => {
@@ -52,21 +55,30 @@ export const DetailEvent = (navigation) => {
 
   useEffect(() => {
     const isLiked = async () => {
-      const likedRecord = await EventService.getEvents(auth.token, {
-        type: "like",
-      });
-      const checkLiked = likedRecord.some((item) => item.id === event.id);
-      setLiked(checkLiked);
+      setLiked(event.liked);
+      setJoined(event.joined);
       wait(1000).then(() => setReady(true));
     };
     isLiked();
   }, [event]);
 
-  const onJoinPress = () => {
-    alert("Joined successfully");
+  const onJoinPress = async () => {
+    const toggleJoin = await EventService.toggleJoinedPublicEvent(
+      auth.token,
+      event.id,
+      joined ? "cancel" : "join"
+    );
+    if (toggleJoin) {
+      alert(
+        joined
+          ? "Đã xóa khỏi danh sách tham gia"
+          : "Đã thêm vào danh sách tham gia"
+      );
+    }
+    setJoined(!joined);
   };
   const onLikePress = async () => {
-    const likeOrDislike = await EventService.likeOrDislikeEvent(
+    const likeOrDislike = await EventService.toggleLikedEvent(
       auth.token,
       event.id,
       liked ? "dislike" : "like"
@@ -109,7 +121,10 @@ export const DetailEvent = (navigation) => {
     };
     getHostInfo();
   };
-  console.log(host, "host info click");
+
+  const onOptionPress = () => {
+    setModalOptionsVisible(true);
+  };
   return isLoading || !ready ? (
     <SimpleLoading></SimpleLoading>
   ) : (
@@ -120,6 +135,11 @@ export const DetailEvent = (navigation) => {
           setModalHostVisible={setModalHostVisible}
           host={host}
         ></HostModal>
+
+        <OptionsModal
+          modalOptionsVisible={modalOptionsVisible}
+          setModalOptionsVisible={setModalOptionsVisible}
+        ></OptionsModal>
         <ScrollView style={styles.scrollView}>
           <View style={styles.bannerContainer}>
             <Image
@@ -186,9 +206,16 @@ export const DetailEvent = (navigation) => {
 
         <View style={styles.actionContainer}>
           <View style={styles.actions}>
-            <View style={styles.going}>
+            <TouchableOpacity
+              style={{
+                ...styles.going,
+                ...{ backgroundColor: joined ? MAIN_COLOR : "grey" },
+              }}
+              onPress={onJoinPress}
+            >
               <Text style={styles.optionText}>Tham gia</Text>
-            </View>
+            </TouchableOpacity>
+
             <TouchableOpacity
               style={{
                 ...styles.liked,
@@ -198,9 +225,10 @@ export const DetailEvent = (navigation) => {
             >
               <Text style={styles.optionText}>Quan tâm</Text>
             </TouchableOpacity>
-            <View style={styles.other}>
+
+            <TouchableOpacity style={styles.other} onPress={onOptionPress}>
               <Text style={styles.optionText}>...</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -294,11 +322,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   going: {
-    backgroundColor: MAIN_COLOR,
+    backgroundColor: "grey",
     flex: 0.3,
     justifyContent: "center",
     borderRadius: 10,
     height: 40,
+    elevation: 10,
   },
   liked: {
     backgroundColor: "grey",
@@ -307,6 +336,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 10,
     height: 40,
+    elevation: 10,
   },
   other: {
     backgroundColor: MAIN_COLOR,
@@ -315,6 +345,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 10,
     height: 40,
+    elevation: 10,
   },
   optionText: {
     textAlign: "center",

@@ -26,6 +26,8 @@ import { HorizontalLine } from "../../components/common/HorizontalLine";
 import { StatisticBox } from "../../components/StatisticComponent/StatisticBox";
 import { StatisticItem } from "../../components/StatisticComponent/StatisticItem";
 import CustomSwitch from "../../components/switch/Switch";
+import { updateListFriend } from "../../redux/actions/friend_action";
+import FriendService from "../../service/FriendService";
 
 const Me = () => {
   const dispatch = useDispatch();
@@ -35,6 +37,9 @@ const Me = () => {
   const navigation = useNavigation();
 
   const auth = useSelector((state) => state.authReducers.auth);
+  const favorite = useSelector((state) => state.authReducers.favorite);
+  const events = useSelector((state) => state.authReducers.events);
+  const friend = useSelector((state) => state.authReducers.friend);
 
   const [isEnabledCopyToCalender, setEnabledCopyToCalender] = useState(false);
   const toggleSwitchCopyToCalender = () =>
@@ -50,6 +55,16 @@ const Me = () => {
   const avatar = auth.user.avatar?.includes("http")
     ? { uri: auth.user.avatar }
     : require("../../assets/avatar-default-icon.png");
+
+  useEffect(() => {
+    (async () => {
+      dispatch(
+        updateListFriend(
+          (await FriendService.getMyFriends(auth.token)).pagination.total_items
+        )
+      );
+    })();
+  });
   return (
     <View>
       <ScrollView
@@ -72,11 +87,23 @@ const Me = () => {
           </View>
 
           <View style={styles.general}>
-            <SimpleStatistic number={0} title={"Favorites"}></SimpleStatistic>
+            <SimpleStatistic
+              number={favorite.length}
+              title={"Favorites"}
+              onPress={() => navigation.navigate("EventListLike")}
+            ></SimpleStatistic>
             <VerticalLine></VerticalLine>
-            <SimpleStatistic number={0} title={"My events"}></SimpleStatistic>
+            <SimpleStatistic
+              number={events.length}
+              title={"My events"}
+              onPress={() => navigation.navigate("EventCreateMe")}
+            ></SimpleStatistic>
             <VerticalLine></VerticalLine>
-            <SimpleStatistic number={0} title={"Friends"}></SimpleStatistic>
+            <SimpleStatistic
+              number={friend}
+              title={"Friends"}
+              onPress={onFriendPress}
+            ></SimpleStatistic>
           </View>
 
           <View style={styles.notification}>
@@ -95,8 +122,20 @@ const Me = () => {
                 toggleSwitch={toggleSwitchCopyToCalender}
               />
             </StatisticItem>
-            <StatisticItem title="Manage events" touchable={true} onPress={() => alert("success")}></StatisticItem>
-            <StatisticItem title="Account settings" touchable={true} onPress={onProfilePress}></StatisticItem>
+            <HorizontalLine></HorizontalLine>
+            <StatisticItem
+              title="Manage events"
+              touchable={true}
+              onPress={() => alert("Manage events")}
+            ></StatisticItem>
+            <HorizontalLine></HorizontalLine>
+            <StatisticItem
+              title="Account settings"
+              touchable={true}
+              onPress={onProfilePress}
+            ></StatisticItem>
+
+            <HorizontalLine></HorizontalLine>
           </StatisticBox>
           {/* <View style={styles.main}>
             <TouchableOpacity style={styles.content} onPress={onProfilePress}>
@@ -176,6 +215,7 @@ const styles = StyleSheet.create({
   },
   buttonBox: {
     marginHorizontal: 20,
+    marginVertical: 30,
   },
   buttonSignout: {
     paddingVertical: 15,

@@ -6,6 +6,7 @@ import CustomButton from "../../components/ButtonComponent/CustomButton";
 import EventItemHot from "../../components/EventItem/EventItemHot";
 import SlideModal from "../../components/modal/SlideModal";
 import EventService from "../../service/EventService";
+import FriendService from "../../service/FriendService";
 import { CustomInfoItem } from "./data/components/CustomInfoItem";
 import { SimpleInfoBox } from "./data/components/SimpleInfoBox";
 
@@ -27,6 +28,14 @@ export const HostModal = ({ host, modalHostVisible, setModalHostVisible }) => {
   const goToDetail = (id) => {
     nav.navigate("Tabs");
     nav.navigate("DetailEvent", { id });
+  };
+
+  const onAddFriend = async () => {
+    alert("on press");
+    // const status = await FriendService.addFriend(auth.token, host.id);
+    // if (status) {
+      // dispatch
+    // }
   };
   const EventsByHost = hostEvents.map((item, index) => (
     <EventItemHot item={item} key={index} onPress={() => goToDetail(item.id)} />
@@ -53,10 +62,24 @@ export const HostModal = ({ host, modalHostVisible, setModalHostVisible }) => {
         </ScrollView>
 
         <View></View>
-        <CustomButton
-          text="Kết bạn"
-          textStyle={{ fontSize: 20 }}
-        ></CustomButton>
+
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <View style={{ flex: 1 }}>
+            <CustomButton
+              text="Kết bạn"
+              textStyle={{ fontSize: 20 }}
+              onPress={onAddFriend}
+            ></CustomButton>
+          </View>
+          <View style={{ flex: 0.02 }}></View>
+          <View style={{ flex: 1 }}>
+            <CustomButton
+              text="Liên hệ"
+              textStyle={{ fontSize: 20 }}
+              onPress={onAddFriend}
+            ></CustomButton>
+          </View>
+        </View>
       </>
     </SlideModal>
   );
@@ -80,9 +103,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   upcomingText: {
-      fontSize: 20,
-      fontWeight: "bold",
-      marginTop: 20,
-      marginBottom: 10
-  }
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 20,
+    marginBottom: 10,
+  },
 });

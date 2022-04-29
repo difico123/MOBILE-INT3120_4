@@ -6,8 +6,9 @@ export const HorizontalLine = () => <View style={styles.horizontalLine}></View>;
 const styles = StyleSheet.create({
   horizontalLine: {
     height: 1,
-    width: "100%",
+    width: "130%",
     backgroundColor: "#909090",
-    marginVertical: 15
+    marginVertical: 15,
+    marginLeft: -20
   },
 });

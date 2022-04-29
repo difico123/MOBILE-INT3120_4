@@ -26,6 +26,8 @@ import { toEventCollection } from "../resources/events/EventResource";
 import { wait } from "../helpers/helpers";
 import moment from "moment";
 import { updateList } from "../redux/actions/favorite_actions";
+import { updateListFriend } from "../redux/actions/friend_action";
+import FriendService from "../service/FriendService";
 
 const Home = ({ navigation }) => {
   const [refreshing, setRefreshing] = React.useState(false);
@@ -41,7 +43,6 @@ const Home = ({ navigation }) => {
   const auth = useSelector((state) => state.authReducers.auth);
   const dispatch = useDispatch();
   const nav = useNavigation();
-
 
   useEffect(() => {
     if (isToggleNav) {
@@ -74,8 +75,12 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       dispatch(
-        updateList(await EventService.getEvents(auth.token, { type: "like" }))
+        updateList(await EventService.getEvents(auth.token, { type: "like" })) //update favorite list
       );
+      const myFriends = await FriendService.getMyFriends(auth.token);
+      if (myFriends) {
+        dispatch(updateListFriend(myFriends.pagination.total_items));
+      }
     })();
   }, [refreshing]);
 
@@ -108,8 +113,10 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     const updateUpcomingEvent = async () => {
       const record = await EventService.getEvents(auth.token, {
-        start_at: moment().format(),
+        start_at_start: moment().format("YYYY-MM-DD HH:mm:ss"),
+        start_at_end: moment().add(1, 'days').format("YYYY-MM-DD HH:mm:ss"),
       });
+      // console.log("upcoming", await toEventCollection(record));
       setUpcomingEvents(await toEventCollection(record));
     };
     updateUpcomingEvent();

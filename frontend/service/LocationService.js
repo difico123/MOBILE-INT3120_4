@@ -10,7 +10,7 @@ const getLocationByLatAndLong = async (lat, long) => {
       : "Không xác định";
     return location;
   } catch (e) {
-    console.log(e);
+    // console.log(e);
     return "Không xác định";
   }
 };
