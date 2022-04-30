@@ -37,7 +37,5 @@ export const toEventResource = async (resource, token = null) => {
 };
 
 export const toEventCollection = async (resource, token) => {
-  return await Promise.all(
-    resource.map(async (item) => await toEventResource(item, token))
-  );
+    return await Promise.all(resource.map(async (item) => await toEventResource(item, token)));
 };

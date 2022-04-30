@@ -2,6 +2,7 @@ import axios from "axios";
 import APP from "../config/app";
 const API = `${APP.BASE_API}events`;
 import queryString from "query-string";
+import http from "./http";
 
 const getEvents = async (token, params = null) => {
   try {
@@ -73,9 +74,20 @@ const toggleJoinedPublicEvent = async (token, id, type = "join") => {
     return false;
   }
 };
+
+const getHealcheck = async () => {
+  return await http.get("/healthcheck");
+};
+
+const create = async () => {
+  return await http.get("/create");
+};
+
 export default {
   getEvents,
   getById,
   toggleLikedEvent,
+  getHealcheck,
+  create,
   toggleJoinedPublicEvent,
 };
