@@ -20,13 +20,13 @@ import { DateCard } from "../../components/EventItem/DateCard";
 import { EventInfo } from "../../components/EventItem/EventInfo";
 import { SimpleLoading } from "../../components/LoadingComponent/simpleLoading";
 import SlideModal from "../../components/modal/SlideModal";
+import { UserModal } from "../../components/modal/UserModal";
 import { MONTH } from "../../config/date";
 import { wait } from "../../helpers/helpers";
 import { addItem, removeItem } from "../../redux/actions/favorite_actions";
 import { toEventResource } from "../../resources/events/EventResource";
 import EventService from "../../service/EventService";
 import UserService from "../../service/UserService";
-import { HostModal } from "./HostModal";
 import { OptionsModal } from "./OptionsModal";
 
 moment.locale("vi");
@@ -130,11 +130,11 @@ export const DetailEvent = (navigation) => {
   ) : (
     Object.keys(event).length > 0 && (
       <View style={styles.container}>
-        <HostModal
-          modalHostVisible={modalHostVisible}
-          setModalHostVisible={setModalHostVisible}
-          host={host}
-        ></HostModal>
+        <UserModal
+          modalUserVisible={modalHostVisible}
+          setModalUserVisible={setModalHostVisible}
+          user={host}
+        ></UserModal>
 
         <OptionsModal
           modalOptionsVisible={modalOptionsVisible}

@@ -2,25 +2,26 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSelector } from "react-redux";
-import CustomButton from "../../components/ButtonComponent/CustomButton";
-import EventItemHot from "../../components/EventItem/EventItemHot";
-import SlideModal from "../../components/modal/SlideModal";
+import CustomButton from "../ButtonComponent/CustomButton";
+import EventItemHot from "../EventItem/EventItemHot";
+import SlideModal from "./SlideModal";
 import EventService from "../../service/EventService";
 import FriendService from "../../service/FriendService";
-import { CustomInfoItem } from "./data/components/CustomInfoItem";
-import { SimpleInfoBox } from "./data/components/SimpleInfoBox";
+import { CustomInfoItem } from "../../screens/Event/data/components/CustomInfoItem";
+import { SimpleInfoBox } from "../../screens/Event/data/components/SimpleInfoBox";
 
-export const HostModal = ({ host, modalHostVisible, setModalHostVisible }) => {
-  const avatar = host.avatar?.includes("http")
-    ? { uri: host.avatar }
-    : require("./data/image/avatar/avatar-default-icon.png");
+export const UserModal = ({ user, modalUserVisible, setModalUserVisible }) => {
+  console.log("hey", user);
+  const avatar = user.avatar?.includes("http")
+    ? { uri: user.avatar }
+    : require("../../assets/avatar-default-icon.png");
   const auth = useSelector((state) => state.authReducers.auth);
-  const [hostEvents, setHostEvents] = useState([]);
+  const [userEvents, setUserEvents] = useState([]);
   const nav = useNavigation();
   useEffect(() => {
     (async () => {
-      setHostEvents(
-        await EventService.getEvents(auth.token, { host_info: host.email })
+      setUserEvents(
+        await EventService.getEvents(auth.token, { host_info: user.email })
       );
     })();
   }, []);
@@ -31,31 +32,32 @@ export const HostModal = ({ host, modalHostVisible, setModalHostVisible }) => {
   };
 
   const onAddFriend = async () => {
-    alert("on press");
-    // const status = await FriendService.addFriend(auth.token, host.id);
-    // if (status) {
-      // dispatch
-    // }
+    const status = await FriendService.addFriend(auth.token, user.id);
+    if (status) {
+      alert("Success");
+    } else {
+      alert("Failed", status);
+    }
   };
-  const EventsByHost = hostEvents.map((item, index) => (
+  const EventsByHost = userEvents.map((item, index) => (
     <EventItemHot item={item} key={index} onPress={() => goToDetail(item.id)} />
   ));
   return (
     <SlideModal
-      setModalVisible={setModalHostVisible}
-      modalVisible={modalHostVisible}
+      setModalVisible={setModalUserVisible}
+      modalVisible={modalUserVisible}
     >
       <>
         <View style={styles.imageBox}>
           <Image style={styles.image} source={avatar} />
           <View style={styles.nameBox}>
             <Text style={styles.name}>
-              {host.first_name + " " + host.last_name}
+              {user.first_name + " " + user.last_name}
             </Text>
           </View>
         </View>
         <ScrollView>
-          <SimpleInfoBox host={host}></SimpleInfoBox>
+          <SimpleInfoBox host={user}></SimpleInfoBox>
           <Text style={styles.upcomingText}>Upcoming</Text>
           {EventsByHost}
           <View style={{ marginBottom: 100 }}></View>
@@ -76,7 +78,7 @@ export const HostModal = ({ host, modalHostVisible, setModalHostVisible }) => {
             <CustomButton
               text="Liên hệ"
               textStyle={{ fontSize: 20 }}
-              onPress={onAddFriend}
+              onPress={() => alert("contact")}
             ></CustomButton>
           </View>
         </View>

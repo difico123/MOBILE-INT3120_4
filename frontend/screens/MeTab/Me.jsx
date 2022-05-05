@@ -51,9 +51,14 @@ const Me = () => {
   const onFriendPress = () => {
     navigation.navigate("Friend");
   };
-  const hostName = auth.user.last_name + " " + auth.user.first_name;
-  const avatar = auth.user.avatar?.includes("http")
-    ? { uri: auth.user.avatar }
+  console.log(auth.user);
+  const hostNameObject = {
+    lastName: auth?.user.last_name ?? "",
+    firstName: auth?.user.first_name ?? "",
+  };
+  const hostName = hostNameObject.firstName + " " + hostNameObject.lastName;
+  const avatar = auth?.user.avatar?.includes("http")
+    ? { uri: auth?.user.avatar }
     : require("../../assets/avatar-default-icon.png");
 
   useEffect(() => {
@@ -65,6 +70,7 @@ const Me = () => {
       );
     })();
   });
+  console.log(hostName, "hostName");
   return (
     <View>
       <ScrollView
@@ -75,7 +81,9 @@ const Me = () => {
           <View style={styles.top}>
             <Image style={styles.avatar} source={avatar} />
             <View style={{ flexDirection: "row" }}>
-              <Text style={styles.hostName}>{hostName}</Text>
+              <Text style={styles.hostName} onPress={onProfilePress}>
+                {hostName == " " ? "<Cập nhật tên>" : hostName}
+              </Text>
               <Pressable onPress={onProfilePress}>
                 <Image
                   style={styles.editIcon}

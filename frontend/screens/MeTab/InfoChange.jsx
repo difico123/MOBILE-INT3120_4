@@ -45,6 +45,8 @@ export const InfoChange = () => {
     }
     if (selectedGender !== "" && selectedGender !== user.gender) {
       data.gender = selectedGender;
+    } else if (!selectedGender && !user.gender) {
+      data.gender = "Nam";
     }
     if (phoneNumber !== "" && phoneNumber !== user.phone_number) {
       data.phone_number = phoneNumber;
