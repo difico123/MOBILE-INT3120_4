@@ -19,6 +19,7 @@ import HeaderLogo from "../components/Layout/HeaderLogo";
 import EventItemIncomming from "../components/EventItem/EventItemIncomming";
 import EventItemHot from "../components/EventItem/EventItemHot";
 import CommonStyle from "../components/common/CommonStyle";
+import { SimpleLoading } from "../components/LoadingComponent/simpleLoading";
 
 import { MAIN_COLOR, BORDER_COLOR } from "../components/common/CommonStyle";
 import EventService from "../service/EventService";
@@ -39,6 +40,7 @@ const Home = ({ navigation }) => {
   const [isToggleNav, setToggleNav] = useState(false);
   const [searchEvent, setSearchEvent] = useState("");
   const [allEvents, setAllEvents] = useState([]);
+  const [isLoading, setLoading] = useState(false);
 
   const auth = useSelector((state) => state.authReducers.auth);
   const dispatch = useDispatch();
@@ -114,7 +116,7 @@ const Home = ({ navigation }) => {
     const updateUpcomingEvent = async () => {
       const record = await EventService.getEvents(auth.token, {
         start_at_start: moment().format("YYYY-MM-DD HH:mm:ss"),
-        start_at_end: moment().add(1, 'days').format("YYYY-MM-DD HH:mm:ss"),
+        start_at_end: moment().add(1, "days").format("YYYY-MM-DD HH:mm:ss"),
       });
       // console.log("upcoming", await toEventCollection(record));
       setUpcomingEvents(await toEventCollection(record));
@@ -124,12 +126,18 @@ const Home = ({ navigation }) => {
 
   const handleSearchEvent = () => {
     const getEvents = async () => {
-      const data =  await EventService.getEvents(auth.token, {event_name: searchEvent});
-      navigation.navigate("EventList", {data, searchEvent});
+      setLoading(true);
+      const data = await EventService.getEvents(auth.token, {
+        event_name: searchEvent,
+      });
+      setLoading(false);
+      navigation.navigate("EventList", { data, searchEvent });
     };
     getEvents();
-  }
-  return (
+  };
+  return isLoading ? (
+    <SimpleLoading></SimpleLoading>
+  ) : (
     <View style={styles.container}>
       <View style={styles.header}>
         <SearchBar
