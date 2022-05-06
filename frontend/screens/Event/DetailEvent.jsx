@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import moment from "moment";
 import "moment/locale/vi";
 import React, { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { BigButton } from "../../components/ButtonComponent/BigButton";
 import CustomButton from "../../components/ButtonComponent/CustomButton";
 import { ImageButton } from "../../components/ButtonComponent/ImageButton";
 import { SmallButton } from "../../components/ButtonComponent/SmallButton";
@@ -32,6 +34,7 @@ import { OptionsModal } from "./OptionsModal";
 moment.locale("vi");
 export const DetailEvent = (navigation) => {
   const auth = useSelector((state) => state.authReducers.auth);
+  const nav = useNavigation();
   const dispatch = useDispatch();
 
   const itemId = navigation.route.params.id;
@@ -113,7 +116,9 @@ export const DetailEvent = (navigation) => {
   const seeHostInfo = async () => {
     console.log("host info click");
     const getHostInfo = async () => {
+      setReady(false);
       const host = await UserService.getUserById(auth.token, event.host_id);
+      setReady(true);
       if (host) {
         setHost(host);
         setModalHostVisible(true);
@@ -124,6 +129,22 @@ export const DetailEvent = (navigation) => {
 
   const onOptionPress = () => {
     setModalOptionsVisible(true);
+  };
+
+  const handleSearchEvent = () => {
+    const getEvents = async () => {
+      setReady(false);
+      const params = { topic: event.topic };
+      const result = await EventService.getEvents(auth.token, params);
+      setReady(true);
+      nav.navigate("Tabs");
+      nav.navigate("EventList", {
+        data: result,
+        searchEvent: event.topic,
+        searchBy: "topic",
+      });
+    };
+    getEvents();
   };
   return isLoading || !ready ? (
     <SimpleLoading></SimpleLoading>
@@ -139,7 +160,14 @@ export const DetailEvent = (navigation) => {
         <OptionsModal
           modalOptionsVisible={modalOptionsVisible}
           setModalOptionsVisible={setModalOptionsVisible}
-        ></OptionsModal>
+          title="Tùy chọn"
+        >
+          <BigButton
+            imageName="contact"
+            text="Gửi mail tới host"
+          ></BigButton>
+          <BigButton imageName="report" text="Báo cáo"></BigButton>
+        </OptionsModal>
         <ScrollView style={styles.scrollView}>
           <View style={styles.bannerContainer}>
             <Image
@@ -197,7 +225,10 @@ export const DetailEvent = (navigation) => {
                 source={require("../../assets/info.png")}
               ></EventInfo>
               <View style={{ flexDirection: "row" }}>
-                <SmallButton title={event.topic}></SmallButton>
+                <SmallButton
+                  title={event.topic}
+                  onPress={handleSearchEvent}
+                ></SmallButton>
               </View>
             </View>
           </View>

@@ -122,6 +122,13 @@ const Home = ({ navigation }) => {
     updateUpcomingEvent();
   }, [refreshing]);
 
+  const handleSearchEvent = () => {
+    const getEvents = async () => {
+      const data =  await EventService.getEvents(auth.token, {event_name: searchEvent});
+      navigation.navigate("EventList", {data, searchEvent});
+    };
+    getEvents();
+  }
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -130,6 +137,7 @@ const Home = ({ navigation }) => {
           setToggleNav={setToggleNav}
           setValue={setSearchEvent}
           value={searchEvent}
+          onPress={handleSearchEvent}
         />
       </View>
       <ScrollView

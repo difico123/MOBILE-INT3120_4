@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import EventList from "../screens/EventTab/EventList";
+// import EventList from "../screens/EventTab/EventList";
 import Home from "../screens/Home";
 import Tabs from "./Tabs";
 import Profile from "../screens/MeTab/Profile";
@@ -17,6 +17,7 @@ import EventCreateMe from "../screens/EventTab/EventCreateMe";
 import EventCreate from "../screens/EventTab/EventCreate";
 import EventInfo from "../screens/EventTab/EventInfo";
 import { color, background } from "../theme";
+import { EventList } from "../screens/Event/EventList";
 
 const Stack = createNativeStackNavigator();
 const Navigation = () => {
@@ -30,7 +31,14 @@ const Navigation = () => {
     return (
         <Stack.Navigator>
             <Stack.Screen name="Tabs" component={Tabs} options={{ headerShown: false }} />
-            <Stack.Screen name="EventList" component={EventList} options={{ headerShown: false }} />
+            <Stack.Screen name="EventList" component={EventList}
+                options={{
+                    title: "Danh sách sự kiện",
+                    headerStyle: {
+                        backgroundColor: "transparent",
+                        elevator: 0,
+                    },
+                }}/>
             <Stack.Screen
                 name="Friend"
                 component={Friend}
