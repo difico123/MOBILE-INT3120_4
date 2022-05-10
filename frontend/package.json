@@ -34,6 +34,7 @@
         "react-native": "0.64.3",
         "react-native-elements": "^3.4.2",
         "react-native-emoji-selector": "^0.2.0",
+        "react-native-geocoding": "^0.5.0",
         "react-native-google-places-autocomplete": "^2.4.1",
         "react-native-maps": "0.29.4",
         "react-native-paper": "^4.11.2",
@@ -42,12 +43,10 @@
         "react-native-swipeout": "^2.3.6",
         "react-native-vector-icons": "^9.1.0",
         "react-native-web": "0.17.1",
-        "react-native-webrtc": "^1.100.0",
         "react-redux": "^7.2.6",
         "redux": "^4.1.2",
         "redux-thunk": "^2.4.1",
-        "socket.io-client": "^4.5.0",
-        "expo-dev-client": "~0.8.5"
+        "socket.io-client": "^4.5.0"
     },
     "devDependencies": {
         "@babel/core": "^7.12.9"
