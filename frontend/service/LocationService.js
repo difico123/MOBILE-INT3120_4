@@ -5,13 +5,14 @@ const getLocationByLatAndLong = async (lat, long) => {
   try {
     Geocoder.init(APP.GEOLOCATION_API_KEY);
     const getLocation = await Geocoder.from(lat, long);
+    // console.log(getLocation.results);
     const location = getLocation
       ? getLocation.results[0].formatted_address
-      : "Không xác định";
+      : "Chưa cập nhật";
     return location;
   } catch (e) {
     // console.log(e);
-    return "Không xác định";
+    return "Chưa cập nhật";
   }
 };
 
