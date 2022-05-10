@@ -58,6 +58,8 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
+        overflow: "hidden",
+
         elevation: 5,
     },
     centeredView: {

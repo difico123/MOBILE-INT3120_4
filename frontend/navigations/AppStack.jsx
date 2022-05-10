@@ -16,6 +16,9 @@ import { DetailEvent } from "../screens/Event/DetailEvent";
 import EventCreateMe from "../screens/EventTab/EventCreateMe";
 import EventCreate from "../screens/EventTab/EventCreate";
 import EventInfo from "../screens/EventTab/EventInfo";
+import Rooms from "../screens/ChatScreen/Rooms";
+import ChatRoom from "../screens/ChatScreen/ChatRoom";
+import VideoCall from "../screens/ChatScreen/VideoCall";
 import { color, background } from "../theme";
 import { EventList } from "../screens/Event/EventList";
 
@@ -67,6 +70,9 @@ const Navigation = () => {
             <Stack.Screen name="EventCreate" component={EventCreate} options={option("Sự kiện mới")} />
             {/* <Stack.Screen name="Friend" component={Friend} options={option("Bạn bè")} /> */}
             <Stack.Screen name="EventInfo" component={EventInfo} options={option("Thông tin sự kiện")} />
+            <Stack.Screen name="ChatRoom" component={ChatRoom} options={option("")} />
+            <Stack.Screen name="Rooms" component={Rooms} options={option("Phòng chat")} />
+            <Stack.Screen name="VideoCall" component={VideoCall} options={option("Video")} />
         </Stack.Navigator>
     );
 };
