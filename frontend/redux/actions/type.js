@@ -9,4 +9,8 @@ export const ADD_EVENT = "add_event";
 export const EDIT_EVENT = "edit_event";
 export const DELETE_EVENT = "delete_event";
 export const SET_ROUTER = "set_router";
+
+export const ADD_FRIEND = "ADD_FRIEND";
+export const DELETE_FRIEND = "DELETE_FRIEND";
+export const UPDATE_LIST_FRIEND = "UPDATE_LIST_FRIEND";
 export const SET_SOCKET = "set_socket";

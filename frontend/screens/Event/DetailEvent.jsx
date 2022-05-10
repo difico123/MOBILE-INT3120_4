@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import moment from "moment";
 import "moment/locale/vi";
 import React, { useEffect, useState } from "react";
@@ -12,28 +13,39 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { BigButton } from "../../components/ButtonComponent/BigButton";
 import CustomButton from "../../components/ButtonComponent/CustomButton";
 import { ImageButton } from "../../components/ButtonComponent/ImageButton";
 import { SmallButton } from "../../components/ButtonComponent/SmallButton";
 import { BORDER_COLOR, MAIN_COLOR } from "../../components/common/CommonStyle";
+import { DateCard } from "../../components/EventItem/DateCard";
 import { EventInfo } from "../../components/EventItem/EventInfo";
 import { SimpleLoading } from "../../components/LoadingComponent/simpleLoading";
+import SlideModal from "../../components/modal/SlideModal";
+import { UserModal } from "../../components/modal/UserModal";
 import { MONTH } from "../../config/date";
 import { wait } from "../../helpers/helpers";
 import { addItem, removeItem } from "../../redux/actions/favorite_actions";
 import { toEventResource } from "../../resources/events/EventResource";
 import EventService from "../../service/EventService";
+import UserService from "../../service/UserService";
+import { OptionsModal } from "./OptionsModal";
 
 moment.locale("vi");
 export const DetailEvent = (navigation) => {
   const auth = useSelector((state) => state.authReducers.auth);
+  const nav = useNavigation();
   const dispatch = useDispatch();
 
   const itemId = navigation.route.params.id;
   const [event, setEvent] = useState({});
   const [liked, setLiked] = useState(false);
+  const [joined, setJoined] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [ready, setReady] = useState(false);
+  const [modalOptionsVisible, setModalOptionsVisible] = useState(false);
+
+  const [modalHostVisible, setModalHostVisible] = useState(false);
   useEffect(() => {
     const getEvent = async () => {
       const record = await EventService.getById(auth.token, itemId);
@@ -45,21 +57,30 @@ export const DetailEvent = (navigation) => {
 
   useEffect(() => {
     const isLiked = async () => {
-      const likedRecord = await EventService.getEvents(auth.token, {
-        type: "like",
-      });
-      const checkLiked = likedRecord.some((item) => item.id === event.id);
-      setLiked(checkLiked);
+      setLiked(event.liked);
+      setJoined(event.joined);
       wait(1000).then(() => setReady(true));
     };
     isLiked();
   }, [event]);
 
-  const onJoinPress = () => {
-    alert("Joined successfully");
+  const onJoinPress = async () => {
+    const toggleJoin = await EventService.toggleJoinedPublicEvent(
+      auth.token,
+      event.id,
+      joined ? "cancel" : "join"
+    );
+    if (toggleJoin) {
+      alert(
+        joined
+          ? "Đã xóa khỏi danh sách tham gia"
+          : "Đã thêm vào danh sách tham gia"
+      );
+    }
+    setJoined(!joined);
   };
   const onLikePress = async () => {
-    const likeOrDislike = await EventService.likeOrDislikeEvent(
+    const likeOrDislike = await EventService.toggleLikedEvent(
       auth.token,
       event.id,
       liked ? "dislike" : "like"
@@ -90,11 +111,49 @@ export const DetailEvent = (navigation) => {
   const onEditPress = () => {
     alert("on edit");
   };
+
+  const seeHostInfo = async () => {
+    setModalHostVisible(true);
+  };
+
+  const onOptionPress = () => {
+    setModalOptionsVisible(true);
+  };
+
+  const handleSearchEvent = () => {
+    const getEvents = async () => {
+      setReady(false);
+      const params = { topic: event.topic };
+      const result = await EventService.getEvents(auth.token, params);
+      setReady(true);
+      nav.navigate("Profile");
+      nav.navigate("EventList", {
+        data: result,
+        searchEvent: event.topic,
+        searchBy: "topic",
+      });
+    };
+    getEvents();
+  };
   return isLoading || !ready ? (
     <SimpleLoading></SimpleLoading>
   ) : (
     Object.keys(event).length > 0 && (
       <View style={styles.container}>
+        <UserModal
+          modalUserVisible={modalHostVisible}
+          setModalUserVisible={setModalHostVisible}
+          userId={event.host_id}
+        ></UserModal>
+
+        <OptionsModal
+          modalOptionsVisible={modalOptionsVisible}
+          setModalOptionsVisible={setModalOptionsVisible}
+          title="Tùy chọn"
+        >
+          <BigButton imageName="contact" text="Gửi mail tới host"></BigButton>
+          <BigButton imageName="report" text="Báo cáo"></BigButton>
+        </OptionsModal>
         <ScrollView style={styles.scrollView}>
           <View style={styles.bannerContainer}>
             <Image
@@ -109,7 +168,7 @@ export const DetailEvent = (navigation) => {
           </View>
           <View style={styles.body}>
             <View style={styles.introContainer}>
-              <View>
+              <View style={{ flex: 0.6 }}>
                 <Text style={styles.introTime}>
                   {/* {event.start_at + " - " + event.end_at} */}
                   {event.start_date
@@ -121,15 +180,7 @@ export const DetailEvent = (navigation) => {
                 <Text style={styles.introTitle}>{event.event_name}</Text>
                 <Text style={styles.introLocation}>{event.location}</Text>
               </View>
-
-              <View style={styles.dateContainer}>
-                <Text style={styles.dateText}>
-                  {event.start_date?.split("T")[0].split("-")[2]}
-                </Text>
-                <Text style={styles.monthText}>
-                  {MONTH[event.start_date?.split("T")[0].split("-")[1]]}
-                </Text>
-              </View>
+              <DateCard item={event}></DateCard>
             </View>
             <View style={styles.main}>
               <Text style={styles.titleMain}>Chi tiết sự kiện</Text>
@@ -140,11 +191,14 @@ export const DetailEvent = (navigation) => {
                   info={event.duration}
                   source={require("../../assets/sand-clock.png")}
                 ></EventInfo>
-              ) : <Text style={{ height: 0 }}></Text>}
+              ) : (
+                <Text style={{ height: 0 }}></Text>
+              )}
               <EventInfo
                 info={event.host?.first_name + " " + event.host?.last_name}
                 source={require("../../assets/flag.png")}
-                type="host"
+                host={{ id: event.host_id }}
+                onPress={seeHostInfo}
               ></EventInfo>
 
               <EventInfo
@@ -157,7 +211,10 @@ export const DetailEvent = (navigation) => {
                 source={require("../../assets/info.png")}
               ></EventInfo>
               <View style={{ flexDirection: "row" }}>
-                <SmallButton title={event.topic}></SmallButton>
+                <SmallButton
+                  title={event.topic}
+                  onPress={handleSearchEvent}
+                ></SmallButton>
               </View>
             </View>
           </View>
@@ -166,9 +223,16 @@ export const DetailEvent = (navigation) => {
 
         <View style={styles.actionContainer}>
           <View style={styles.actions}>
-            <View style={styles.going}>
+            <TouchableOpacity
+              style={{
+                ...styles.going,
+                ...{ backgroundColor: joined ? MAIN_COLOR : "grey" },
+              }}
+              onPress={onJoinPress}
+            >
               <Text style={styles.optionText}>Tham gia</Text>
-            </View>
+            </TouchableOpacity>
+
             <TouchableOpacity
               style={{
                 ...styles.liked,
@@ -178,9 +242,10 @@ export const DetailEvent = (navigation) => {
             >
               <Text style={styles.optionText}>Quan tâm</Text>
             </TouchableOpacity>
-            <View style={styles.other}>
+
+            <TouchableOpacity style={styles.other} onPress={onOptionPress}>
               <Text style={styles.optionText}>...</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -258,6 +323,8 @@ const styles = StyleSheet.create({
   introContainer: {
     marginHorizontal: 20,
     // marginTop: 10
+    flex: 1,
+    flexDirection: "row",
   },
   introTime: {
     color: "#5A5C60",
@@ -271,36 +338,13 @@ const styles = StyleSheet.create({
     color: "#5A5C60",
     fontSize: 15,
   },
-  dateContainer: {
-    position: "absolute",
-    borderRadius: 10,
-    width: 80,
-    height: 80,
-    justifyContent: "center",
-    alignItems: "center",
-    top: 0,
-    right: 0,
-    borderWidth: 1,
-    backgroundColor: MAIN_COLOR,
-    borderColor: BORDER_COLOR,
-    elevation: 10,
-    marginBottom: 10,
-  },
-  dateText: {
-    fontSize: 27,
-    fontWeight: "bold",
-    color: "#FFFFFF",
-  },
-  monthText: {
-    fontSize: 16,
-    color: "#FFFFFF",
-  },
   going: {
-    backgroundColor: MAIN_COLOR,
+    backgroundColor: "grey",
     flex: 0.3,
     justifyContent: "center",
     borderRadius: 10,
     height: 40,
+    elevation: 10,
   },
   liked: {
     backgroundColor: "grey",
@@ -309,6 +353,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 10,
     height: 40,
+    elevation: 10,
   },
   other: {
     backgroundColor: MAIN_COLOR,
@@ -317,6 +362,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 10,
     height: 40,
+    elevation: 10,
   },
   optionText: {
     textAlign: "center",

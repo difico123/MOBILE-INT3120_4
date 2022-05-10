@@ -6,6 +6,10 @@ export const leaves = require("./category/leaves/leaves.png");
 export const peace = require("./category/peace/peace.png");
 export const checkedCategory = require("./check/checkbox-icon.png");
 
+export const contact = require("./category/contact/email.png");
+export const report = require("./category/report/megaphone.png");
+export const time = require("./category/time/fast-time.png");
+export const location = require("./category/location/location.png");
 export const categories = {
     // "Bài học cuộc sống"
     life,
@@ -19,4 +23,12 @@ export const categories = {
     leaves,
     // "Hòa bình"
     peace,
+
+    contact,
+
+    report,
+    
+    time,
+
+    location,
 };

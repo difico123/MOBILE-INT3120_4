@@ -12,6 +12,7 @@ const signUp = async (user) => {
     return axios.post(`${APP.BASE_API}register`, user);
 };
 const signIn = async (user) => {
+    console.log(`${APP.BASE_API}login`, user);
     return axios.post(`${APP.BASE_API}login`, user);
 };
 

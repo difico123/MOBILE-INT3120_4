@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import EventList from "../screens/EventTab/EventList";
+// import EventList from "../screens/EventTab/EventList";
 import Home from "../screens/Home";
 import Tabs from "./Tabs";
 import Profile from "../screens/MeTab/Profile";
@@ -19,6 +19,7 @@ import EventInfo from "../screens/EventTab/EventInfo";
 import Rooms from "../screens/ChatScreen/Rooms";
 import ChatRoom from "../screens/ChatScreen/ChatRoom";
 import { color, background } from "../theme";
+import { EventList } from "../screens/Event/EventList";
 
 const Stack = createNativeStackNavigator();
 const Navigation = () => {
@@ -32,7 +33,14 @@ const Navigation = () => {
     return (
         <Stack.Navigator>
             <Stack.Screen name="Tabs" component={Tabs} options={{ headerShown: false }} />
-            <Stack.Screen name="EventList" component={EventList} options={{ headerShown: false }} />
+            <Stack.Screen name="EventList" component={EventList}
+                options={{
+                    title: "Danh sách sự kiện",
+                    headerStyle: {
+                        backgroundColor: "transparent",
+                        elevator: 0,
+                    },
+                }}/>
             <Stack.Screen
                 name="Friend"
                 component={Friend}
@@ -44,8 +52,15 @@ const Navigation = () => {
                     },
                 }}
             />
-
-            <Stack.Screen name="DetailEvent" component={DetailEvent} />
+            
+            <Stack.Screen name="DetailEvent" component={DetailEvent} 
+                options={{
+                    title: "Chi tiết sự kiện",
+                    headerStyle: {
+                        backgroundColor: "transparent",
+                        elevator: 0,
+                    },
+                }} />
             <Stack.Screen name="Profile" component={Profile} options={option("Thông tin cá nhân")} />
             <Stack.Screen name="Change Password" component={PasswordChange} options={option("Thay đổi mật khẩu")} />
             <Stack.Screen name="Change Information" component={InfoChange} options={option("Thay đổi thông tin")} />

@@ -58,6 +58,12 @@ export default Profile = (nav = null) => {
       }
     }
   };
+  const hostNameObject = {
+    lastName: user?.last_name ?? "",
+    firstName: user?.first_name ?? "",
+  };
+  const hostName = hostNameObject.firstName + " " + hostNameObject.lastName;
+
   return (
     <View style={styles.container}>
       <InfoBox
@@ -71,9 +77,10 @@ export default Profile = (nav = null) => {
         onPress={() => navigation.navigate("Change Information")}
         user={user}
       >
-        <Text
+      {(hostName != " ")  && <Text
           style={styles.textDetail}
-        >{`${user?.first_name} ${user?.last_name}`}</Text>
+        >{hostName}</Text>}
+        
         <Text style={styles.textDetail}>{user?.email}</Text>
         <Text style={styles.textDetail}>{user?.gender}</Text>
         <Text style={styles.textDetail}>{user?.phone_number}</Text>

@@ -127,7 +127,7 @@ const EventCreateMe = ({ navigation }) => {
                         <Text style={[styles.filter, styles.title]}>{selectedValue}</Text>
                         {/* <Icon name="filter" type="font-awesome" color={background.gray} /> */}
 
-                        <Picker style={[styles.picker]} selectedValue={selectedValue} style={{ width: 35 }} onValueChange={onChangePicker}>
+                        <Picker style={[styles.picker]} selectedValue={selectedValue} onValueChange={onChangePicker}>
                             <Picker.Item label={dataPicker.all} value={dataPicker.all} disabled={true} />
                             <Picker.Item label={dataPicker.active} value={dataPicker.active} />
                             <Picker.Item label={dataPicker.inActive} value={dataPicker.inActive} />
@@ -177,6 +177,7 @@ const styles = StyleSheet.create({
     },
     picker: {
         borderRadius: 50,
+        width: 35
     },
     swipeBtn: {
         width: "100%",
