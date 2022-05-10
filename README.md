@@ -7,4 +7,4 @@ cd vào frontend
 
 `npm run android`
 
-`đổi IP trong config/app thành địa chỉ IPv4 `
+`đổi IP trong config/app thành địa chỉ IPv4 c`
