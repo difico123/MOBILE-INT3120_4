@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import MapView, { Marker, AnimatedRegion, MarkerAnimated, Animated } from "react-native-maps";
-import { StyleSheet, Text, View, Dimensions, ActivityIndicator, KeyboardAvoidingView, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Dimensions, ActivityIndicator, KeyboardAvoidingView, TouchableOpacity, FlatList } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import CustomButton from "../../components/ButtonComponent/CustomButton";
+import CustomSearchBar from "../../components/InputComponent/CustomSearchBar";
 import { color, background } from "../../theme";
 import * as Location from "expo-location";
+import { searchLocation } from "../../service/map";
+import FadeModal from "../../components/modal/FadeModal";
+import { SearchLocationName } from "./components";
 
 const data = [
     {
@@ -40,14 +44,17 @@ const data = [
         description: "bbb",
     },
 ];
+
 export default function MapScreen({ navigation }) {
     const [location, setLocation] = useState({
-        latitude: -122,
-        longitude: 37,
+        latitude: 105.63334,
+        longitude: 19.15,
         latitudeDelta: 0.25,
         longitudeDelta: 0.25,
         name: "Đống Đa",
     });
+    const [search, setSearch] = useState("");
+    const [visibleModalSearch, setVisibleModalSearch] = useState(false);
 
     useEffect(() => {
         setLoading(true);
@@ -55,27 +62,45 @@ export default function MapScreen({ navigation }) {
         (async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== "granted") {
+                console.log("ok");
                 return;
+            } else {
+                console.log("not granted");
             }
             let location = await Location.getCurrentPositionAsync({});
             // setLocation({ locatio});
+            console.log(location);
         })();
     }, []);
 
-    const [isLoading, setLoading] = React.useState(false);
+    const [isLoading, setLoading] = useState(false);
+    const [locationNameList, setLocationNameList] = useState([]);
 
     const onRegionChange = (region) => {
         // console.log(region);
     };
-    const handlePressSearch = (data, details = null) => {
-        let { lat, lng } = details.geometry.location;
-        let { name } = details;
-        setLocation({
-            ...location,
-            latitude: lat,
-            longitude: lng,
-            name,
-        });
+    const handlePressSearch = async () => {
+        if (search) {
+            setVisibleModalSearch(true);
+            await searchLocation(search).then((results) => {
+                setLocationNameList(results.data.features);
+            });
+        }
+    };
+
+    console.log(locationNameList);
+
+    const handleSearchLocation = (geometry, name) => {
+        console.log(geometry, name);
+        if (geometry) {
+            setLocation({
+                ...location,
+                latitude: geometry.coordinates[0],
+                longitude: geometry.coordinates[1],
+                name,
+            });
+            setVisibleModalSearch(false);
+        }
     };
 
     const handlePressSelect = () => {
@@ -91,36 +116,12 @@ export default function MapScreen({ navigation }) {
         return (
             <View style={styles.container}>
                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
-                    <GooglePlacesAutocomplete
-                        placeholder="Search"
-                        styles={{
-                            container: {
-                                flex: 0,
-                            },
-                            textInput: {
-                                fontSize: 10,
-                                color: "black",
-                                borderWidth: 1,
-                                margin: 0,
-                            },
-                        }}
-                        enablePoweredByContainer={false}
-                        minLength={2}
-                        fetchDetails={true}
-                        returnKeyType={"search"}
-                        onPress={handlePressSearch}
-                        nearbyPlacesAPI="GooglePlacesSearch"
-                        debounce={400}
-                        query={{
-                            key: "AIzaSyC_8ZzcEbucSlkDlE7GTiLHNhFvfGHDMlQ",
-                            language: "en",
-                        }}
-                    />
+                    <CustomSearchBar value={search} setValue={setSearch} onPress={handlePressSearch} />
 
                     <View style={styles.paddingVer}></View>
                     <View style={styles.mapWrap}>
                         <MapView style={styles.map} onRegionChangeComplete={onRegionChange} region={location} enabled={false}>
-                            {data.map((location, index) => {
+                            {/* {data.map((location, index) => {
                                 return (
                                     <Marker
                                         draggable
@@ -139,7 +140,7 @@ export default function MapScreen({ navigation }) {
                                         }}
                                     />
                                 );
-                            })}
+                            })} */}
                             <Marker
                                 draggable
                                 coordinate={{
@@ -165,6 +166,23 @@ export default function MapScreen({ navigation }) {
                 <View style={styles.padding}>
                     <CustomButton text="chọn địa điểm" bgColor={background.random} onPress={handlePressSelect} />
                 </View>
+
+                <FadeModal modalVisible={visibleModalSearch} setModalVisible={setVisibleModalSearch}>
+                    <View style={styles.modalContainer}>
+                        <Text style={styles.titleSearch}>
+                            {search}: Có {locationNameList.length} tìm kiếm
+                        </Text>
+                        <View style={styles.contentSearch}>
+                            <FlatList
+                                data={locationNameList}
+                                showsVerticalScrollIndicator={false}
+                                contentContainerStyle={styles.flatSearch}
+                                keyExtractor={(item, index) => index}
+                                renderItem={({ item, index }) => <SearchLocationName name={item.text} description={item.place_name} onPress={() => handleSearchLocation(item.geometry, item.text)} />}
+                            />
+                        </View>
+                    </View>
+                </FadeModal>
             </View>
         );
     } else {
@@ -178,6 +196,17 @@ export default function MapScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+    btnSearch: {},
+    modalContainer: {},
+    contentSearch: {},
+    titleSearch: {
+        position: "absolute",
+        top: -24,
+        fontWeight: "bold",
+    },
+    flatSearch: {
+        paddingBottom: 20,
+    },
     container: {
         flex: 1,
         paddingTop: 10,
