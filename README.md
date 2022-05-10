@@ -1,7 +1,6 @@
 # MOBILE-INT3120_4
 
 
-# Tải project về máy
 cd vào frontend
 
 `npm install`
