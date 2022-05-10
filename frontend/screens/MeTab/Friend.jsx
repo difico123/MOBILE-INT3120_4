@@ -16,14 +16,13 @@ export const Friend = () => {
   const [isToggleNav, setToggleNav] = useState(false);
   const [searchEvent, setSearchEvent] = useState("");
   const [modalUserVisible, setModalUserVisible] = useState({});
-  const [selectedUser, setSelectedUser] = useState({});
   const dispatch = useDispatch();
 
   const auth = useSelector((state) => state.authReducers.auth);
   const [friends, setFriends] = useState([]);
+  const [selectedId, setSelectedId] = useState(0);
   useEffect(async () => {
     const record = await FriendService.getMyFriends(auth.token);
-    console.log(record, "record");
     setFriends(record.items);
 
     (async () => {
@@ -45,7 +44,7 @@ export const Friend = () => {
   ));
 
   const onFriendPress = (friend) => {
-    setSelectedUser(friend);
+    setSelectedId(friend.id);
     setModalUserVisible(true);
   };
   return (
@@ -53,7 +52,7 @@ export const Friend = () => {
       <UserModal
         setModalUserVisible={setModalUserVisible}
         modalUserVisible={modalUserVisible}
-        user={selectedUser}
+        userId={selectedId}
       ></UserModal>
       <View style={styles.main}>
         <View style={styles.header}>

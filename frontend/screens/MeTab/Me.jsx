@@ -70,7 +70,6 @@ const Me = () => {
       );
     })();
   });
-  console.log(hostName, "hostName");
   return (
     <View>
       <ScrollView

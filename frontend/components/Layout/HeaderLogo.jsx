@@ -23,9 +23,7 @@ const HeaderLogo = () => {
       <View style={styles.avatarContainer}>
         <Image
           style={[styles.logo, { marginBottom: 5 }]}
-          source={{
-            uri: "https://scontent.fhan2-4.fna.fbcdn.net/v/t1.6435-1/49204546_581029609007102_1545982587820834816_n.jpg?stp=cp0_dst-jpg_p60x60&_nc_cat=104&ccb=1-5&_nc_sid=1eb0c7&_nc_ohc=mg15yCEA1BYAX-oYnpm&tn=wuNm7sLpi-3BCdM8&_nc_ht=scontent.fhan2-4.fna&oh=00_AT9Ov_C2UIjYv29N51l1DOYfex1E58lNDobUCrCY9zjJbA&oe=625A94D4",
-          }}
+          source={require("../../assets/VNU_logo.png")}
         />
         <Text style={styles.title}>SOCIENT</Text>
       </View>

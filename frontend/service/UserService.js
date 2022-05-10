@@ -40,10 +40,10 @@ const getUserById = async (token, userId) => {
         "Content-Type": "application/json",
       },
     };
-    const response = await axios.get(`${API}/${userId}`, config);
+    const response = await axios.get(`${API}/${userId}`, config); 
     return response.data.data;
   } catch (e) {
-    console.log(e);
+    console.log(e, "error in getUserById");
     return null;
   }
 };

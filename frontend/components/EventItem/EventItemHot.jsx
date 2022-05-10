@@ -31,7 +31,7 @@ const EventItemHot = ({ item, onPress, onFresh }) => {
     getLikedStatus();
   }, [liked, onFresh, favorite]);
   const onPressLiked = async () => {
-    const likeOrDislike = await EventService.likeOrDislikeEvent(
+    const likeOrDislike = await EventService.toggleLikedEvent(
       auth.token,
       event.id,
       liked ? "dislike" : "like"

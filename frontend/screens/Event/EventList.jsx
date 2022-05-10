@@ -1,9 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
+  FlatList,
   Image,
+  LogBox,
   RefreshControl,
+  SafeAreaView,
   ScrollView,
+  SectionList,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -20,7 +24,7 @@ import { OptionsModal } from "./OptionsModal";
 
 export const EventList = (navigation) => {
   const filterType = ["event_name", "topic"];
-  const items = navigation.route.params.data;
+  const [items, setItems] = useState(navigation.route.params.data);
   const auth = useSelector((state) => state.authReducers.auth);
   const nav = useNavigation();
 
@@ -31,50 +35,63 @@ export const EventList = (navigation) => {
 
   const [refreshing, setRefreshing] = useState(false);
 
+  const navSearchBy = navigation.route.params.searchBy;
   const [searchBy, setSearchBy] = useState(
-    filterType.includes(navigation.route.params.searchBy)
-      ? navigation.route.params.searchBy
-      : "event_name"
+    navSearchBy &&
+      navSearchBy.length > 0 &&
+      filterType.includes(navSearchBy[0] || filterType.includes(navSearchBy[1]))
+      ? navSearchBy
+      : ["event_name"]
   );
-  
   const [modalOptionsVisible, setModalOptionsVisible] = useState(false);
 
-  const handleSearchEvent = (type = searchBy) => {
+  // useEffect(() => {
+  //   handleSearchEvent();
+  // }, [refreshing]);
+
+  const handleSearchEvent = (searchProperty = searchBy) => {
     const getEvents = async () => {
-      const params =
-        type == "topic" ? { topic: searchEvent } : { event_name: searchEvent };
+      let params = {};
+      if (searchProperty.length == 2) {
+        params = {
+          event_name: searchEvent,
+          topic: searchEvent,
+        };
+      } else if (searchProperty.length == 1) {
+        params =
+          searchProperty[0] == "topic"
+            ? { topic: searchEvent }
+            : { event_name: searchEvent };
+      } else {
+        // update
+        params = { event_name: searchEvent };
+      }
       const result = await EventService.getEvents(auth.token, params);
-      nav.navigate("Tabs");
+      setItems(result);
+      nav.navigate("Profile");
       nav.navigate("EventList", {
         data: result,
         searchEvent,
-        searchBy: type ?? "event_name",
+        searchBy: searchProperty.length > 0 ? searchProperty : ["event_name"], //update
       });
     };
     getEvents();
   };
 
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    handleSearchEvent(searchBy);
-    setRefreshing(false);
-  }, []);
 
   const goToDetail = (id) => {
     nav.navigate("DetailEvent", { id });
   };
 
-  const EventItemList = items.map((item, index) => (
-    <EventItemHot
-      item={item}
-      key={index}
-      onPress={() => goToDetail(item.id)}
-      onFresh={refreshing}
-    />
-  ));
   const handleFilter = (type) => {
-    setSearchBy(type);
-    handleSearchEvent(type);
+    let newSearchBy = searchBy;
+    if (searchBy.includes(type)) {
+      newSearchBy = searchBy.filter((item) => item != type);
+    } else {
+      newSearchBy.push(type);
+    }
+    setSearchBy(newSearchBy);
+    handleSearchEvent(newSearchBy);
   };
 
   return (
@@ -85,15 +102,12 @@ export const EventList = (navigation) => {
           setToggleNav={setToggleNav}
           setValue={setSearchEvent}
           value={searchEvent}
-          onPress={() => handleSearchEvent(searchBy)}
+          onPress={() => handleSearchEvent()}
         />
       </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollView}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
       >
         <OptionsModal
           modalOptionsVisible={modalOptionsVisible}
@@ -119,8 +133,12 @@ export const EventList = (navigation) => {
               title={"tên sự kiện"}
               customStyle={{
                 width: "30%",
-                backgroundColor: searchBy == "event_name" ? "#E1ECF4" : "grey",
-                textColor: searchBy == "event_name" ? "#39739D" : "white",
+                backgroundColor: searchBy.includes("event_name")
+                  ? "#E1ECF4"
+                  : "grey",
+                textColor: searchBy.includes("event_name")
+                  ? "#39739D"
+                  : "white",
               }}
               onPress={() => handleFilter("event_name")}
             ></SmallButton>
@@ -128,13 +146,39 @@ export const EventList = (navigation) => {
               title={"chủ đề"}
               onPress={() => handleFilter("topic")}
               customStyle={{
-                backgroundColor: searchBy == "topic" ? "#E1ECF4" : "grey",
-                textColor: searchBy == "topic" ? "#39739D" : "white",
+                backgroundColor: searchBy.includes("topic")
+                  ? "#E1ECF4"
+                  : "grey",
+                textColor: searchBy.includes("topic") ? "#39739D" : "white",
               }}
             ></SmallButton>
           </View>
-
-          {EventItemList}
+          <FlatList
+            data={items}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item, index }) => {
+              return (
+                <EventItemHot
+                  item={item}
+                  key={index}
+                  onPress={() => goToDetail(item.id)}
+                  onFresh={refreshing}
+                />
+              );
+            }}
+          />
+          {/* {items.length > 0 ? (
+            items.map((item, index) => (
+              <EventItemHot
+                item={item}
+                key={index}
+                onPress={() => goToDetail(item.id)}
+                onFresh={refreshing}
+              />
+            ))
+          ) : (
+            <Text>Không có sự kiện nào!</Text>
+          )} */}
         </View>
         <View style={{ marginBottom: 140 }}></View>
       </ScrollView>

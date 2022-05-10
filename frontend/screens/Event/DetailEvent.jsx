@@ -43,7 +43,6 @@ export const DetailEvent = (navigation) => {
   const [joined, setJoined] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [ready, setReady] = useState(false);
-  const [host, setHost] = useState({});
   const [modalOptionsVisible, setModalOptionsVisible] = useState(false);
 
   const [modalHostVisible, setModalHostVisible] = useState(false);
@@ -114,17 +113,7 @@ export const DetailEvent = (navigation) => {
   };
 
   const seeHostInfo = async () => {
-    console.log("host info click");
-    const getHostInfo = async () => {
-      setReady(false);
-      const host = await UserService.getUserById(auth.token, event.host_id);
-      setReady(true);
-      if (host) {
-        setHost(host);
-        setModalHostVisible(true);
-      } else alert("Something went wrong.\nCan't get host information now");
-    };
-    getHostInfo();
+    setModalHostVisible(true);
   };
 
   const onOptionPress = () => {
@@ -137,7 +126,7 @@ export const DetailEvent = (navigation) => {
       const params = { topic: event.topic };
       const result = await EventService.getEvents(auth.token, params);
       setReady(true);
-      nav.navigate("Tabs");
+      nav.navigate("Profile");
       nav.navigate("EventList", {
         data: result,
         searchEvent: event.topic,
@@ -154,7 +143,7 @@ export const DetailEvent = (navigation) => {
         <UserModal
           modalUserVisible={modalHostVisible}
           setModalUserVisible={setModalHostVisible}
-          user={host}
+          userId={event.host_id}
         ></UserModal>
 
         <OptionsModal
@@ -162,10 +151,7 @@ export const DetailEvent = (navigation) => {
           setModalOptionsVisible={setModalOptionsVisible}
           title="Tùy chọn"
         >
-          <BigButton
-            imageName="contact"
-            text="Gửi mail tới host"
-          ></BigButton>
+          <BigButton imageName="contact" text="Gửi mail tới host"></BigButton>
           <BigButton imageName="report" text="Báo cáo"></BigButton>
         </OptionsModal>
         <ScrollView style={styles.scrollView}>

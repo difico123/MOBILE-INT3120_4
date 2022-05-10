@@ -20,6 +20,7 @@ const CustomButton = ({
   bgColor,
   ftColor,
   loading = false,
+  disabled = false,
   ...props
 }) => {
   let iconBtn = !icon ? "" : <Icon style={icon.style} {...icon} />;
@@ -31,6 +32,7 @@ const CustomButton = ({
         styles[`color_${type}`],
         bgColor ? { backgroundColor: bgColor } : {},
       ]}
+      disabled={disabled}
     >
       <Text style={props.title ? styles.title : ""}>
         {props.title ?? iconBtn}
