@@ -10,10 +10,12 @@ const getMyFriends = async (token, query = null) => {
       },
     };
 
-    const response = await axios.get(API, config);
+    const statusQuery = query ? query.status : 1;
+    const url = API + `?status=${statusQuery}`;
+    const response = await axios.get(url, config);
     return response.data.data;
   } catch (err) {
-    console.log(err);
+    console.log(err, "error in getMyFriends");
     return [];
   }
 };
@@ -57,6 +59,26 @@ const removeFriend = async (token, friend_id) => {
     console.log(err, "failed in removeFriend");
     return false;
   }
+  
 };
 
-export default { getMyFriends, addFriend, removeFriend };
+const getFriendRequest = async (token) => {
+  try {
+    const config = {
+      method: "get",
+      url: API + "/request",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    const response = await axios(config);
+    return response.data.data;
+  } catch (err) {
+    console.log(err, "failed in getFriendRequest");
+    return false;
+  }
+}
+
+export default { getMyFriends, addFriend, removeFriend, getFriendRequest };

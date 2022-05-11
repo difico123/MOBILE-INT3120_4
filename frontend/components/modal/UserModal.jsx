@@ -27,20 +27,24 @@ export const UserModal = ({
   }
   const [userInfo, setUserInfo] = useState(null);
   const [isLoading, setLoading] = useState(false);
+  const [isLoadingPage, setLoadingPage] = useState(false);
 
   const auth = useSelector((state) => state.authReducers.auth);
   const nav = useNavigation();
   useEffect(() => {
     const getUserEvent = async () => {
+      setLoadingPage(true);
       setUserInfo(await UserService.getUserById(auth.token, userId));
       setUserEvents(
         await EventService.getEvents(auth.token, {
           host_info: userInfo?.email,
         })
       );
+      
+      setLoadingPage(false);
     };
     getUserEvent();
-  }, []);
+  }, [modalUserVisible]);
 
   const avatar = userInfo?.avatar?.includes("http")
     ? { uri: userInfo.avatar }
@@ -105,7 +109,9 @@ export const UserModal = ({
     }
   };
 
-  return (
+  return isLoadingPage ? 
+    <SimpleLoading customStyle={{ marginTop: 20 }}></SimpleLoading>
+  : (
     userInfo && (
       <SlideModal
         setModalVisible={setModalUserVisible}

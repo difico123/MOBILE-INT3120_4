@@ -2,9 +2,9 @@ import React from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { MAIN_COLOR } from "../common/CommonStyle";
 
-export const SimpleLoading = () => {
+export const SimpleLoading = ({customStyle}) => {
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, ...customStyle }}>
       <ActivityIndicator size="large" color={MAIN_COLOR} />
     </View>
 );;
