@@ -1,6 +1,7 @@
 import axios from "axios";
 import APP from "../config/app";
 const API = `${APP.BASE_API}friends`;
+import queryString from "query-string";
 
 const getMyFriends = async (token, query = null) => {
   try {
@@ -10,10 +11,15 @@ const getMyFriends = async (token, query = null) => {
       },
     };
 
-    const response = await axios.get(API, config);
+    const statusQuery = query ? query.status ?? 1 : 1;
+    let url = API + `?status=${statusQuery}`;
+    if (query) {
+      url += "&" + queryString.stringify(query);
+    }
+    const response = await axios.get(url, config);
     return response.data.data;
   } catch (err) {
-    console.log(err);
+    console.log(err, "error in getMyFriends");
     return [];
   }
 };
@@ -30,6 +36,7 @@ const addFriend = async (token, friend_id) => {
       data: { friend_id },
     };
 
+    console.log(config);
     const response = await axios(config);
     console.log(response.data, "data");
     return response.data.data;
@@ -59,4 +66,48 @@ const removeFriend = async (token, friend_id) => {
   }
 };
 
-export default { getMyFriends, addFriend, removeFriend };
+const approveFriend = async (token, friend_id) => {
+  try {
+    const config = {
+      method: "put",
+      url: `${API}/${friend_id}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      data: { status: 1 },
+    };
+
+    const response = await axios(config);
+    return response.data.data;
+  } catch (err) {
+    console.log(err, "failed in approveFriend");
+    return false;
+  }
+};
+const getFriendRequest = async (token, status, page = 1) => {
+  try {
+    const config = {
+      method: "get",
+      url: API + "/request?status=" + status + "&page=" + page,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    const response = await axios(config);
+    return response.data.data;
+  } catch (err) {
+    console.log(err, "failed in getFriendRequest");
+    return false;
+  }
+};
+
+export default {
+  getMyFriends,
+  addFriend,
+  removeFriend,
+  getFriendRequest,
+  approveFriend,
+};

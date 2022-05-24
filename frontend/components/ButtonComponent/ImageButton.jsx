@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
-export const ImageButton = ({ source, onPress }) => {
+export const ImageButton = ({ source, onPress, customImageStyle, containerStyle }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
-      <Image style={styles.action} source={source} />
+    <TouchableOpacity onPress={onPress} style={containerStyle}>
+      <Image style={{ ...styles.action, ...customImageStyle }} source={source} />
     </TouchableOpacity>
   );
 };

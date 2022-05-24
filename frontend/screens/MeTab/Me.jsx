@@ -51,6 +51,9 @@ const Me = () => {
   const onFriendPress = () => {
     navigation.navigate("Friend");
   };
+  const onManageEventsPress = () => {
+    navigation.navigate("EventCreateMe");
+  }
   console.log(auth.user);
   const hostNameObject = {
     lastName: auth?.user.last_name ?? "",
@@ -133,7 +136,7 @@ const Me = () => {
             <StatisticItem
               title="Manage events"
               touchable={true}
-              onPress={() => alert("Manage events")}
+              onPress={onManageEventsPress}
             ></StatisticItem>
             <HorizontalLine></HorizontalLine>
             <StatisticItem

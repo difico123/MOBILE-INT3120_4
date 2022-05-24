@@ -1,4 +1,7 @@
-import { FRIEND_BUTTON_DEFAULT, FRIEND_STATUS } from "../../../config/friendStatus";
+import {
+  FRIEND_BUTTON_DEFAULT,
+  FRIEND_STATUS,
+} from "../../../config/friendStatus";
 
 export const handleBgColorFriendButton = (status) => {
   let res = FRIEND_BUTTON_DEFAULT;
@@ -22,6 +25,11 @@ export const handleBgColorFriendButton = (status) => {
       res.backgroundColor = "#3B71F3";
       res.disabled = false;
       res.name = "Bạn bè";
+      break;
+    case FRIEND_STATUS.request:
+      res.backgroundColor = "#3B71F3";
+      res.disabled = false;
+      res.name = "Đồng ý kết bạn";
       break;
     default:
       break;

@@ -7,6 +7,7 @@ const getUser = async (token) => {
       authorization: `Bearer ${token}`,
     },
   };
+  console.log(config);
   const response = await axios.get(API + "/me", config);
   return response.data.data;
 };
@@ -47,4 +48,14 @@ const getUserById = async (token, userId) => {
     return null;
   }
 };
-export default { getUser, updateUser, updatePassword, getUserById };
+
+const getUserList = async (token) => {
+  let config = {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.get(API, config);
+  return response.data.data;
+}; 
+export default { getUser, updateUser, updatePassword, getUserById, getUserList };
