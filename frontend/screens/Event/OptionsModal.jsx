@@ -41,5 +41,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginHorizontal: 30,
     marginTop: 20,
+    flexWrap: "wrap",
   },
 });

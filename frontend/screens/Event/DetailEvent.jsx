@@ -23,6 +23,7 @@ import { EventInfo } from "../../components/EventItem/EventInfo";
 import { SimpleLoading } from "../../components/LoadingComponent/simpleLoading";
 import SlideModal from "../../components/modal/SlideModal";
 import { UserModal } from "../../components/modal/UserModal";
+import app from "../../config/app";
 import { MONTH } from "../../config/date";
 import { wait } from "../../helpers/helpers";
 import { addItem, removeItem } from "../../redux/actions/favorite_actions";
@@ -38,6 +39,7 @@ export const DetailEvent = (navigation) => {
   const dispatch = useDispatch();
 
   const itemId = navigation.route.params.id;
+  const isInvited = navigation.route.params.invited;
   const [event, setEvent] = useState({});
   const [liked, setLiked] = useState(false);
   const [joined, setJoined] = useState(false);
@@ -49,7 +51,9 @@ export const DetailEvent = (navigation) => {
   useEffect(() => {
     const getEvent = async () => {
       const record = await EventService.getById(auth.token, itemId);
-      setEvent(await toEventResource(record, auth.token));
+      if (record.length !== 0)
+        setEvent(await toEventResource(record, auth.token));
+      else alert("Không thể xem sự kiện. Vui lòng liên hệ với host");
       setLoading(false);
     };
     getEvent();
@@ -65,17 +69,32 @@ export const DetailEvent = (navigation) => {
   }, [event]);
 
   const onJoinPress = async () => {
-    const toggleJoin = await EventService.toggleJoinedPublicEvent(
-      auth.token,
-      event.id,
-      joined ? "cancel" : "join"
-    );
-    if (toggleJoin) {
-      alert(
-        joined
-          ? "Đã xóa khỏi danh sách tham gia"
-          : "Đã thêm vào danh sách tham gia"
+    if (event.host_id === auth.user.id) {
+      alert("Bạn là host. Không thể hủy tham gia.");
+      return;
+    }
+    if (isInvited && !joined) {
+      const check = await EventService.approveInvite(auth.token, event.id);
+      if (check) {
+        alert("Đã xác nhận tham gia");
+        nav.navigate("Home");
+        nav.navigate("JoinedEvent");
+      } else {
+        alert("Có lỗi xảy ra, vui lòng liên hệ với admin");
+      }
+    } else {
+      const toggleJoin = await EventService.toggleJoinedPublicEvent(
+        auth.token,
+        event.id,
+        joined ? "cancel" : "join"
       );
+      if (toggleJoin) {
+        alert(
+          joined
+            ? "Đã xóa khỏi danh sách tham gia"
+            : "Đã thêm vào danh sách tham gia"
+        );
+      }
     }
     setJoined(!joined);
   };
@@ -126,14 +145,43 @@ export const DetailEvent = (navigation) => {
       const params = { topic: event.topic };
       const result = await EventService.getEvents(auth.token, params);
       setReady(true);
-      nav.navigate("Profile");
+      // nav.navigate("Profile");
       nav.navigate("EventList", {
         data: result,
         searchEvent: event.topic,
-        searchBy: "topic",
+        searchBy: ["topic"],
       });
     };
     getEvents();
+  };
+
+  const onInviteFriendPress = () => {
+    setModalOptionsVisible(false);
+    nav.navigate("InviteFriend", {
+      event: { id: event.id, name: event.event_name },
+    });
+  };
+
+  const onAttendantPress = () => {
+    setModalOptionsVisible(false);
+    nav.navigate("Attendance", {
+      event: { id: event.id, name: event.event_name },
+    });
+  };
+
+  const sendMailTo = (type) => {
+    setModalOptionsVisible(false);
+    if (type === "admin") {
+      nav.navigate("Email", {
+        email: app.EMAIL_ADMIN,
+        eventId: event.id,
+      });
+    } else if (type == "host") {
+      nav.navigate("Email", {
+        email: event.host.email,
+        eventId: event.id,
+      });
+    }
   };
   return isLoading || !ready ? (
     <SimpleLoading></SimpleLoading>
@@ -151,8 +199,30 @@ export const DetailEvent = (navigation) => {
           setModalOptionsVisible={setModalOptionsVisible}
           title="Tùy chọn"
         >
-          <BigButton imageName="contact" text="Gửi mail tới host"></BigButton>
-          <BigButton imageName="report" text="Báo cáo"></BigButton>
+          <BigButton
+            imageName="contact"
+            text="Gửi mail tới host"
+            onPress={() => sendMailTo("host")}
+          ></BigButton>
+          <BigButton
+            imageName="report"
+            text="Báo cáo"
+            onPress={() => sendMailTo("admin")}
+          ></BigButton>
+          {event.host.id === auth.user.id && (
+            <BigButton
+              imageName="invite"
+              text="Mời bạn bè"
+              onPress={onInviteFriendPress}
+            ></BigButton>
+          )}
+          {event.host.id === auth.user.id && (
+            <BigButton
+              imageName="attendant"
+              text="Thành viên"
+              onPress={onAttendantPress}
+            ></BigButton>
+          )}
         </OptionsModal>
         <ScrollView style={styles.scrollView}>
           <View style={styles.bannerContainer}>

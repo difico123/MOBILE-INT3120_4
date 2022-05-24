@@ -20,7 +20,7 @@ const EventItemHot = ({ item, onPress, onFresh }) => {
       const record = await EventService.getById(auth.token, item.id);
       setEvent(await toEventResource(record, auth.token));
     };
-    getUpdatedEvent();
+    if (item.id) getUpdatedEvent();
   }, []);
   useEffect(() => {
     const getLikedStatus = async () => {

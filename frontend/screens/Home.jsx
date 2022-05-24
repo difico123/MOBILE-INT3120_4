@@ -29,7 +29,8 @@ import moment from "moment";
 import { updateList } from "../redux/actions/favorite_actions";
 import { updateListFriend } from "../redux/actions/friend_action";
 import FriendService from "../service/FriendService";
-
+import { ImageButton } from "../components/ButtonComponent/ImageButton";
+import { BigButton } from "../components/ButtonComponent/BigButton";
 const Home = ({ navigation }) => {
   const [refreshing, setRefreshing] = React.useState(false);
   const onRefresh = React.useCallback(() => {
@@ -41,6 +42,8 @@ const Home = ({ navigation }) => {
   const [searchEvent, setSearchEvent] = useState("");
   const [allEvents, setAllEvents] = useState([]);
   const [isLoading, setLoading] = useState(false);
+
+  const [page, setPage] = useState(1);
 
   const auth = useSelector((state) => state.authReducers.auth);
   const dispatch = useDispatch();
@@ -91,6 +94,7 @@ const Home = ({ navigation }) => {
       setAllEvents(await EventService.getEvents(auth.token));
     };
     getAll();
+    setPage(1);
   }, [refreshing]);
 
   const getItemCount = allEvents.length;
@@ -118,7 +122,6 @@ const Home = ({ navigation }) => {
         start_at_start: moment().format("YYYY-MM-DD HH:mm:ss"),
         start_at_end: moment().add(1, "days").format("YYYY-MM-DD HH:mm:ss"),
       });
-      // console.log("upcoming", await toEventCollection(record));
       setUpcomingEvents(await toEventCollection(record));
     };
     updateUpcomingEvent();
@@ -135,6 +138,37 @@ const Home = ({ navigation }) => {
     };
     getEvents();
   };
+
+  const loadMoreItem = () => {
+    const getMoreItem = async () => {
+      const data = await EventService.getEvents(auth.token, {
+        page: page + 1,
+      });
+      if (data.length > 0) {
+        setAllEvents([...allEvents, ...data]);
+
+        setPage(page + 1);
+      } else alert("Không còn sự kiện nào nữa");
+    };
+    getMoreItem();
+  };
+  
+  const homeController = async (type) => {
+    switch (type) {
+      case "joined":
+        navigation.navigate("JoinedEvent");
+        break;
+      case "love":
+        nav.navigate("EventListLike");
+        break;
+      case "invitation":
+        nav.navigate("RequestEvent", {invited: true});
+        break;
+      case "friend":
+        nav.navigate("Friend");
+        break;
+    }
+  };
   return isLoading ? (
     <SimpleLoading></SimpleLoading>
   ) : (
@@ -147,6 +181,41 @@ const Home = ({ navigation }) => {
           value={searchEvent}
           onPress={handleSearchEvent}
         />
+        <View style={{ flexDirection: "row" }}>
+          <BigButton
+            imageName="joined"
+            text="Đã tham gia"
+            onPress={() => homeController("joined")}
+            containerStyle={{
+              width: 80,
+              height: 80,
+              marginLeft: 20,
+              marginRight: 20,
+            }}
+            imageStyle={{ width: 40, height: 40 }}
+          ></BigButton>
+          <BigButton
+            imageName="love"
+            text="Yêu thích"
+            onPress={() => homeController("love")}
+            containerStyle={{ width: 80, height: 80, marginRight: 20 }}
+            imageStyle={{ width: 40, height: 40 }}
+          ></BigButton>
+          <BigButton
+            imageName="invitation"
+            text="Lời mời"
+            onPress={() => homeController("invitation")}
+            containerStyle={{ width: 80, height: 80, marginRight: 20 }}
+            imageStyle={{ width: 40, height: 40 }}
+          ></BigButton>
+          <BigButton
+            imageName="attendant"
+            text="Bạn bè"
+            onPress={() => homeController("friend")}
+            containerStyle={{ width: 80, height: 80, marginRight: 10 }}
+            imageStyle={{ width: 40, height: 40 }}
+          ></BigButton>
+        </View>
       </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -191,7 +260,13 @@ const Home = ({ navigation }) => {
           {EventHotList}
           {/* <VirtualizedList data={data} initialNumToRender={4} renderItem={(item, index) => <EventItemHot item={item} key={index} />} keyExtractor={(item, index) => index} getItemCount={getItemCount} getItem={() => {}} /> */}
         </View>
-        <View style={{ marginBottom: 140 }}></View>
+        <ImageButton
+          source={require("../assets/down-arrow.png")}
+          customImageStyle={{ height: 100, width: 100 }}
+          containerStyle={{ alignItems: "center" }}
+          onPress={loadMoreItem}
+        ></ImageButton>
+        <View style={{ marginBottom: 240 }}></View>
       </ScrollView>
     </View>
   );

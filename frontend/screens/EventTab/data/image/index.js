@@ -10,6 +10,10 @@ export const contact = require("./category/contact/email.png");
 export const report = require("./category/report/megaphone.png");
 export const time = require("./category/time/fast-time.png");
 export const location = require("./category/location/location.png");
+export const invite = require("./category/friends/add-friend.png");
+export const attendant = require("./category/friends/user.png");
+export const joined = require("../../../../assets/approved.png");
+export const invitation = require("../../../../assets/invitation.png");
 export const categories = {
     // "Bài học cuộc sống"
     life,
@@ -31,4 +35,12 @@ export const categories = {
     time,
 
     location,
+
+    invite,
+
+    attendant,
+
+    joined,
+
+    invitation
 };

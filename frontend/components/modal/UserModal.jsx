@@ -21,6 +21,7 @@ export const UserModal = ({
   userId,
   modalUserVisible,
   setModalUserVisible,
+  friendId
 }) => {
   if (!userId) {
     return <View></View>;
@@ -29,18 +30,23 @@ export const UserModal = ({
   const [isLoading, setLoading] = useState(false);
   const [isLoadingPage, setLoadingPage] = useState(false);
 
+  const [userEvents, setUserEvents] = useState([]);
+  const [friendButton, setFriendButton] = useState(
+    handleBgColorFriendButton(userInfo?.is_friend)
+  );
   const auth = useSelector((state) => state.authReducers.auth);
   const nav = useNavigation();
   useEffect(() => {
     const getUserEvent = async () => {
       setLoadingPage(true);
-      setUserInfo(await UserService.getUserById(auth.token, userId));
+      const currentUser = await UserService.getUserById(auth.token, userId);
+      setUserInfo(currentUser);
       setUserEvents(
         await EventService.getEvents(auth.token, {
           host_info: userInfo?.email,
         })
       );
-      
+      setFriendButton(handleBgColorFriendButton(currentUser?.is_friend));
       setLoadingPage(false);
     };
     getUserEvent();
@@ -49,10 +55,6 @@ export const UserModal = ({
   const avatar = userInfo?.avatar?.includes("http")
     ? { uri: userInfo.avatar }
     : require("../../assets/avatar-default-icon.png");
-  const [userEvents, setUserEvents] = useState([]);
-  const [friendButton, setFriendButton] = useState(
-    handleBgColorFriendButton(userInfo?.is_friend)
-  );
   const goToDetail = (id) => {
     nav.navigate("Profile");
     nav.navigate("DetailEvent", { id });
@@ -70,6 +72,14 @@ export const UserModal = ({
   const onRemoveFriend = async () => {
     setLoading(true);
     await FriendService.removeFriend(auth.token, userInfo.id);
+    const updatedUser = await UserService.getUserById(auth.token, userId);
+    setFriendButton(handleBgColorFriendButton(updatedUser.is_friend));
+    setUserInfo(updatedUser);
+    setLoading(false);
+  };
+  const onApproveFriend = async () => {
+    setLoading(true);
+    await FriendService.approveFriend(auth.token, friendId);
     const updatedUser = await UserService.getUserById(auth.token, userId);
     setFriendButton(handleBgColorFriendButton(updatedUser.is_friend));
     setUserInfo(updatedUser);
@@ -103,15 +113,19 @@ export const UserModal = ({
         await createTwoButtonAlert("Hủy kết bạn", onRemoveFriend);
         // await onRemoveFriend();
         break;
+      case FRIEND_STATUS.request:
+        await onApproveFriend();
+        // await onRemoveFriend();
+        break;
       default:
         await onAddFriend();
         break;
     }
   };
 
-  return isLoadingPage ? 
+  return isLoadingPage ? (
     <SimpleLoading customStyle={{ marginTop: 20 }}></SimpleLoading>
-  : (
+  ) : (
     userInfo && (
       <SlideModal
         setModalVisible={setModalUserVisible}
