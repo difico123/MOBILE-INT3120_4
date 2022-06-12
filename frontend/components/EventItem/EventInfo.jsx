@@ -12,7 +12,7 @@ export const EventInfo = ({
   const content =
     host ? (
       <Text>
-        Event by{" "}
+        Tổ chức bởi {" "}
         <Text
           style={{ fontWeight: "bold" }}
           onPress={onPress}

@@ -54,10 +54,9 @@ const Me = () => {
   const onManageEventsPress = () => {
     navigation.navigate("EventCreateMe");
   }
-  console.log(auth.user);
   const hostNameObject = {
-    lastName: auth?.user.last_name ?? "",
-    firstName: auth?.user.first_name ?? "",
+    lastName: auth?.user?.last_name ?? "",
+    firstName: auth?.user?.first_name ?? "",
   };
   const hostName = hostNameObject.firstName + " " + hostNameObject.lastName;
   const avatar = auth?.user.avatar?.includes("http")

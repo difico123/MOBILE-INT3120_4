@@ -20,7 +20,7 @@ export const InfoBox = ({
         <Text style={styles.titleText}>{name}</Text>
         <TouchableOpacity>
           <Text style={styles.editButton} onPress={onPress}>
-            Edit
+            Sửa
           </Text>
         </TouchableOpacity>
       </View>
@@ -40,7 +40,7 @@ export const InfoBox = ({
 };
 const styles = StyleSheet.create({
   box: {
-    backgroundColor: "rgb(27,27,27)",
+    backgroundColor: "#b1b1b3",
     height: 200,
     borderColor: "white",
     borderWidth: 2,
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   box_v2: {
-    backgroundColor: "rgb(27,27,27)",
+    backgroundColor: "#b1b1b3",
     height: 100,
     borderColor: "white",
     borderWidth: 2,
@@ -61,14 +61,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginHorizontal: 12,
+    marginTop: 10,
   },
   titleText: {
-    color: "white",
+    color: "black",
     fontSize: 20,
     fontWeight: "bold",
   },
   editButton: {
-    color: "#3B71F3",
+    color: "#057BFF",
     fontSize: 20,
     fontWeight: "500",
   },

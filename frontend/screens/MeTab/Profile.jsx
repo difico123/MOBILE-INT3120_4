@@ -67,13 +67,13 @@ export default Profile = (nav = null) => {
   return (
     <View style={styles.container}>
       <InfoBox
-        name="Profile Picture"
+        name="Ảnh đại diện"
         hasImage="true"
         onPress={pickImage}
         imageUrl={imageUrl}
       ></InfoBox>
       <InfoBox
-        name="Details"
+        name="Chi tiết"
         onPress={() => navigation.navigate("Change Information")}
         user={user}
       >
@@ -87,7 +87,7 @@ export default Profile = (nav = null) => {
         <Text style={styles.textDetail}>{user?.dob}</Text>
       </InfoBox>
       <InfoBox
-        name="Password"
+        name="Bảo mật"
         isPassWord="true"
         onPress={() => navigation.navigate("Change Password")}
       >
@@ -105,9 +105,10 @@ const styles = StyleSheet.create({
     maxHeight: "60%",
   },
   textDetail: {
-    color: "white",
+    color: "black",
     fontSize: 15,
     paddingLeft: 10,
     paddingTop: 10,
+    marginLeft: 10
   },
 });
