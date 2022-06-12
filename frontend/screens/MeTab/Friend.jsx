@@ -36,11 +36,12 @@ export const Friend = () => {
   const [friendsRequest, setFriendsRequest] = useState([]);
   const [selectedId, setSelectedId] = useState(0);
   const [friendId, setFriendId] = useState(0);
-  const [selectedValue, setSelectedValue] = useState("Lọc");
+  const [selectedValue, setSelectedValue] = useState(typePicker.friend);
   const [page, setPage] = useState(1);
   useEffect(async () => {
     const record = await FriendService.getMyFriends(auth.token);
     setFriends(record.items);
+    setShowFriends(record.items);
 
     (async () => {
       dispatch(

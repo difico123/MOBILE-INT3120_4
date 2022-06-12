@@ -15,8 +15,8 @@ const HeaderLogo = () => {
   const nav = useNavigation();
   const { height } = useWindowDimensions();
   const auth = useSelector((state) => state.authReducers.auth);
-  const avatar = auth?.user.avatar?.includes("http")
-    ? { uri: auth?.user.avatar }
+  const avatar = auth?.user?.avatar?.includes("http")
+    ? { uri: auth?.user?.avatar }
     : require("../../assets/avatar-default-icon.png");
   return (
     <View style={styles.container}>
