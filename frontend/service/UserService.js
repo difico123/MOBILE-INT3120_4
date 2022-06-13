@@ -7,7 +7,6 @@ const getUser = async (token) => {
       authorization: `Bearer ${token}`,
     },
   };
-  console.log(config);
   const response = await axios.get(API + "/me", config);
   return response.data.data;
 };
@@ -41,10 +40,9 @@ const getUserById = async (token, userId) => {
         "Content-Type": "application/json",
       },
     };
-    const response = await axios.get(`${API}/${userId}`, config); 
+    const response = await axios.get(`${API}/${userId}`, config);
     return response.data.data;
   } catch (e) {
-    console.log(e, "error in getUserById");
     return null;
   }
 };
@@ -57,5 +55,11 @@ const getUserList = async (token) => {
   };
   const response = await axios.get(API, config);
   return response.data.data;
-}; 
-export default { getUser, updateUser, updatePassword, getUserById, getUserList };
+};
+export default {
+  getUser,
+  updateUser,
+  updatePassword,
+  getUserById,
+  getUserList,
+};

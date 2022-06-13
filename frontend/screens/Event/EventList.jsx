@@ -1,13 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import moment from "moment";
 import React, { useCallback, useState } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  Picker,
-} from "react-native";
+import { ScrollView, StyleSheet, Text, View, Picker } from "react-native";
 import { useSelector } from "react-redux";
 import { SmallButton } from "../../components/ButtonComponent/SmallButton";
 import EventItemHot from "../../components/EventItem/EventItemHot";
@@ -102,7 +96,6 @@ export const EventList = (navigation) => {
   };
 
   const showMode = (currentMode, type) => {
-    console.log("hey");
     setShow(type === "start" ? 1 : 2);
     setMode(currentMode);
   };
@@ -179,7 +172,6 @@ export const EventList = (navigation) => {
         }
       }
     }
-    console.log(activeEventList, items, result, typePicker);
     setShowItems([...result]);
     setSelectedValue(itemValue);
   };
