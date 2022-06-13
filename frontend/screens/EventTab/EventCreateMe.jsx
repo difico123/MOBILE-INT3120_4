@@ -21,7 +21,7 @@ import { EventCreateMeItem } from "../../components/EventItem/EventCreateMeItem"
 import { useDispatch, useSelector } from "react-redux";
 import CrudSwipeoutButton from "../../components/ButtonComponent/CrudSwipeoutButton";
 import FadeModal from "../../components/modal/FadeModal";
-import { deleteEvent, setRouter } from "../../redux/actions";
+import { deleteEvent, setRouter, getEvents } from "../../redux/actions";
 import EventService from "../../service/EventService";
 
 const dataPicker = {
@@ -33,6 +33,7 @@ const EventCreateMe = ({ navigation }) => {
   const [visibleModalDelete, setVisibleModalDelete] = useState(false);
   const [selectedValue, setSelectedValue] = useState("Lọc");
   const [eventList, setEventList] = useState([]);
+
   const [keyword, setKeyword] = useState("");
   const eventId = useRef(0);
   const dispatch = useDispatch();
@@ -71,13 +72,11 @@ const EventCreateMe = ({ navigation }) => {
 
   useEffect(() => {
     setEventList([...events]);
-  }, []);
+  }, [events]);
 
   useEffect(() => {
     (async () => {
-      await EventService.getHealcheck().then((res) => {
-        // console.log("res", res);
-      });
+      dispatch(getEvents());
     })();
   }, []);
 

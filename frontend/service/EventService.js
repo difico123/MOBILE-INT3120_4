@@ -29,9 +29,7 @@ const getById = async (token, id) => {
         authorization: `Bearer ${token}`,
       },
     };
-    console.log(config, id);
     const response = await axios.get(API + `/${id}`, config);
-    console.log(response.data);
     return response.data.data;
   } catch (err) {
     return [];
@@ -82,6 +80,11 @@ const create = async (event) => {
   return res.data;
 };
 
+const getEventsCreated = async () => {
+  let res = await http.get("/events?type=host&page=1&page_size=10");
+  return res.data;
+};
+
 const getInvitedRequest = async (token, event_id, status) => {
   try {
     let config = {
@@ -116,7 +119,6 @@ const inviteFriend = async (token, event_id, user_id = []) => {
     const response = await axios(config);
     return response.data.code === "000" ? true : false;
   } catch (err) {
-    console.log(err, "failed in inviteFriend");
     return false;
   }
 };
@@ -136,7 +138,6 @@ const deleteInvitedFriend = async (token, event_id, user_id = []) => {
     const response = await axios(config);
     return response.data.code === "000" ? true : false;
   } catch (err) {
-    console.log(err, "failed in deleteInvitedFriend");
     return false;
   }
 };
@@ -190,6 +191,7 @@ const createEvent = async (data) => {
 };
 export default {
   getEvents,
+  getEventsCreated,
   getById,
   toggleLikedEvent,
   getHealcheck,

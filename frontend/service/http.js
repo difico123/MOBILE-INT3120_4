@@ -4,7 +4,6 @@ import App from "../config/app";
 const { IP } = App;
 
 const URI = `http://${IP}:5002/api`;
-console.log("🚀 ~ file: http.js ~ line 7 ~ URI", URI);
 
 const http = axios.create({ baseURL: URI });
 http.defaults.headers.common["Content-Type"] = "application/json";
