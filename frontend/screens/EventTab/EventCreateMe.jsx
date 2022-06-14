@@ -194,7 +194,7 @@ const EventCreateMe = ({ navigation }) => {
                 </Swipeout>
               )}
               showsVerticalScrollIndicator={false}
-              ListFooterComponent={<View style={{ paddingBottom: 300 }}></View>}
+              ListFooterComponent={<View style={{ paddingBottom: 400 }}></View>}
             />
           ) : (
             <View style={styles.noEvent}>
