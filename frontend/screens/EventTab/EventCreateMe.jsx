@@ -23,7 +23,9 @@ import CrudSwipeoutButton from "../../components/ButtonComponent/CrudSwipeoutBut
 import FadeModal from "../../components/modal/FadeModal";
 import { deleteEvent, setRouter, getEvents } from "../../redux/actions";
 import EventService from "../../service/EventService";
-
+import { LogBox } from "react-native";
+LogBox.ignoreLogs(["Warning: ..."]);
+LogBox.ignoreAllLogs();
 const dataPicker = {
   all: "Tất cả",
   inActive: "Không hoạt động",

@@ -1,7 +1,9 @@
 import http from "./http";
-const endpoint = "/chat_rooms";
+const endpoint = "/chat_room";
+
 const getChatRooms = async () => {
-  return http.get(`${endpoint}?page=1&page_size=10`);
+  let res = await http.get(`${endpoint}?page=1&page_size=10`);
+  return res.data;
 };
 
 const chatRoom = async (eventId) => {
