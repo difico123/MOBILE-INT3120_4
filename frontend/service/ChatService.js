@@ -7,9 +7,10 @@ const getChatRooms = async () => {
 };
 
 const chatRoom = async (eventId) => {
-  return http.get(
+  let res = await http.get(
     `${endpoint}/message?event_id=${eventId}&page=1&page_size=10`
   );
+  return res.data;
 };
 
 const chat = (async = (data) => {

@@ -7,6 +7,7 @@ import {
   TextInput,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
+import { useSelector } from "react-redux";
 import { RoomItem, ChatItem } from "./components";
 import { IP } from "../../config/app";
 import { Icon } from "react-native-elements";
@@ -19,79 +20,27 @@ import {
   sendMessage,
 } from "../../service/socket";
 import ChatService from "../../service/ChatService";
-const data = [
-  {
-    id: "1",
-    name: "biladen",
-    image:
-      "https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg",
-    me: true,
-    time: "10 gio",
-    text: "vcl em",
-  },
-  {
-    id: "2",
-    name: "biladen",
-    image:
-      "https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg",
-    me: false,
-    time: "10 gio",
-    text: "vcl vc lorem 25 adfdasfdsafas lorem 25 adfdas lorem25 loadfadsfadsfasdfsa",
-  },
-  {
-    id: "1",
-    name: "biladen",
-    image:
-      "https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg",
-    me: false,
-    time: "10 gio",
-    text: "vxc🙃🙃",
-  },
-  {
-    id: "2",
-    name: "biladen",
-    image:
-      "https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg",
-    me: false,
-    time: "10 gio",
-    text: "vcl z",
-  },
-  {
-    id: "2",
-    name: "biladen",
-    image:
-      "https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg",
-    me: false,
-    time: "10 gio",
-    text: "vcl z",
-  },
-  {
-    id: "2",
-    name: "biladen",
-    image:
-      "https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg",
-    me: false,
-    time: "10 gio",
-    text: "vcl z",
-  },
-  {
-    id: "2",
-    name: "biladen",
-    image:
-      "https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg",
-    me: false,
-    time: "10 gio",
-    text: "vcl z",
-  },
-];
+
 const ChatRoom = ({ route, navigation }) => {
   const { container, room, flatlist, userOnline } = styles;
-
+  const auth = useSelector((state) => state.authReducers.auth);
   const [userList, setUserList] = useState([]);
-  const [chatList, setChatList] = useState([...data]);
+  const [chatList, setChatList] = useState([
+    {
+      user_id: "2",
+      user_name: "biladen",
+      user_image:
+        "https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg",
+      me: false,
+      create_at: "",
+      message: "",
+    },
+  ]);
   const [toggleEmoji, setToggleEmoji] = useState(false);
   const [chat, setChat] = useState("");
   const [chatListening, setChatListening] = useState("");
+
+  const userId = auth.user.id;
 
   useEffect(() => {
     navigation.setOptions({ title: route.params?.name });
@@ -103,13 +52,12 @@ const ChatRoom = ({ route, navigation }) => {
     });
 
     ChatService.chatRoom(route.params.room).then((res) => {
-      console.log("🚀 ~ file: ChatRoom.jsx ~ line 107 ~ useEffect ~ res", res);
+      setChatList([...chatList, ...res.data.items]);
     });
   }, []);
 
   useEffect(() => {
     let { name, room, text, time } = chatListening;
-
     if (room === route.params?.room) {
       let newChat = {
         name,
@@ -124,15 +72,10 @@ const ChatRoom = ({ route, navigation }) => {
     }
   }, [chatListening]);
 
-  const goRoom = () => {};
-  const handleEscape = () => {
-    // socket.current.emit("disconnect");
-  };
-
   const send = () => {
     let newChat = {
       name: "bill",
-      text: chat,
+      message: chat,
       time: "10 gio",
       image:
         "https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg",
@@ -143,6 +86,7 @@ const ChatRoom = ({ route, navigation }) => {
     sendMessage("chatMessage", { room: route.params?.room, msg: chat });
     setChat("");
   };
+
   return (
     <View style={container}>
       <View style={styles.chatWrap}>
@@ -156,10 +100,10 @@ const ChatRoom = ({ route, navigation }) => {
           keyExtractor={(item, index) => index}
           renderItem={({ item, index }) => (
             <ChatItem
-              chat={item.text}
-              image={item.image}
-              name={item.name}
-              me={item.me}
+              chat={item.message}
+              image={item.user_image}
+              name={item.user_name}
+              me={item.user_id === userId}
             />
           )}
         />
