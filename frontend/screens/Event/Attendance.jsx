@@ -51,10 +51,10 @@ export const Attendance = (navigation) => {
   useEffect(() => {
     (async () => {
       setJoinedNumber(
-        (await EventService.getInvitedRequest(auth.token, eventId, 1)).pagination.total_items
+        (await EventService.getInvitedRequest(auth.token, eventId, 1))?.pagination?.total_items
       );
       setNotConfirmed(
-        (await EventService.getInvitedRequest(auth.token, eventId, 0)).pagination.total_items ?? 0
+        (await EventService.getInvitedRequest(auth.token, eventId, 0))?.pagination?.total_items ?? 0
       );
     })();
   }, [refreshing]);

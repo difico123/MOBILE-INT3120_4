@@ -59,15 +59,15 @@ const Me = () => {
     firstName: auth?.user?.first_name ?? "",
   };
   const hostName = hostNameObject.firstName + " " + hostNameObject.lastName;
-  const avatar = auth?.user.avatar?.includes("http")
-    ? { uri: auth?.user.avatar }
+  const avatar = auth?.user?.avatar?.includes("http")
+    ? { uri: auth?.user?.avatar }
     : require("../../assets/avatar-default-icon.png");
 
   useEffect(() => {
     (async () => {
       dispatch(
         updateListFriend(
-          (await FriendService.getMyFriends(auth.token)).pagination.total_items
+          (await FriendService.getMyFriends(auth.token))?.pagination?.total_items
         )
       );
     })();

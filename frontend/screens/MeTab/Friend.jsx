@@ -46,7 +46,7 @@ export const Friend = () => {
     (async () => {
       dispatch(
         updateListFriend(
-          (await FriendService.getMyFriends(auth.token))?.pagination.total_items
+          (await FriendService.getMyFriends(auth.token))?.pagination?.total_items
         )
       );
     })();
