@@ -1,6 +1,6 @@
 // const BASE_API = "http://172.31.16.1:5002/api/";
-// const IP = "192.168.8.100";
-const IP = "172.16.0.10";
+const IP = "192.168.5.24";
+// const IP = "172.16.0.10";
 const SOCKETHOST = "https://chat-my-event-app.herokuapp.com/";
 const BASE_API = `http://${IP}:5002/api/`;
 const CLOUDINARY_API = "https://api.cloudinary.com/v1_1/dbiexlh94/image/upload";

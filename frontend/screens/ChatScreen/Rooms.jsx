@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { RoomItem } from "./components";
 import CustomSearchBar from "../../components/InputComponent/CustomSearchBar";
 import { joinRoom, messageSocket, offSocket } from "../../service/socket";
@@ -16,31 +17,40 @@ const Rooms = ({ navigation }) => {
   const [messageRoom, setMessageRoom] = useState([]);
   const [chatRoomList, setChatRoomList] = useState([]);
   const [chat, setChat] = useState("");
+  const auth = useSelector((state) => state.authReducers.auth);
 
   useEffect(() => {
     ChatService.getChatRooms().then((res) => {
-      let eventRooms = res.data.items;
-      setChatRoomList(eventRooms);
-    });
-  }, []);
+      let eventRooms = res?.data?.items;
+      if (eventRooms.length) {
+        setChatRoomList(eventRooms);
+        eventRooms.map((room) => {
+          joinRoom(room?.event_id, auth?.user?.username, auth?.user?.avatar);
+        });
 
-  useEffect(() => {
-    chatRoomList.map((room) => {
-      joinRoom(room.event_id, "xx");
-    });
-    messageSocket("message", (message) => {
-      setChat(message);
+        messageSocket("message", (message) => {
+          setChat(message);
+        });
+      }
     });
   }, []);
 
   useEffect(() => {
     if (chat) {
-      let { name, room, text } = chat;
+      let { username, room, text, image } = chat;
+      console.log(
+        "🚀 ~ file: Rooms.jsx ~ line 41 ~ useEffect ~ name, room, text,image",
+        username,
+        room,
+        text,
+        image
+      );
+
       const newList = chatRoomList.map((chatRoom) => {
         if (chatRoom.room === room) {
           const chatRef = {
             ...chatRoom,
-            chater: name,
+            user_name: username,
             message: text,
             notseen: chatRoom.notseen + 1,
           };
