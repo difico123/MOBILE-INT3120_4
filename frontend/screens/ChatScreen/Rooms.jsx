@@ -37,17 +37,9 @@ const Rooms = ({ navigation }) => {
 
   useEffect(() => {
     if (chat) {
-      let { username, room, text, image } = chat;
-      console.log(
-        "🚀 ~ file: Rooms.jsx ~ line 41 ~ useEffect ~ name, room, text,image",
-        username,
-        room,
-        text,
-        image
-      );
-
+      let { username, room, text } = chat;
       const newList = chatRoomList.map((chatRoom) => {
-        if (chatRoom.room === room) {
+        if (chatRoom.event_id == room) {
           const chatRef = {
             ...chatRoom,
             user_name: username,

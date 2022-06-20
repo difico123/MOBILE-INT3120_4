@@ -64,6 +64,8 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     justifyContent: "space-around",
     paddingVertical: 5,
+    width: "60%",
+    overflow: "hidden",
   },
   txt: {
     fontSize: 18,

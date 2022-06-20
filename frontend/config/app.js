@@ -1,5 +1,5 @@
 // const BASE_API = "http://172.31.16.1:5002/api/";
-const IP = "192.168.5.24";
+const IP = "10.236.33.79";
 // const IP = "172.16.0.10";
 const SOCKETHOST = "https://chat-my-event-app.herokuapp.com/";
 const BASE_API = `http://${IP}:5002/api/`;

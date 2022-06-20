@@ -52,35 +52,35 @@ const ChatRoom = ({ route, navigation }) => {
     });
 
     ChatService.chatRoom(route.params.room).then((res) => {
-      setChatList([...chatList, ...res.data.items]);
+      setChatList([...res?.data?.items]);
     });
   }, []);
 
   useEffect(() => {
-    let { name, room, text, time } = chatListening;
+    let { username, room, text, time, image } = chatListening;
     if (room === route.params?.room) {
       let newChat = {
-        name,
-        text,
-        time,
-        image:
-          "https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg",
-        me: false,
+        user_name: username,
+        message: text,
+        created_at: time,
+        user_image: image,
+        user_id: "1",
         id: "1",
       };
+
       setChatList([...chatList, newChat]);
     }
   }, [chatListening]);
 
   const send = () => {
     let newChat = {
-      name: "bill",
+      user_name: auth.user.username,
       message: chat,
-      time: "10 gio",
-      image:
+      created_at: new Date(),
+      user_image:
         "https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg",
-      me: true,
-      id: "1",
+      user_id: userId,
+      id: userId,
     };
     setChatList([...chatList, newChat]);
     sendMessage("chatMessage", { room: route.params?.room, msg: chat });
