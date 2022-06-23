@@ -18,7 +18,6 @@ const getEvents = async (token, params = null) => {
     const response = await axios.get(decodeURIComponent(url), config);
     return response.data.data.items;
   } catch (err) {
-    console.log("error", err);
     return [];
   }
 };
@@ -30,12 +29,9 @@ const getById = async (token, id) => {
         authorization: `Bearer ${token}`,
       },
     };
-    console.log(config, id);
     const response = await axios.get(API + `/${id}`, config);
-    console.log(response.data);
     return response.data.data;
   } catch (err) {
-    console.log("error in get by id", err);
     return [];
   }
 };
@@ -50,11 +46,9 @@ const toggleLikedEvent = async (token, id, type = "like") => {
         "Content-Type": "application/json",
       },
     };
-    console.log(config);
     await axios(config);
     return true;
   } catch (err) {
-    console.log("error in toggleLikedEvent", err);
     return false;
   }
 };
@@ -69,7 +63,6 @@ const toggleJoinedPublicEvent = async (token, id, type = "join") => {
         "Content-Type": "application/json",
       },
     };
-    console.log(config);
     await axios(config);
     return true;
   } catch (err) {
@@ -82,8 +75,14 @@ const getHealcheck = async () => {
   return await http.get("/healthcheck");
 };
 
-const create = async () => {
-  return await http.get("/create");
+const create = async (event) => {
+  let res = await http.post("/events", event);
+  return res.data;
+};
+
+const getEventsCreated = async () => {
+  let res = await http.get("/events?type=host&page=1&page_size=10");
+  return res.data;
 };
 
 const getInvitedRequest = async (token, event_id, status) => {
@@ -117,11 +116,9 @@ const inviteFriend = async (token, event_id, user_id = []) => {
       data: { user_id },
     };
 
-    console.log(config);
     const response = await axios(config);
     return response.data.code === "000" ? true : false;
   } catch (err) {
-    console.log(err, "failed in inviteFriend");
     return false;
   }
 };
@@ -138,11 +135,9 @@ const deleteInvitedFriend = async (token, event_id, user_id = []) => {
       data: { user_id },
     };
 
-    console.log(config);
     const response = await axios(config);
     return response.data.code === "000" ? true : false;
   } catch (err) {
-    console.log(err, "failed in deleteInvitedFriend");
     return false;
   }
 };
@@ -177,7 +172,6 @@ const approveInvite = async (token, eventId) => {
       data: { approve: "approved" },
     };
 
-    console.log(config);
     const response = await axios(config);
     // return response.data.code === "000" ? true : false;
     return true;
@@ -187,8 +181,17 @@ const approveInvite = async (token, eventId) => {
   }
 };
 
+const createEvent = async (data) => {
+  let response = await http().post(`${API}`, data);
+  console.log(
+    "🚀 ~ file: EventService.js ~ line 186 ~ createEvent ~ response",
+    response
+  );
+  return response.data;
+};
 export default {
   getEvents,
+  getEventsCreated,
   getById,
   toggleLikedEvent,
   getHealcheck,
@@ -199,4 +202,5 @@ export default {
   deleteInvitedFriend,
   getEventRequests,
   approveInvite,
+  createEvent,
 };

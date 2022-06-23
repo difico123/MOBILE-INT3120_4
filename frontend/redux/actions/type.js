@@ -8,6 +8,7 @@ export const UPDATE_LIST = "UPDATE_LIST";
 export const ADD_EVENT = "add_event";
 export const EDIT_EVENT = "edit_event";
 export const DELETE_EVENT = "delete_event";
+export const GET_EVENTS = "GET_EVENTS";
 export const SET_ROUTER = "set_router";
 
 export const ADD_FRIEND = "ADD_FRIEND";

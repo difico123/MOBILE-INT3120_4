@@ -17,7 +17,6 @@ export const InviteFriend = (navigation) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(navigation.route.params.event.name);
 
-  console.log(value, "--------");
   const [events, setEvents] = useState([]);
   const [friends, setFriends] = useState([]);
 
@@ -27,7 +26,7 @@ export const InviteFriend = (navigation) => {
   const [invitedFriendId, setInvitedFriendId] = useState([]);
   const [pendingInvitedFriendId, setPendingInvitedFriendId] = useState([]);
 
-  const [refresh, setRefresh] = useState(false);;
+  const [refresh, setRefresh] = useState(false);
   const onChangeEvent = (value) => {
     const event = events.filter((event) => event.value === value);
     setSelectedEventId(event && event.length > 0 ? event[0].id : []);
@@ -63,12 +62,14 @@ export const InviteFriend = (navigation) => {
 
     const getPendingInvitedFriendRequest = async () => {
       setPendingInvitedFriendId(
-        (await EventService.getInvitedRequest(auth.token, selectedEventId, 0)).items
+        (await EventService.getInvitedRequest(auth.token, selectedEventId, 0))
+          .items
       );
     };
     const getInvitedFriendRequest = async () => {
       setInvitedFriendId(
-        (await EventService.getInvitedRequest(auth.token, selectedEventId, 1)).items
+        (await EventService.getInvitedRequest(auth.token, selectedEventId, 1))
+          .items
       );
     };
     getEvents();

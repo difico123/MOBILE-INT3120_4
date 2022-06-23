@@ -6,18 +6,31 @@ const API = `${APP.BASE_API}common/email`;
 
 const REMIND_MAIL = (event, email) => {
   return (
-    `~Bạn nhận được 1 tin nhắn từ ${email} của ứng dụng ` +    APP.APP_NAME +    " với nội dung như sau: \n" +
-    "Xin chào, chúng tôi đến từ sự kiện " +    event.event_name +    "!\n" +
+    `~Bạn nhận được 1 tin nhắn từ ${email} của ứng dụng ` +
+    APP.APP_NAME +
+    " với nội dung như sau: \n" +
+    "Xin chào, chúng tôi đến từ sự kiện " +
+    event.event_name +
+    "!\n" +
     "Ban tổ chức xin xác nhận thông tin sự kiện: \n" +
-    "Sự kiện " +    event.event_name +    " diễn ra vào lúc " +    event.start_at +    (event.location ? " tại " + event.location : "") +    "\n" +
-    "Để chuẩn bị cho sự kiện diễn ra tốt nhất, vui lòng vào app " +    APP.APP_NAME +    " để xác nhận tham gia/không tham gia \n" +
+    "Sự kiện " +
+    event.event_name +
+    " diễn ra vào lúc " +
+    event.start_at +
+    (event.location ? " tại " + event.location : "") +
+    "\n" +
+    "Để chuẩn bị cho sự kiện diễn ra tốt nhất, vui lòng vào app " +
+    APP.APP_NAME +
+    " để xác nhận tham gia/không tham gia \n" +
     "Xin chân thành cảm ơn và mong được gặp bạn ở sự kiện này nhé \n" +
     "Thân ái, "
   );
 };
 const COMMON = (event, email) => {
   return (
-    `~Bạn nhận được 1 tin nhắn từ email : ${email} từ sự kiện ${event.event_name} của ứng dụng ` +    APP.APP_NAME +    " với nội dung như sau: \n"
+    `~Bạn nhận được 1 tin nhắn từ email : ${email} từ sự kiện ${event.event_name} của ứng dụng ` +
+    APP.APP_NAME +
+    " với nội dung như sau: \n"
   );
 };
 const getEmail = (type, event, email = null) => {
@@ -30,12 +43,22 @@ const getEmail = (type, event, email = null) => {
       return REMIND_MAIL(event, email);
   }
 };
-export const sendMail = async (token, emails, type, eventId, customBody = null, customSubject = null) => {
+export const sendMail = async (
+  token,
+  emails,
+  type,
+  eventId,
+  customBody = null,
+  customSubject = null
+) => {
   try {
     const event = await EventService.getById(token, eventId);
-    console.log(event);
-    const bodyMail = customBody ? getEmail(type, event, emails[0]) + customBody : getEmail(type, event, emails[0]);
-    const subject = customSubject ? `[${APP.APP_NAME}] ${customSubject}` : "Thông báo đến từ hệ thống " + APP.APP_NAME;
+    const bodyMail = customBody
+      ? getEmail(type, event, emails[0]) + customBody
+      : getEmail(type, event, emails[0]);
+    const subject = customSubject
+      ? `[${APP.APP_NAME}] ${customSubject}`
+      : "Thông báo đến từ hệ thống " + APP.APP_NAME;
     const config = {
       method: "post",
       url: API,

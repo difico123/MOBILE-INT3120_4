@@ -1,4 +1,9 @@
-import { ADD_EVENT, EDIT_EVENT, DELETE_EVENT } from "../actions/type";
+import {
+  ADD_EVENT,
+  EDIT_EVENT,
+  DELETE_EVENT,
+  GET_EVENTS,
+} from "../actions/type";
 
 // [
 //     {
@@ -16,23 +21,26 @@ import { ADD_EVENT, EDIT_EVENT, DELETE_EVENT } from "../actions/type";
 // ];
 
 export default function (state = [], payload) {
-    switch (payload.type) {
-        case ADD_EVENT:
-            return [...state, payload.events];
-        case EDIT_EVENT:
-            return state.map((event) => {
-                if (event.id === payload.event.id) {
-                    return payload.event;
-                } else {
-                    return event;
-                }
-            });
-        case DELETE_EVENT: {
-            const { id } = payload;
-            let newEventList = state.filter((event) => event.id !== id);
-            return [...newEventList];
+  switch (payload.type) {
+    case ADD_EVENT:
+      return [...state, payload.events];
+    case EDIT_EVENT:
+      return state.map((event) => {
+        if (event.id === payload.event.id) {
+          return payload.event;
+        } else {
+          return event;
         }
-        default:
-            return state;
+      });
+    case DELETE_EVENT: {
+      const { id } = payload;
+      let newEventList = state.filter((event) => event.id !== id);
+      return [...newEventList];
     }
+    case GET_EVENTS: {
+      return [...payload.events];
+    }
+    default:
+      return state;
+  }
 }

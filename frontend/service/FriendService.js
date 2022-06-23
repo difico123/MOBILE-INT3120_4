@@ -19,7 +19,6 @@ const getMyFriends = async (token, query = null) => {
     const response = await axios.get(url, config);
     return response.data.data;
   } catch (err) {
-    console.log(err, "error in getMyFriends");
     return [];
   }
 };
@@ -36,12 +35,9 @@ const addFriend = async (token, friend_id) => {
       data: { friend_id },
     };
 
-    console.log(config);
     const response = await axios(config);
-    console.log(response.data, "data");
     return response.data.data;
   } catch (err) {
-    console.log(err, "failed in addFriend");
     return false;
   }
 };
@@ -61,7 +57,6 @@ const removeFriend = async (token, friend_id) => {
     const response = await axios(config);
     return response.data.data;
   } catch (err) {
-    console.log(err, "failed in removeFriend");
     return false;
   }
 };
@@ -99,7 +94,6 @@ const getFriendRequest = async (token, status, page = 1) => {
     const response = await axios(config);
     return response.data.data;
   } catch (err) {
-    console.log(err, "failed in getFriendRequest");
     return false;
   }
 };
