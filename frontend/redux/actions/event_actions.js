@@ -1,6 +1,6 @@
 import { ADD_EVENT, DELETE_EVENT, EDIT_EVENT, GET_EVENTS } from "./type";
 import EventService from "../../service/EventService";
-
+import ImageService from "../../service/ImageService";
 const idGenerator = () => {
   let id = 0;
   const increase = () => {
@@ -12,8 +12,7 @@ const idGenerator = () => {
 const id = idGenerator();
 
 export const addEvent = (event) => async (dispatch) => {
-  id.increase();
-  event.id = id.getId();
+  await ImageService.uploadImage(event.images);
   let res = await EventService.create(event);
   event.id = res?.data?.id;
   dispatch({ type: ADD_EVENT, events: event });

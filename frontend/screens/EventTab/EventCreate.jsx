@@ -200,6 +200,7 @@ const EventCreate = ({ route, navigation }) => {
     },
     [imageList]
   );
+
   const handlePressEdit = () => {
     setLoading(true);
     setTimeout(() => {
@@ -218,11 +219,11 @@ const EventCreate = ({ route, navigation }) => {
       };
 
       dispatch(editEvent(formData));
-
       setLoading(false);
       navigation.navigate("EventCreateMe");
     }, 1000);
   };
+
   const handlePressPost = () => {
     setLoading(true);
     setTimeout(() => {
