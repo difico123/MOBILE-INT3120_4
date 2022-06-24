@@ -1,6 +1,7 @@
 import axios from "axios";
 import APP from "../config/app";
 const API = `${APP.BASE_API}events`;
+const endpoint = "/events";
 import queryString from "query-string";
 import http from "./http";
 
@@ -182,13 +183,20 @@ const approveInvite = async (token, eventId) => {
 };
 
 const createEvent = async (data) => {
-  let response = await http().post(`${API}`, data);
-  console.log(
-    "🚀 ~ file: EventService.js ~ line 186 ~ createEvent ~ response",
-    response
-  );
+  let response = await http.post(endpoint, data);
   return response.data;
 };
+
+const deleteEvent = async (eventId) => {
+  let res = await http.delete(`${endpoint}/${eventId}`);
+  return res.data;
+};
+
+const editEvent = async (eventId) => {
+  let res = await http.put(`${endpoint}/${eventId}`);
+  return res.data;
+};
+
 export default {
   getEvents,
   getEventsCreated,
@@ -203,4 +211,6 @@ export default {
   getEventRequests,
   approveInvite,
   createEvent,
+  deleteEvent,
+  editEvent,
 };

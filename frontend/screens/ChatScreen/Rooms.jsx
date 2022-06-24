@@ -9,7 +9,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RoomItem } from "./components";
 import CustomSearchBar from "../../components/InputComponent/CustomSearchBar";
-import { joinRoom, messageSocket, offSocket } from "../../service/socket";
+import { joinRoom, messageSocket } from "../../service/socket";
 import ChatService from "../../service/ChatService";
 
 const Rooms = ({ navigation }) => {
@@ -23,8 +23,9 @@ const Rooms = ({ navigation }) => {
     ChatService.getChatRooms().then((res) => {
       let eventRooms = res?.data?.items;
       if (eventRooms.length) {
+        // let evtRooms = eventRooms.reverse();
         setChatRoomList(eventRooms);
-        eventRooms.map((room) => {
+        eventRooms?.map((room) => {
           joinRoom(room?.event_id, auth?.user?.username, auth?.user?.avatar);
         });
 

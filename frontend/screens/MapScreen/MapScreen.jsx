@@ -127,7 +127,6 @@ export default function MapScreen({ navigation }) {
             setValue={setSearch}
             onPress={handlePressSearch}
           />
-
           <View style={styles.paddingVer}></View>
           <View style={styles.mapWrap}>
             <MapView
