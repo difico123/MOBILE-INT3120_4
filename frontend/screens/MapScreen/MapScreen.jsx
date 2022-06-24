@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import {
   StyleSheet,
   Text,
@@ -13,77 +13,23 @@ import {
 import CustomButton from "../../components/ButtonComponent/CustomButton";
 import CustomSearchBar from "../../components/InputComponent/CustomSearchBar";
 import { color, background } from "../../theme";
-import * as Location from "expo-location";
-import { searchLocation } from "../../service/map";
+import { searchLocation, geoToName } from "../../service/map";
 import FadeModal from "../../components/modal/FadeModal";
 import { SearchLocationName } from "./components";
 
-const data = [
-  {
-    latitude: -125,
-    longitude: 30,
-    latitudeDelta: 0.25,
-    longitudeDelta: 0.25,
-    name: "quan",
-    description: "abc",
-  },
-  {
-    latitude: -126,
-    longitude: 31,
-    latitudeDelta: 0.25,
-    longitudeDelta: 0.25,
-    name: "adsf",
-    description: "azcv",
-  },
-  {
-    latitude: -128,
-    longitude: 38,
-    latitudeDelta: 0.25,
-    longitudeDelta: 0.25,
-    name: "ac",
-    description: "adf",
-  },
-  {
-    latitude: -130,
-    longitude: 36,
-    latitudeDelta: 0.25,
-    longitudeDelta: 0.25,
-    name: "aaa",
-    description: "bbb",
-  },
-];
-
 export default function MapScreen({ navigation }) {
   const [location, setLocation] = useState({
-    latitude: 105.63334,
-    longitude: 19.15,
-    latitudeDelta: 0.25,
-    longitudeDelta: 0.25,
-    name: "Đống Đa",
+    latitude: 21.0333,
+    longitude: 105.8,
+    latitudeDelta: 0.002,
+    longitudeDelta: 0.0021,
+    name: "Quận Cầu Giấy",
   });
+
   const [search, setSearch] = useState("");
   const [visibleModalSearch, setVisibleModalSearch] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        return;
-      } else {
-        console.log("not granted");
-      }
-      let location = await Location.getCurrentPositionAsync({});
-    })();
-  }, []);
-
   const [isLoading, setLoading] = useState(false);
   const [locationNameList, setLocationNameList] = useState([]);
-
-  const onRegionChange = (region) => {
-    // console.log(region);
-  };
 
   const handlePressSearch = async () => {
     if (search) {
@@ -95,18 +41,16 @@ export default function MapScreen({ navigation }) {
   };
 
   const handleSearchLocation = (geometry, name) => {
-    console.log(geometry, name);
     if (geometry) {
       setLocation({
         ...location,
-        latitude: geometry.coordinates[0],
-        longitude: geometry.coordinates[1],
+        latitude: geometry?.coordinates[1],
+        longitude: geometry?.coordinates[0],
         name,
       });
       setVisibleModalSearch(false);
     }
   };
-
   const handlePressSelect = () => {
     let locationParams = {
       lat: location.latitude,
@@ -116,81 +60,103 @@ export default function MapScreen({ navigation }) {
     navigation.navigate("EventCreate", { location: locationParams });
   };
 
-  if (isLoading) {
-    return (
-      <View style={styles.container}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
+  const onRegionChange = () => {};
+  const onClickMap = async (e) => {
+    const { latitude, longitude } = e?.nativeEvent?.coordinate;
+    const res = await geoToName({ latitude, longitude });
+    let name = res.features[0].place_name;
+    setLocation({
+      ...location,
+      latitude,
+      longitude,
+      name,
+    });
+  };
+  return (
+    <View style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <MapView
+          style={styles.map}
+          onRegionChangeComplete={onRegionChange}
+          region={location}
+          enabled={false}
+          onPress={onClickMap}
         >
-          <CustomSearchBar
-            value={search}
-            setValue={setSearch}
-            onPress={handlePressSearch}
-          />
-          <View style={styles.paddingVer}></View>
-          <View style={styles.mapWrap}>
-            <MapView
-              style={styles.map}
-              onRegionChangeComplete={onRegionChange}
-              region={location}
-              enabled={false}
-            ></MapView>
-          </View>
-          <View style={styles.nameWrap}>
-            <Text style={styles.title}>{location.name}</Text>
-          </View>
-        </KeyboardAvoidingView>
-
-        <View style={styles.padding}>
-          <CustomButton
-            text="chọn địa điểm"
-            bgColor={background.random}
-            onPress={handlePressSelect}
-          />
+          <Marker
+            coordinate={location}
+            pinColor={"red"}
+            title={"click map to select location"}
+          ></Marker>
+        </MapView>
+      </KeyboardAvoidingView>
+      <View style={{ position: "absolute", top: 20 }}>
+        <CustomSearchBar
+          value={search}
+          setValue={setSearch}
+          onPress={handlePressSearch}
+          placeholder={"Tìm kiếm"}
+        />
+      </View>
+      <View style={styles.padding}>
+        <View style={styles.nameWrap}>
+          <Text style={styles.title}>{location.name}</Text>
         </View>
+        <CustomButton
+          text="Chọn địa điểm"
+          bgColor={background.random}
+          onPress={handlePressSelect}
+        />
+      </View>
 
-        <FadeModal
-          modalVisible={visibleModalSearch}
-          setModalVisible={setVisibleModalSearch}
-        >
-          <View style={styles.modalContainer}>
-            <Text style={styles.titleSearch}>
-              {search}: Có {locationNameList.length} tìm kiếm
-            </Text>
-            <View style={styles.contentSearch}>
-              <FlatList
-                data={locationNameList}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.flatSearch}
-                keyExtractor={(item, index) => index}
-                renderItem={({ item, index }) => (
-                  <SearchLocationName
-                    name={item.text}
-                    description={item.place_name}
-                    onPress={() =>
-                      handleSearchLocation(item.geometry, item.text)
-                    }
-                  />
-                )}
-              />
-            </View>
+      <FadeModal
+        modalVisible={visibleModalSearch}
+        setModalVisible={setVisibleModalSearch}
+      >
+        <View style={styles.modalContainer}>
+          <Text style={styles.titleSearch}>
+            {search}: Có {locationNameList.length} tìm kiếm
+          </Text>
+          <View style={styles.contentSearch}>
+            <FlatList
+              data={locationNameList}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.flatSearch}
+              keyExtractor={(item, index) => index}
+              renderItem={({ item, index }) => (
+                <SearchLocationName
+                  name={item.text}
+                  description={item?.place_name}
+                  onPress={() =>
+                    handleSearchLocation(item?.geometry, item?.text)
+                  }
+                />
+              )}
+            />
           </View>
-        </FadeModal>
-      </View>
-    );
-  } else {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
+        </View>
+      </FadeModal>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  map: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
+  },
   btnSearch: {},
-  modalContainer: {},
+  modalContainer: {
+    minWidth: Dimensions.get("window").width * 0.9,
+    minHeight: Dimensions.get("window").height * 0.9,
+  },
   contentSearch: {},
   titleSearch: {
     position: "absolute",
@@ -200,16 +166,9 @@ const styles = StyleSheet.create({
   flatSearch: {
     paddingBottom: 20,
   },
-  container: {
-    flex: 1,
-    paddingTop: 10,
-    paddingHorizontal: 5,
-  },
-  map: {
-    height: Dimensions.get("window").height * 0.57,
-  },
   nameWrap: {
     alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.7)",
     paddingVertical: 15,
   },
   mapWrap: {
@@ -232,8 +191,10 @@ const styles = StyleSheet.create({
   },
   padding: {
     paddingHorizontal: 10,
+    position: "absolute",
+    bottom: 30,
   },
   paddingVer: {
-    paddingVertical: 10,
+    paddingVertical: 8,
   },
 });
