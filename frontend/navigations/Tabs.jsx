@@ -15,11 +15,21 @@ import {
 } from "../components/common/CommonStyle";
 import { useSelector } from "react-redux";
 import Rooms from "../screens/ChatScreen/Rooms";
+import ChatService from "../service/ChatService";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
   const favorite = useSelector((state) => state.authReducers.favorite);
+  const [eventLength, setEventLength] = useState(0);
+  useEffect(() => {
+    (async () => {
+      let res = await ChatService.getChatRooms();
+      setEventLength(res?.data?.items?.length);
+    })();
+  }, []);
   return (
     <>
       <View style={{ marginTop: 20, marginBottom: 20 }}>
@@ -128,7 +138,7 @@ const Tabs = () => {
             tabBarLabel: "Room",
             tabBarShowLabel: false,
             headerShown: false,
-            tabBarBadge: favorite.length,
+            tabBarBadge: eventLength,
             tabBarIcon: ({ color, size, focused }) => (
               <View
                 style={{

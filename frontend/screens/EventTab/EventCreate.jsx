@@ -23,7 +23,9 @@ import { categories } from "./data/category";
 import { background, color } from "../../theme";
 import { addEvent, editEvent } from "../../redux/actions";
 import ImageService from "../../service/ImageService";
+import { geoToName } from "../../service/map";
 import moment from "moment";
+
 const EventCreate = ({ route, navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalImageVisible, setModalImageVisible] = useState(false);
@@ -95,6 +97,29 @@ const EventCreate = ({ route, navigation }) => {
   }, [route.params?.location]);
 
   useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      navigation.setOptions({
+        tabBarStyle: {
+          display: "flex",
+          position: "absolute",
+          bottom: 10,
+          left: 10,
+          right: 10,
+          elevation: 1,
+          backgroundColor: "#FFFFFF",
+          borderRadius: 10,
+          height: 70,
+          paddingBottom: 10,
+          paddingTop: 5,
+          borderWidth: 1,
+          borderColor: BORDER_COLOR,
+        },
+      });
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  useEffect(() => {
     if (eventId) {
       const index = events.findIndex(
         (event) => event.id === route.params.eventId
@@ -110,9 +135,18 @@ const EventCreate = ({ route, navigation }) => {
           long,
           images,
           status,
-          location_name,
           topic,
         } = events[index];
+
+        (async () => {
+          let res = await geoToName({ latitude: lat, longitude: long });
+
+          setLocation({
+            lat,
+            long,
+            name: res.features[0].place_name,
+          });
+        })();
 
         setSelectCategory({ ...selectCategory, name: topic });
         setDescription(description);
@@ -124,11 +158,6 @@ const EventCreate = ({ route, navigation }) => {
         });
         setIsEnabled(status);
         setImageList(images);
-        setLocation({
-          lat,
-          long,
-          name: location_name,
-        });
       }
     }
   }, [eventId]);

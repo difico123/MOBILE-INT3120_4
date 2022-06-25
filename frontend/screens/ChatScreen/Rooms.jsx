@@ -23,7 +23,6 @@ const Rooms = ({ navigation }) => {
     ChatService.getChatRooms().then((res) => {
       let eventRooms = res?.data?.items;
       if (eventRooms.length) {
-        // let evtRooms = eventRooms.reverse();
         setChatRoomList(eventRooms);
         eventRooms?.map((room) => {
           joinRoom(room?.event_id, auth?.user?.username, auth?.user?.avatar);

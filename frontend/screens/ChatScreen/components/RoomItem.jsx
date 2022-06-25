@@ -19,7 +19,9 @@ export const RoomItem = ({
             <Image
               style={styles.image}
               source={{
-                uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLrW7MwE4yjLYfZnLpcy02zmlb7yXPloXpxA&usqp=CAU",
+                uri:
+                  image ||
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLrW7MwE4yjLYfZnLpcy02zmlb7yXPloXpxA&usqp=CAU",
               }}
             />
           </View>
