@@ -22,7 +22,8 @@ import { CategoryList, ImagePost } from "./component";
 import { categories } from "./data/category";
 import { background, color } from "../../theme";
 import { addEvent, editEvent } from "../../redux/actions";
-
+import ImageService from "../../service/ImageService";
+import moment from "moment";
 const EventCreate = ({ route, navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalImageVisible, setModalImageVisible] = useState(false);
@@ -44,6 +45,7 @@ const EventCreate = ({ route, navigation }) => {
     start: new Date(),
     end: new Date(),
   });
+
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(0);
   const eventId = route.params?.eventId;
@@ -111,12 +113,14 @@ const EventCreate = ({ route, navigation }) => {
           location_name,
           topic,
         } = events[index];
+
         setSelectCategory({ ...selectCategory, name: topic });
         setDescription(description);
         setTitle(event_name);
+
         setDate({
-          start: start_at,
-          end: end_at,
+          start: new Date(moment(start_at).unix()),
+          end: new Date(moment(end_at).unix()),
         });
         setIsEnabled(status);
         setImageList(images);
@@ -166,6 +170,7 @@ const EventCreate = ({ route, navigation }) => {
     } else {
       value.end = selectedDate;
     }
+
     setShow(0);
     setDate(value);
   };
@@ -224,26 +229,29 @@ const EventCreate = ({ route, navigation }) => {
     }, 1000);
   };
 
-  const handlePressPost = () => {
+  const handlePressPost = async () => {
     setLoading(true);
-    setTimeout(() => {
-      let formData = {
-        topic: selectCategory.name,
-        event_name: title,
-        start_at: date.start,
-        end_at: date.end,
-        description,
-        lat: 0,
-        long: 0,
-        images: [...imageList],
-        location_name: location.name,
-        status: isEnabled,
-      };
 
-      dispatch(addEvent(formData));
-      setLoading(false);
-      navigation.navigate("EventCreateMe");
-    }, 1000);
+    let res = await ImageService.uploadImages(imageList);
+    let imagesArr = res.data.map((item) => {
+      return item.url;
+    });
+
+    let formData = {
+      topic: selectCategory.name,
+      event_name: title,
+      start_at: date.start,
+      end_at: date.end,
+      description,
+      lat: location.lat,
+      long: location.long,
+      images: imagesArr,
+      location_name: location.name,
+      status: isEnabled,
+    };
+    await dispatch(addEvent(formData));
+    setLoading(false);
+    navigation.navigate("EventCreateMe");
   };
 
   return (

@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     width: windowWidth,
-    height: windowHeight,
+    height: windowHeight * 0.88,
     position: "absolute",
     bottom: 0,
     shadowColor: "#000",

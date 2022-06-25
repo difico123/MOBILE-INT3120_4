@@ -12,7 +12,6 @@ const idGenerator = () => {
 const id = idGenerator();
 
 export const addEvent = (event) => async (dispatch) => {
-  await ImageService.uploadImage(event.images);
   let res = await EventService.create(event);
   event.id = res?.data?.id;
   dispatch({ type: ADD_EVENT, events: event });

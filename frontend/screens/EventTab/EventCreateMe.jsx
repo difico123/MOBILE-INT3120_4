@@ -37,6 +37,7 @@ const EventCreateMe = ({ navigation }) => {
   const [eventList, setEventList] = useState([]);
 
   const [keyword, setKeyword] = useState("");
+  const [closeSwipe, setCloseSwipe] = useState(true);
   const eventId = useRef(0);
   const dispatch = useDispatch();
   const goCreateEvent = () => {
@@ -84,20 +85,24 @@ const EventCreateMe = ({ navigation }) => {
 
   const handleSearch = () => {
     let newList = events.filter((event) => event.event_name.includes(keyword));
+    setCloseSwipe(true);
     setEventList([...newList]);
   };
   const handleDeleteEvent = (id) => {
     eventId.current = id;
+    setCloseSwipe(true);
     setVisibleModalDelete(true);
   };
   const handleEditEvent = (id) => {
     dispatch(setRouter("edit"));
+    setCloseSwipe(true);
     navigation.navigate("EventCreate", { eventId: id });
   };
 
   const handleDeleteForce = () => {
     setVisibleModalDelete(false);
     dispatch(deleteEvent(eventId.current));
+    setCloseSwipe(true);
   };
 
   const onChangePicker = (itemValue, itemIndex) => {
@@ -188,10 +193,15 @@ const EventCreateMe = ({ navigation }) => {
               keyExtractor={(item, index) => index}
               scrollEnabled={true}
               renderItem={({ item, index }) => (
-                <Swipeout right={swipeoutBtns(item.id)} style={styles.btns}>
+                <Swipeout
+                  right={swipeoutBtns(item.id)}
+                  style={styles.btns}
+                  close={closeSwipe}
+                >
                   <EventCreateMeItem
                     name={item.event_name}
                     status={item.status}
+                    image={item.images[0]}
                   />
                 </Swipeout>
               )}
