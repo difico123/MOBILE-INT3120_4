@@ -22,6 +22,9 @@ import { CategoryList, ImagePost } from "./component";
 import { categories } from "./data/category";
 import { background, color } from "../../theme";
 import { addEvent, editEvent } from "../../redux/actions";
+import ImageService from "../../service/ImageService";
+import { geoToName } from "../../service/map";
+import moment from "moment";
 
 const EventCreate = ({ route, navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -44,6 +47,7 @@ const EventCreate = ({ route, navigation }) => {
     start: new Date(),
     end: new Date(),
   });
+
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(0);
   const eventId = route.params?.eventId;
@@ -57,7 +61,7 @@ const EventCreate = ({ route, navigation }) => {
   };
 
   const dispatch = useDispatch();
-  const { app, events } = useSelector((state) => state.authReducers);
+  const { app, events, auth } = useSelector((state) => state.authReducers);
 
   useEffect(() => {
     if (isToggleNav) {
@@ -93,6 +97,29 @@ const EventCreate = ({ route, navigation }) => {
   }, [route.params?.location]);
 
   useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      navigation.setOptions({
+        tabBarStyle: {
+          display: "flex",
+          position: "absolute",
+          bottom: 10,
+          left: 10,
+          right: 10,
+          elevation: 1,
+          backgroundColor: "#FFFFFF",
+          borderRadius: 10,
+          height: 70,
+          paddingBottom: 10,
+          paddingTop: 5,
+          borderWidth: 1,
+          borderColor: BORDER_COLOR,
+        },
+      });
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  useEffect(() => {
     if (eventId) {
       const index = events.findIndex(
         (event) => event.id === route.params.eventId
@@ -108,23 +135,29 @@ const EventCreate = ({ route, navigation }) => {
           long,
           images,
           status,
-          location_name,
           topic,
         } = events[index];
+
+        (async () => {
+          let res = await geoToName({ latitude: lat, longitude: long });
+
+          setLocation({
+            lat,
+            long,
+            name: res.features[0].place_name,
+          });
+        })();
+
         setSelectCategory({ ...selectCategory, name: topic });
         setDescription(description);
         setTitle(event_name);
+
         setDate({
-          start: start_at,
-          end: end_at,
+          start: new Date(moment(start_at).unix()),
+          end: new Date(moment(end_at).unix()),
         });
         setIsEnabled(status);
         setImageList(images);
-        setLocation({
-          lat,
-          long,
-          name: location_name,
-        });
       }
     }
   }, [eventId]);
@@ -160,6 +193,10 @@ const EventCreate = ({ route, navigation }) => {
   };
 
   const onChange = (event, selectedDate) => {
+    if (event.type === "dismissed") {
+      setShow(0);
+      return;
+    }
     let value = { ...date };
     if (show === 1) {
       value.start = selectedDate;
@@ -201,49 +238,56 @@ const EventCreate = ({ route, navigation }) => {
     [imageList]
   );
 
-  const handlePressEdit = () => {
+  const handlePressEdit = async () => {
     setLoading(true);
-    setTimeout(() => {
-      let formData = {
-        id: eventId,
-        topic: selectCategory.name,
-        event_name: title,
-        start_at: date.start,
-        end_at: date.end,
-        description,
-        lat: 0,
-        long: 0,
-        images: [...imageList],
-        location_name: location.name,
-        status: isEnabled,
-      };
+    let res = await ImageService.uploadImages(imageList);
+    let imagesArr = res.data.map((item) => {
+      return item.url;
+    });
 
-      dispatch(editEvent(formData));
-      setLoading(false);
-      navigation.navigate("EventCreateMe");
-    }, 1000);
+    let formData = {
+      host_id: auth.user.id,
+      topic: selectCategory.name,
+      event_name: title,
+      start_at: date.start,
+      end_at: date.end,
+      description,
+      lat: location.lat,
+      long: location.long,
+      images: imagesArr,
+      location_name: location.name,
+      status: isEnabled,
+      id: eventId,
+    };
+
+    await dispatch(editEvent(formData));
+    setLoading(false);
+    navigation.navigate("EventCreateMe");
   };
 
-  const handlePressPost = () => {
+  const handlePressPost = async () => {
     setLoading(true);
-    setTimeout(() => {
-      let formData = {
-        topic: selectCategory.name,
-        event_name: title,
-        start_at: date.start,
-        end_at: date.end,
-        description,
-        lat: 0,
-        long: 0,
-        images: [...imageList],
-        location_name: location.name,
-        status: isEnabled,
-      };
 
-      dispatch(addEvent(formData));
-      setLoading(false);
-      navigation.navigate("EventCreateMe");
-    }, 1000);
+    let res = await ImageService.uploadImages(imageList);
+    let imagesArr = res.data.map((item) => {
+      return item.url;
+    });
+
+    let formData = {
+      topic: selectCategory.name,
+      event_name: title,
+      start_at: date.start,
+      end_at: date.end,
+      description,
+      lat: location.lat,
+      long: location.long,
+      images: imagesArr,
+      location_name: location.name,
+      status: isEnabled,
+    };
+    await dispatch(addEvent(formData));
+    setLoading(false);
+    navigation.navigate("EventCreateMe");
   };
 
   return (

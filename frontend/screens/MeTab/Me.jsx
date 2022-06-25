@@ -71,7 +71,7 @@ const Me = () => {
         )
       );
     })();
-  });
+  }, []);
   return (
     <View>
       <ScrollView
