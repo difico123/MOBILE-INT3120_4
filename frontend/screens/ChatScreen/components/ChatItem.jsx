@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import React, { memo } from "react";
 import { color } from "../../../theme";
 export const ChatItem = memo(({ chat, image, name, me }) => {
-  console.log("🚀 ~ file: ChatItem.jsx ~ line 5 ~ ChatItem ~ image", image);
   return (
     <View style={styles.container}>
       {!me ? (
@@ -11,7 +10,9 @@ export const ChatItem = memo(({ chat, image, name, me }) => {
             <Image
               style={styles.image}
               source={{
-                uri: " https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTrXF09rX3X6J5a6gF_LGKvKZIgGhKxTXIDA&usqp=CAU",
+                uri:
+                  image ||
+                  "https://cdn-icons-png.flaticon.com/512/1053/1053244.png?w=360",
               }}
             />
           </View>

@@ -25,17 +25,7 @@ const ChatRoom = ({ route, navigation }) => {
   const { container, room, flatlist, userOnline } = styles;
   const auth = useSelector((state) => state.authReducers.auth);
   const [userList, setUserList] = useState([]);
-  const [chatList, setChatList] = useState([
-    {
-      user_id: "2",
-      user_name: "biladen",
-      user_image:
-        "https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg",
-      me: false,
-      create_at: "",
-      message: "",
-    },
-  ]);
+  const [chatList, setChatList] = useState([{}]);
   const [toggleEmoji, setToggleEmoji] = useState(false);
   const [chat, setChat] = useState("");
   const [chatListening, setChatListening] = useState("");
@@ -52,12 +42,14 @@ const ChatRoom = ({ route, navigation }) => {
     });
 
     ChatService.chatRoom(route.params.room).then((res) => {
-      setChatList([...res?.data?.items]);
+      let roomChats = [...res?.data?.items].reverse();
+      setChatList([...roomChats]);
     });
   }, []);
 
   useEffect(() => {
     let { username, room, text, time, image } = chatListening;
+
     if (room === route.params?.room) {
       let newChat = {
         user_name: username,
@@ -72,7 +64,7 @@ const ChatRoom = ({ route, navigation }) => {
     }
   }, [chatListening]);
 
-  const send = () => {
+  const send = async () => {
     let newChat = {
       user_name: auth.user.username,
       message: chat,
@@ -84,6 +76,12 @@ const ChatRoom = ({ route, navigation }) => {
     };
     setChatList([...chatList, newChat]);
     sendMessage("chatMessage", { room: route.params?.room, msg: chat });
+
+    let mess = {
+      event_id: route.params?.room,
+      message: chat,
+    };
+    await ChatService.chat(mess);
     setChat("");
   };
 
