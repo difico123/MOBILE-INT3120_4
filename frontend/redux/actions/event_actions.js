@@ -20,7 +20,7 @@ export const addEvent = (event) => async (dispatch) => {
 export const editEvent = (event) => async (dispatch) => {
   try {
     dispatch({ type: EDIT_EVENT, event: event });
-    await EventService.editEvent(event.id);
+    await EventService.editEvent(event.id, event);
   } catch (error) {
     console.log(error);
   }

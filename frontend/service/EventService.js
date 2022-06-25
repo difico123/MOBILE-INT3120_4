@@ -192,8 +192,8 @@ const deleteEvent = async (eventId) => {
   return res.data;
 };
 
-const editEvent = async (eventId) => {
-  let res = await http.put(`${endpoint}/${eventId}`);
+const editEvent = async (eventId, event) => {
+  let res = await http.put(`${endpoint}/${eventId}`, event);
   return res.data;
 };
 

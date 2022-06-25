@@ -61,7 +61,7 @@ const EventCreate = ({ route, navigation }) => {
   };
 
   const dispatch = useDispatch();
-  const { app, events } = useSelector((state) => state.authReducers);
+  const { app, events, auth } = useSelector((state) => state.authReducers);
 
   useEffect(() => {
     if (isToggleNav) {
@@ -193,13 +193,16 @@ const EventCreate = ({ route, navigation }) => {
   };
 
   const onChange = (event, selectedDate) => {
+    if (event.type === "dismissed") {
+      setShow(0);
+      return;
+    }
     let value = { ...date };
     if (show === 1) {
       value.start = selectedDate;
     } else {
       value.end = selectedDate;
     }
-
     setShow(0);
     setDate(value);
   };
@@ -235,27 +238,31 @@ const EventCreate = ({ route, navigation }) => {
     [imageList]
   );
 
-  const handlePressEdit = () => {
+  const handlePressEdit = async () => {
     setLoading(true);
-    setTimeout(() => {
-      let formData = {
-        id: eventId,
-        topic: selectCategory.name,
-        event_name: title,
-        start_at: date.start,
-        end_at: date.end,
-        description,
-        lat: 0,
-        long: 0,
-        images: [...imageList],
-        location_name: location.name,
-        status: isEnabled,
-      };
+    let res = await ImageService.uploadImages(imageList);
+    let imagesArr = res.data.map((item) => {
+      return item.url;
+    });
 
-      dispatch(editEvent(formData));
-      setLoading(false);
-      navigation.navigate("EventCreateMe");
-    }, 1000);
+    let formData = {
+      host_id: auth.user.id,
+      topic: selectCategory.name,
+      event_name: title,
+      start_at: date.start,
+      end_at: date.end,
+      description,
+      lat: location.lat,
+      long: location.long,
+      images: imagesArr,
+      location_name: location.name,
+      status: isEnabled,
+      id: eventId,
+    };
+
+    await dispatch(editEvent(formData));
+    setLoading(false);
+    navigation.navigate("EventCreateMe");
   };
 
   const handlePressPost = async () => {
