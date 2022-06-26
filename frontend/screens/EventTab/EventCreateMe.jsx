@@ -143,7 +143,7 @@ const EventCreateMe = ({ navigation }) => {
     },
   ];
   return (
-    <View>
+    <View style={styles.containerWrap}>
       <SearchBar
         placeholder="Tìm kiếm"
         setToggleNav={setToggleNav}
@@ -238,6 +238,9 @@ const EventCreateMe = ({ navigation }) => {
 
 export default EventCreateMe;
 const styles = StyleSheet.create({
+  containerWrap: {
+    marginTop: 5,
+  },
   disablePicker: {
     display: "none",
   },

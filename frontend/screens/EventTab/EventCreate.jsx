@@ -39,9 +39,11 @@ const EventCreate = ({ route, navigation }) => {
   });
   const [imageList, setImageList] = useState([]);
   const [location, setLocation] = useState({
-    name: "Chọn địa điểm",
-    lat: 0,
-    long: 0,
+    latitudeDelta: 0.002,
+    longitudeDelta: 0.0021,
+    name: "Chọn địa điểm ",
+    lat: 21.0333,
+    long: 105.8,
   });
   const [date, setDate] = useState({
     start: new Date(),
@@ -137,7 +139,6 @@ const EventCreate = ({ route, navigation }) => {
           status,
           topic,
         } = events[index];
-
         (async () => {
           let res = await geoToName({ latitude: lat, longitude: long });
 
@@ -147,14 +148,12 @@ const EventCreate = ({ route, navigation }) => {
             name: res.features[0].place_name,
           });
         })();
-
         setSelectCategory({ ...selectCategory, name: topic });
         setDescription(description);
         setTitle(event_name);
-
         setDate({
-          start: new Date(moment(start_at).unix()),
-          end: new Date(moment(end_at).unix()),
+          start: new Date(moment(start_at)),
+          end: new Date(moment(end_at)),
         });
         setIsEnabled(status);
         setImageList(images);

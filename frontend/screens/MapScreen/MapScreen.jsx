@@ -67,7 +67,7 @@ export default function MapScreen({ route, navigation }) {
     };
     if (eventId) {
       navigation.navigate("EventCreate", {
-        eventId: id,
+        eventId,
         location: locationParams,
       });
     } else {
