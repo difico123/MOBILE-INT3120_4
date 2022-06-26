@@ -69,12 +69,10 @@ const Signup = () => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.root}>
-        <View>
+        <View style={styles.root}>
           <Image
-            style={[styles.logo, { height: height * 0.4 }, { marginBottom: 5 }]}
-            source={{
-              uri: "https://intphcm.com/data/upload/logo-the-thao-dep.jpg",
-            }}
+            style={[styles.logo, { height: height * 0.4, width: 350 }, { marginBottom: 5 }]}
+            source={require("../../assets/logo.jpg")}
           />
           <Text style={styles.title}>TẠO TÀI KHOẢN MỚI</Text>
           <CustomInput
@@ -150,5 +148,11 @@ const styles = StyleSheet.create({
     margin: 10,
     textAlign: "center",
   },
-  logo: {},
+  logo: {
+      width: "100%",
+      maxWidth: 300,
+      maxHeight: 250,
+      resizeMode: "contain",
+      borderRadius: 100,
+  },
 });

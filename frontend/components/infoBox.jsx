@@ -40,16 +40,17 @@ export const InfoBox = ({
 };
 const styles = StyleSheet.create({
   box: {
-    backgroundColor: "#b1b1b3",
+    backgroundColor: "#e6e6e6",
     height: 200,
     borderColor: "white",
     borderWidth: 2,
     borderRadius: 10,
     marginHorizontal: 5,
     marginTop: 5,
+    marginBottom: 5
   },
   box_v2: {
-    backgroundColor: "#b1b1b3",
+    backgroundColor: "#e6e6e6",
     height: 100,
     borderColor: "white",
     borderWidth: 2,
