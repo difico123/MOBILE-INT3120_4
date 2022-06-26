@@ -17,13 +17,7 @@ const SocialSignInButtons = ({ loading, setLoading }) => {
 
     return (
         <View style={{ marginTop: 20 }}>
-            <CustomButton
-                loading={loading.ggLogin}
-                icon={{ name: "google", type: "font-awesome", color: color.white, style: { backgroundColor: background.lightGoogle, padding: 5, borderRadius: 5 } }}
-                text="Đăng nhập với tài khoản google"
-                ftColor={color.white}
-                bgColor={background.red}
-            />
+        
             <CustomButton
                 loading={loading.fbLogin}
                 onPress={doLoginFB}

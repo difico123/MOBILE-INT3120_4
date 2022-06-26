@@ -9,7 +9,7 @@ import UserService from "../../service/UserService";
 import { useNavigation } from "@react-navigation/native";
 export const PasswordChange = () => {
   const auth = useSelector((state) => state.authReducers.auth);
-  
+
   const navigation = useNavigation();
   const [showPw, setShowPw] = useState({
     name: "eye-slash",
@@ -77,7 +77,7 @@ export const PasswordChange = () => {
       data.update_password = newPassword;
     }
     if (newPassword !== retypeNewPassword) {
-      alert("Khong khop");
+      alert("Nhập lại mật khẩu mới do xác nhận không khớp");
       return false;
     }
 
@@ -92,40 +92,46 @@ export const PasswordChange = () => {
         console.log(error);
         setLoading({ ...loading, login: false });
         alert("Wrong password");
-      } );
+      });
   };
   return (
     <View style={styles.main}>
       <CustomInput
-        titleInput="Old Password"
+        titleInput="Mật khẩu hiện tại"
         setValue={(old) => setOldPassword(old)}
         secureTextEntry={showPw.status}
         icon={{ name: "lock" }}
         iconRight={{ name: showPw.name, type: "font-awesome" }}
-        onPress={onEyePress} placeholder="Password"
+        onPress={onEyePress}
+        placeholder="********"
+        type="Password"
       ></CustomInput>
       <CustomInput
-        titleInput="New Password"
+        titleInput="Mật khẩu mới"
         setValue={(newPassword) => setNewPassword(newPassword)}
         secureTextEntry={showPwNew.status}
         icon={{ name: "lock" }}
         iconRight={{ name: showPwNew.name, type: "font-awesome" }}
-        onPress={onEyePressNew} placeholder="Password"
+        onPress={onEyePressNew}
+        placeholder="********"
+        type="Password"
       ></CustomInput>
       <CustomInput
-        titleInput="Confirm New Password"
+        titleInput="Nhập lại mật khẩu mới"
         setValue={(confirmNewPassword) =>
           setRetypeNewPassword(confirmNewPassword)
         }
         secureTextEntry={showPwRetype.status}
         icon={{ name: "lock" }}
         iconRight={{ name: showPwRetype.name, type: "font-awesome" }}
-        onPress={onEyePressRetype} placeholder="Password"
+        onPress={onEyePressRetype}
+        placeholder="********"
+        type="Password"
       ></CustomInput>
 
       <View style={styles.confirmButton}>
         <CustomButton
-          text="Confirm"
+          text="Xác nhận"
           onPress={onConfirmPress}
           loading={loading.updated}
         ></CustomButton>

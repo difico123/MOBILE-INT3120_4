@@ -87,9 +87,7 @@ const Signin = () => {
             <View style={styles.root}>
                 <Image
                     style={[styles.logo, { height: height * 0.4 }, { marginBottom: 5 }]}
-                    source={{
-                        uri: "https://intphcm.com/data/upload/logo-the-thao-dep.jpg",
-                    }}
+                    source={require('../../assets/logo.jpg')}
                 />
                 <CustomInput placeholder="Username" value={username} setValue={setUsername} icon={{ name: "user", type: "font-awesome" }} />
                 <CustomInput
@@ -124,6 +122,7 @@ const styles = StyleSheet.create({
         maxWidth: 300,
         maxHeight: 250,
         resizeMode: "contain",
+        borderRadius: 100
     },
     buttons: {
         marginTop: 25,

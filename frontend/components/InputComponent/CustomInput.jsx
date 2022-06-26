@@ -14,7 +14,7 @@ const windowWidth = Dimensions.get("window").width;
 const CustomInput = ({ style, icon, value, setValue, onPress, iconRight, ...props }) => {
   let iconInput = !icon ? "" : <Icon {...icon} />;
   let icon2 =
-    props.placeholder !== "Password" ? (
+    props.placeholder !== "Password" && props.type != "Password" ? (
       ""
     ) : (
       <TouchableOpacity onPress={onPress}>
