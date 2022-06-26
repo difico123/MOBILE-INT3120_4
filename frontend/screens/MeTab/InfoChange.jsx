@@ -114,7 +114,7 @@ export const InfoChange = () => {
 
         <View style={styles.confirmButton}>
           <CustomButton
-            text="Confirm"
+            text="Xác nhận"
             onPress={onConfirmPress}
             loading={loading.updated}
           ></CustomButton>
@@ -133,5 +133,6 @@ const styles = StyleSheet.create({
   confirmButton: {
     // paddingLeft:
     width: "93%",
+    marginTop: 10,
   },
 });
