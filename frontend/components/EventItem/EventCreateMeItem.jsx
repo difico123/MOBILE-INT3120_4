@@ -1,7 +1,21 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 import { border, color, background } from "../../theme";
-export const EventCreateMeItem = memo(({ name, status, image }) => {
+import moment from "moment";
+export const EventCreateMeItem = memo(({ name, status, image, time }) => {
+  const timeTx = useMemo(() => {
+    return moment(time.start).format("MMMM Do YYYY, h:mm");
+  }, [time]);
+
+  const duration = useMemo(() => {
+    let now = moment(time.start); //todays date
+    let end = moment(time.end); // another date
+    let duration = moment.duration(end.diff(now));
+    const hours = parseInt(duration.asHours());
+    const minutes = parseInt(duration.asMinutes()) % 60;
+    return `${hours} giờ ${minutes} phút`;
+  }, []);
+
   return (
     <View style={styles.containerWrap}>
       <View style={styles.container}>
@@ -13,8 +27,11 @@ export const EventCreateMeItem = memo(({ name, status, image }) => {
               "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/330px-Image_created_with_a_mobile_phone.png",
           }}
         />
-
-        <Text style={styles.title}>{name}</Text>
+        <View>
+          <Text style={styles.title}>{name}</Text>
+          <Text style={styles.time}>{timeTx}</Text>
+        </View>
+        <Text style={styles.duration}>{duration}</Text>
       </View>
       <View
         style={[
@@ -59,5 +76,19 @@ const styles = StyleSheet.create({
   title: {
     marginLeft: 10,
     fontWeight: "bold",
+    fontSize: 16,
+  },
+  time: {
+    fontSize: 12,
+    marginLeft: 10,
+  },
+  duration: {
+    justifyContent: "flex-end",
+    position: "absolute",
+    right: 3,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
   },
 });

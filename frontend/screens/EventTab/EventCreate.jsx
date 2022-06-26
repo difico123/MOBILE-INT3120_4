@@ -163,7 +163,14 @@ const EventCreate = ({ route, navigation }) => {
   }, [eventId]);
 
   const goSelectMap = () => {
-    navigation.navigate("MapScreen");
+    if (eventId) {
+      navigation.navigate("MapScreen", {
+        eventId,
+        location,
+      });
+    } else {
+      navigation.navigate("MapScreen", { location });
+    }
   };
 
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);

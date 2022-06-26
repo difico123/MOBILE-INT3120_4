@@ -142,7 +142,6 @@ const EventCreateMe = ({ navigation }) => {
       ),
     },
   ];
-
   return (
     <View>
       <SearchBar
@@ -202,6 +201,10 @@ const EventCreateMe = ({ navigation }) => {
                     name={item.event_name}
                     status={item.status}
                     image={item.images[0]}
+                    time={{
+                      end: item.end_at,
+                      start: item.start_at,
+                    }}
                   />
                 </Swipeout>
               )}

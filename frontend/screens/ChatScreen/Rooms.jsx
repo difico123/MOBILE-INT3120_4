@@ -21,7 +21,13 @@ const Rooms = ({ navigation }) => {
 
   useEffect(() => {
     ChatService.getChatRooms().then((res) => {
-      let eventRooms = res?.data?.items;
+      let eventRooms = res?.data?.items?.map((item) => {
+        return {
+          ...item,
+          notseen: 0,
+        };
+      });
+
       if (eventRooms.length) {
         setChatRoomList(eventRooms);
         eventRooms?.map((room) => {

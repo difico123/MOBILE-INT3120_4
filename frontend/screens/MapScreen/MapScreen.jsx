@@ -5,9 +5,7 @@ import {
   Text,
   View,
   Dimensions,
-  ActivityIndicator,
   KeyboardAvoidingView,
-  TouchableOpacity,
   FlatList,
 } from "react-native";
 import CustomButton from "../../components/ButtonComponent/CustomButton";
@@ -17,7 +15,7 @@ import { searchLocation, geoToName } from "../../service/map";
 import FadeModal from "../../components/modal/FadeModal";
 import { SearchLocationName } from "./components";
 
-export default function MapScreen({ navigation }) {
+export default function MapScreen({ route, navigation }) {
   const [location, setLocation] = useState({
     latitude: 21.0333,
     longitude: 105.8,
@@ -28,9 +26,19 @@ export default function MapScreen({ navigation }) {
 
   const [search, setSearch] = useState("");
   const [visibleModalSearch, setVisibleModalSearch] = useState(false);
-  const [isLoading, setLoading] = useState(false);
   const [locationNameList, setLocationNameList] = useState([]);
-
+  const eventId = route.params?.eventId;
+  const local = route.params.location;
+  useEffect(() => {
+    if (local) {
+      setLocation({
+        ...location,
+        latitude: local?.lat,
+        longitude: local.long,
+        name: local.name,
+      });
+    }
+  }, [local]);
   const handlePressSearch = async () => {
     if (search) {
       setVisibleModalSearch(true);
@@ -57,7 +65,14 @@ export default function MapScreen({ navigation }) {
       long: location.longitude,
       name: location.name,
     };
-    navigation.navigate("EventCreate", { location: locationParams });
+    if (eventId) {
+      navigation.navigate("EventCreate", {
+        eventId: id,
+        location: locationParams,
+      });
+    } else {
+      navigation.navigate("EventCreate", { location: locationParams });
+    }
   };
 
   const onRegionChange = () => {};
