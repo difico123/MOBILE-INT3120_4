@@ -1,8 +1,8 @@
 export const categories = [
-    { id: 1, name: "Party", image: "life" },
-    { id: 2, name: "Sinh nhật", image: "diamond" },
-    { id: 3, name: "Picnic", image: "gold" },
-    { id: 4, name: "Bar", image: "love" },
-    { id: 5, name: "Game", image: "leaves" },
-    { id: 6, name: "Thể Thao", image: "peace" },
+  { id: 1, name: "Party", image: "party" },
+  { id: 2, name: "Sinh nhật", image: "birthday" },
+  { id: 3, name: "Picnic", image: "leaves" },
+  { id: 4, name: "Bar", image: "bar" },
+  { id: 5, name: "Game", image: "game" },
+  { id: 6, name: "Thể Thao", image: "sport" },
 ];
